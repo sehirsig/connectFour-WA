@@ -59,7 +59,7 @@ class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder)
     try {
       val currentPiece = Some(Piece(currentPlayer))
       for (i <- 0 to rowCount - 1) {
-        for (j <- 0 to colCount - 1) {
+        for (j <- 0 to colCount - 3) {
           if (grid.cell(i, j).piece == currentPiece && grid.cell(i, j + 1).piece == currentPiece && grid.cell(i, j + 2).piece == currentPiece && grid.cell(i, j + 3).piece == currentPiece)
             return Some(true)
         }
