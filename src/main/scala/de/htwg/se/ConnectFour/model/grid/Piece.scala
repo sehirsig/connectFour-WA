@@ -1,10 +1,10 @@
-package de.htwg.se.ConnectFour.model.grid.impl
+package de.htwg.se.ConnectFour.model.grid
 
 import de.htwg.se.ConnectFour.model.player.Player
 
 /**
-* Piece case class
-*/
+ * Piece case class
+ */
 case class Piece(player: Player) {
 
   override def toString: String = {

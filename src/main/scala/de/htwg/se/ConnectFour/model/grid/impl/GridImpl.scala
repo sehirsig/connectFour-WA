@@ -1,10 +1,9 @@
 package de.htwg.se.ConnectFour.model.grid.impl
 
 import com.google.inject.Inject
-import de.htwg.se.ConnectFour.model.grid.Grid
-import de.htwg.se.ConnectFour.model.{CannotDropPiece, ColumnFull}
+import de.htwg.se.ConnectFour.model.grid.{Cell, Grid, Piece}
+import de.htwg.se.ConnectFour.model.player.Player
 
-import scala.util.{Failure, Success, Try}
 
 /**
  * Game grid implementation
@@ -13,6 +12,9 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid {
 
   @Inject()
   def this() = this(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
+
+  val colCount = 7
+  val rowCount = 6
 
   override def cell(row: Int, col: Int): Cell = rows(row)(col)
 
@@ -27,6 +29,59 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid {
 
   override def reset(): Grid = {
     new GridImpl()
+  }
+
+  override def checkWin(currentPlayer:Player):Boolean = {
+    val checkList:List[Option[Boolean]] = List(winPatternHorizontal(currentPlayer),winPatternVertical(currentPlayer),winPatternAscendingDiagonal(currentPlayer),winPatternDescendingDiagonal(currentPlayer))
+
+    val win = checkList.filterNot(f => f.isEmpty).contains((Some(true)))
+    if (win)
+      return true
+    false
+  }
+
+  override def winPatternHorizontal(currentPlayer:Player):Option[Boolean] = {
+    val currentPiece = Some(Piece(currentPlayer))
+    for (i <- 0 to rowCount - 1) {
+      for (j <- 0 to colCount - 4) {
+        if (this.cell(i, j).piece == currentPiece && this.cell(i, j + 1).piece == currentPiece && this.cell(i, j + 2).piece == currentPiece && this.cell(i, j + 3).piece == currentPiece)
+          return Some(true)
+      }
+    }
+    None
+  }
+
+  override def winPatternVertical(currentPlayer:Player):Option[Boolean] = {
+    val currentPiece = Some(Piece(currentPlayer : Player))
+    for (i <- 0 to rowCount - 3) {
+      for (j <- 0 to colCount - 1) {
+        if (this.cell(i, j).piece == currentPiece && this.cell(i + 1, j).piece == currentPiece && this.cell(i + 2, j).piece == currentPiece && this.cell(i + 3, j).piece == currentPiece)
+          return Some(true)
+      }
+    }
+    None
+  }
+
+  override def winPatternAscendingDiagonal(currentPlayer:Player):Option[Boolean] = {
+    val currentPiece = Some(Piece(currentPlayer))
+    for (i <- 0 to rowCount - 4){
+      for (j <- 0 to colCount - 4){
+        if (this.cell(i,j).piece == currentPiece && this.cell(i+1,j+1).piece == currentPiece && this.cell(i+2,j+2).piece == currentPiece && this.cell(i+3,j+3).piece == currentPiece)
+          return Some(true)
+      }
+    }
+    None
+  }
+
+  override def winPatternDescendingDiagonal(currentPlayer:Player):Option[Boolean] = {
+    val currentPiece = Some(Piece(currentPlayer))
+    for (i <- 3 to rowCount - 1) {
+      for (j <- 0 to colCount - 3) {
+        if (this.cell(i, j).piece == currentPiece && this.cell(i - 1, j + 1).piece == currentPiece && this.cell(i - 2, j + 2).piece == currentPiece && this.cell(i - 3, j + 3).piece == currentPiece)
+          return Some(true)
+      }
+    }
+    None
   }
 
   override def toString: String = {

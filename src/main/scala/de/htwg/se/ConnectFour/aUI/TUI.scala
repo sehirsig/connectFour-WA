@@ -1,6 +1,5 @@
 package de.htwg.se.ConnectFour.aUI
 
-import de.htwg.se.ConnectFour.aUI.states.GUI.DropState
 import de.htwg.se.ConnectFour.aUI.states.TUI.GameState
 import de.htwg.se.ConnectFour.controller.Controller
 import de.htwg.se.ConnectFour.util.{Observer, UI}

@@ -2,9 +2,8 @@ package de.htwg.se.ConnectFour.model.fileio.xml
 
 import de.htwg.se.ConnectFour.controller.Controller
 import de.htwg.se.ConnectFour.model.fileio.FileIO
-import de.htwg.se.ConnectFour.model.grid.Grid
-import de.htwg.se.ConnectFour.model.grid.impl.{Cell, Piece}
-
+import de.htwg.se.ConnectFour.model.grid
+import de.htwg.se.ConnectFour.model.grid.{Cell, Grid, Piece}
 
 import scala.xml.PrettyPrinter
 
@@ -37,8 +36,8 @@ class FileIOImpl() extends FileIO {
       val value: Int = cell.text.trim.toInt
 
       val optPiece = (value) match {
-        case 1 => Some(Piece(controller.players(0)))
-        case 2 => Some(Piece(controller.players(1)))
+        case 1 => Some(grid.Piece(controller.players(0)))
+        case 2 => Some(grid.Piece(controller.players(1)))
         case _ => None
       }
       newGrid = newGrid.replaceCell(row, col, Cell(optPiece))

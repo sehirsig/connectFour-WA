@@ -60,6 +60,11 @@ class ControllerImplSpec extends AnyWordSpec with Matchers {
           controller.gridToString()
           controller.grid.cell(0, 0).isSet should be(true)
         }
+        "drop 0 when an illegal number has been selected to drop" in {
+          controller.drop("0")
+          controller.gridToString()
+          controller.grid.cell(1, 0).isSet should be(true)
+        }
       }
       "notify its Observer that the game has been saved" in {
         controller.saveGame()

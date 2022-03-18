@@ -4,8 +4,7 @@ import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.ConnectFour.GameModule
 import de.htwg.se.ConnectFour.controller.Controller
 import de.htwg.se.ConnectFour.model.fileio.FileIO
-import de.htwg.se.ConnectFour.model.grid.Grid
-import de.htwg.se.ConnectFour.model.grid.impl.Piece
+import de.htwg.se.ConnectFour.model.grid.{Grid, Piece}
 import de.htwg.se.ConnectFour.model.player.{Player, PlayerBuilder}
 import de.htwg.se.ConnectFour.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
@@ -48,78 +47,16 @@ class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder)
   }
 
   override def checkWin():Boolean = {
-    val checkList:List[Option[Boolean]] = List(winPatternHorizontal(),winPatternVertical(),winPatternAscendingDiagonal(),winPatternDescendingDiagonal())
-    val win = checkList.filterNot(f => f.isEmpty).contains((Some(true)))
-    if (win)
-      return true
-    false
+    grid.checkWin(currentPlayer)
   }
 
-  override def winPatternHorizontal():Option[Boolean] = {
-    try {
-      val currentPiece = Some(Piece(currentPlayer))
-      for (i <- 0 to rowCount - 1) {
-        for (j <- 0 to colCount - 3) {
-          if (grid.cell(i, j).piece == currentPiece && grid.cell(i, j + 1).piece == currentPiece && grid.cell(i, j + 2).piece == currentPiece && grid.cell(i, j + 3).piece == currentPiece)
-            return Some(true)
-        }
-      }
-      None
-    } catch {
-      case e: Exception => None
-    }
-  }
-
-
-  override def winPatternVertical():Option[Boolean] = {
-    try {
-      val currentPiece = Some(Piece(currentPlayer : Player))
-      for (i <- 0 to rowCount - 3) {
-        for (j <- 0 to colCount - 1) {
-          if (grid.cell(i, j).piece == currentPiece && grid.cell(i + 1, j).piece == currentPiece && grid.cell(i + 2, j).piece == currentPiece && grid.cell(i + 3, j).piece == currentPiece)
-            return Some(true)
-        }
-      }
-      None
-    } catch {
-      case e: Exception => None
-    }
-  }
-  override def winPatternAscendingDiagonal():Option[Boolean] = {
-    try {
-      val currentPiece = Some(Piece(currentPlayer))
-      for (i <- 0 to rowCount-4){
-        for (j <- 0 to colCount-4){
-          if (grid.cell(i,j).piece == currentPiece && grid.cell(i+1,j+1).piece == currentPiece && grid.cell(i+2,j+2).piece == currentPiece && grid.cell(i+3,j+3).piece == currentPiece)
-            return Some(true)
-        }
-      }
-      None
-    } catch {
-      case e: Exception => None
-    }
-  }
-  override def winPatternDescendingDiagonal():Option[Boolean] = {
-    try {
-      val currentPiece = Some(Piece(currentPlayer))
-      for (i <- 3 to rowCount - 1) {
-        for (j <- 0 to colCount - 4) {
-          if (grid.cell(i, j).piece == currentPiece && grid.cell(i - 1, j + 1).piece == currentPiece && grid.cell(i - 2, j + 2).piece == currentPiece && grid.cell(i - 3, j + 3).piece == currentPiece)
-            return Some(true)
-        }
-      }
-      None
-    } catch {
-      case e: Exception => None
-    }
-  }
 
   override def drop(col:String): Unit = {
     whoseTurnIsIt()
     var validCol = 0
     if (col.toInt <= 6)
       validCol = col.toInt
-    undoManager.doStep(new SetCommandImpl(validCol,Piece(currentPlayer),this));
+    undoManager.doStep(new SetCommandImpl(validCol, Piece(currentPlayer),this));
     moveCount += 1
     notifyObservers
   }

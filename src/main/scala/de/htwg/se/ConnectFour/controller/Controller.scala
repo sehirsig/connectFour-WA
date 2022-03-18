@@ -20,10 +20,6 @@ trait Controller extends Observable{
   def addPlayer(name:String):Unit
   def whoseTurnIsIt(): Unit
   def checkWin():Boolean
-  def winPatternHorizontal():Option[Boolean]
-  def winPatternVertical():Option[Boolean]
-  def winPatternAscendingDiagonal():Option[Boolean]
-  def winPatternDescendingDiagonal():Option[Boolean]
   def drop(input:String): Unit
   def undoDrop(): Unit
   def redoDrop(): Unit

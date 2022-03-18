@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.model.grid.impl
+package de.htwg.se.ConnectFour.model.grid
 
 /**
  * Cell case class
