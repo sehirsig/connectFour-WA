@@ -62,8 +62,8 @@ class FileIOImpl() extends FileIO {
       </player>
     <grid>
       {
-      for {col <- 0 to controller.colCount - 1;
-    row <- (0 to controller.rowCount - 1).reverse
+      for {col <- 0 to controller.getGrid().colCount - 1;
+    row <- (0 to controller.getGrid().rowCount - 1).reverse
     }
     yield {
       var player = controller.getGrid().cell(row, col).piece match {

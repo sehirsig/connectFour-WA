@@ -7,6 +7,8 @@ import de.htwg.se.ConnectFour.model.player.Player
  */
 trait Grid {
   val rows: Vector[Vector[Cell]]
+  val rowCount:Int
+  val colCount:Int
   def cell(row: Int, col: Int): Cell
   def replaceCell(row: Int, col: Int, cell: Cell): Grid
   def drop(column: Int, piece: Piece): Grid

@@ -67,8 +67,8 @@ class FileIOImpl @Inject () extends FileIO {
       ),
       "grid" -> Json.obj(
         "cells" -> Json.toJson(
-          for {col <- 0 to controller.colCount - 1;
-               row <- (0 to controller.rowCount - 1).reverse
+          for {col <- 0 to controller.getGrid().colCount - 1;
+               row <- (0 to controller.getGrid().rowCount - 1).reverse
                }
           yield {
 

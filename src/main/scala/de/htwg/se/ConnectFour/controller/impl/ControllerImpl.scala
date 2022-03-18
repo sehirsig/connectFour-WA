@@ -19,8 +19,6 @@ class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder)
   var moveCount = 0
   var currentPlayer:Player = _
   val maxPlayers = 2
-  val colCount = 7
-  val rowCount = 6
   override val undoManager: UndoManager = new UndoManager
 
   override def createGrid(): Unit = {

@@ -28,7 +28,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp {
   }
 
   def typeName(): Unit = {
-    val dialog = new TextInputDialog(defaultValue = "Detlef") {
+    val dialog = new TextInputDialog(defaultValue = "Player " + (controller.players.size + 1)) {
       initOwner(stage)
       title = "ConnectFour Game"
       headerText = "Welcome to Connect Four!"
@@ -111,15 +111,15 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp {
     gridLinesVisible = false
     padding = Insets(70)
     var i = 0
-    for (_ <- 0 until controller.colCount) {
+    for (_ <- 0 until controller.getGrid().colCount) {
       if (i < 6) {
         val row = new RowConstraints() {
-          percentHeight = 100.0 / controller.rowCount
+          percentHeight = 100.0 / controller.getGrid().rowCount
         }
         rowConstraints.add(row)
       }
       val column = new ColumnConstraints() {
-        percentWidth = 100.0 / controller.colCount
+        percentWidth = 100.0 / controller.getGrid().colCount
       }
       columnConstraints.add(column)
       i += 1
@@ -232,7 +232,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp {
    */
   def refreshView(): Unit = {
     try {
-      for (x <- 0 to controller.colCount -1; y <- (0 to controller.rowCount - 1).reverse) {
+      for (x <- 0 to controller.getGrid().colCount - 1; y <- (0 to controller.getGrid().rowCount - 1).reverse) {
         /**
          * Reversing the y values so the dropped pieces
          * are landing at the bottom

@@ -12,8 +12,6 @@ trait Controller extends Observable{
   var moveCount:Int
   var currentPlayer:Player
   val maxPlayers:Int
-  val colCount:Int
-  val rowCount:Int
   val undoManager:UndoManager
 
   def createGrid(): Unit

@@ -13,8 +13,8 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid {
   @Inject()
   def this() = this(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
 
-  val colCount = 7
-  val rowCount = 6
+  override val colCount = 7
+  override val rowCount = 6
 
   override def cell(row: Int, col: Int): Cell = rows(row)(col)
 
