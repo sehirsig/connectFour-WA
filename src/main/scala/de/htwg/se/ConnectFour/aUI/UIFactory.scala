@@ -4,9 +4,9 @@ import de.htwg.se.ConnectFour.controller.Controller
 
 object UIFactory {
   def apply(uiType:String, controller:Controller): Unit = {
-    uiType match {
-      case "gui" | "GUI" | "Gui" => GUI(controller).run()
-      case "tui" | "TUI" | "Tui" => TUI(controller).run()
+    uiType.toLowerCase() match {
+      case "gui" => GUI(controller).run()
+      case "tui" => TUI(controller).run()
     }
   }
 }

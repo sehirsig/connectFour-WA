@@ -10,7 +10,7 @@ case object Game {
   def main(args: Array[String]): Unit = {
     val injector: Injector = Guice.createInjector(new GameModule())
     val controller = injector.getInstance(classOf[Controller])
-    val uiType = "GUI"
+    val uiType = "tui"
 
     Try(UIFactory(uiType,controller)) match {
       case Success(v) => println("See you next time! Bye.")
