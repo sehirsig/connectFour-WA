@@ -27,21 +27,23 @@ class ControllerImplSpec extends AnyWordSpec with Matchers {
         override def update: Boolean = {
           updated = true; updated
         }
+
+        override def toString: String = updated.toString
       }
       controller.add(observer)
       "notify its Observer after grid creation" in {
         controller.createGrid()
-        observer.updated should be(true)
+        observer.toString should be("true")
         controller.grid should be(new GridImpl())
       }
       "notify its Observer which player has the turn" in {
         controller.whoseTurnIsIt()
-        observer.updated should be(true)
+        observer.toString should be("true")
         controller.currentPlayer should be(controller.players(0))
       }
       "notify its Observer after resetting the grid" in {
         controller.reset()
-        observer.updated should be(true)
+        observer.toString should be("true")
         controller.grid should be(new GridImpl())
       }
       "notify its Observer when a do/undo/redo step is done" should {
