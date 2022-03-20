@@ -21,8 +21,7 @@ lazy val root = project
     jacocoExcludes in Test := Seq(
       "de.htwg.se.ConnectFour.aUI*",
         "de.htwg.se.ConnectFour.model.fileio*",
-        "de.htwg.se.ConnectFour.Game*",
-        "de.htwg.se.ConnectFour.model.Error*",
+        "de.htwg.se.ConnectFour.Game*"
     ),
     libraryDependencies ++= {
       // Determine OS version of JavaFX binaries
