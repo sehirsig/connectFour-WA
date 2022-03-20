@@ -49,13 +49,12 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp {
    * when method is running
    */
   def begin(): Unit = {
-    do {
-      val playerSize = controller.players.size
-      playerSize match {
-        case 0 => typeName()
-        case 1 => typeName()
-      }
-    } while (controller.players.size < 2)
+    while (controller.players.size < 2) {
+        controller.players.size match {
+          case 0 => typeName()
+          case 1 => typeName()
+        }
+    }
     execute("") // changing the state
   }
 

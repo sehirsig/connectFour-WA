@@ -1,20 +1,20 @@
 package de.htwg.se.ConnectFour.controller.impl
 
-import com.google.inject.{Guice, Inject, Injector}
+import com.google.inject.{Guice, Inject, Key}
 import de.htwg.se.ConnectFour.GameModule
 import de.htwg.se.ConnectFour.controller.Controller
 import de.htwg.se.ConnectFour.model.fileio.FileIO
 import de.htwg.se.ConnectFour.model.grid.{Grid, Piece}
 import de.htwg.se.ConnectFour.model.player.{Player, PlayerBuilder}
 import de.htwg.se.ConnectFour.util.UndoManager
-import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 
 /**
  *  Controller implementation
  */
 class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder) extends Controller {
-  val injector: Injector = Guice.createInjector(new GameModule)
-  val fileIo: FileIO = injector.instance[FileIO]
+  val injector = Guice.createInjector(new GameModule)
+  val fileIo = injector.getInstance(classOf[FileIO])
+
   var players: Vector[Player] = Vector.empty
   var moveCount = 0
   var currentPlayer:Player = _

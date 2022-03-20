@@ -5,6 +5,6 @@ package de.htwg.se.ConnectFour.util
  * Template pattern
  */
 trait UI{
-  def processInput(input: String)
-  def run():Unit
+  def processInput(input: String): Unit
+  def run(): Unit
 }

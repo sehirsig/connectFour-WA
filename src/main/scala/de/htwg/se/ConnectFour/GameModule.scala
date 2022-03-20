@@ -1,5 +1,7 @@
 package de.htwg.se.ConnectFour
+
 import com.google.inject.AbstractModule
+import com.google.inject.name.Names
 import de.htwg.se.ConnectFour.controller.Controller
 import de.htwg.se.ConnectFour.controller.impl.ControllerImpl
 import de.htwg.se.ConnectFour.model.fileio.FileIO
@@ -17,10 +19,10 @@ import net.codingwell.scalaguice.ScalaModule
  */
 class GameModule extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
-    bind[PlayerBuilder].to[PlayerBuilderImpl]
-    bind[Grid].to[GridImpl]
-    bind[FileIO].to[json.FileIOImpl]
-    //bind[FileIO].to[xml.FileIOImpl]
-    bind[Controller].to[ControllerImpl]
+    bind(classOf[PlayerBuilder]).to(classOf[PlayerBuilderImpl])
+    bind(classOf[Grid]).to(classOf[GridImpl])
+    bind(classOf[FileIO]).to(classOf[json.FileIOImpl])
+    //bind(classOf[FileIO]).to(classOf[xml.FileIOImpl])
+    bind(classOf[Controller]).to(classOf[ControllerImpl])
   }
 }
