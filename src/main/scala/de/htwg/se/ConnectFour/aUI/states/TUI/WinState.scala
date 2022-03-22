@@ -7,7 +7,7 @@ import de.htwg.se.ConnectFour.controller.Controller
  */
 case class WinState(controller: Controller) extends State[GameState] {
   override def handle(input: String, state: GameState): Unit = {
-    if (input == "won") {
+    if (controller.checkWin()) {
       if (controller.currentPlayer.color.equals("red"))
         println(Console.RED + "BOOOOOOOOOOM!!!! Player " +
           controller.currentPlayer.playerNumber + " called " +
