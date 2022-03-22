@@ -1,5 +1,5 @@
 [![Scala CI](https://github.com/sehirsig/connectFour/actions/workflows/scala.yml/badge.svg?branch=SA-01_Scala-3&kill_cache=1)](https://github.com/sehirsig/connectFour/actions/workflows/scala.yml)
-[![Coverage Status](https://coveralls.io/repos/github/sehirsig/connectFour/badge.svg?branch=master)](https://coveralls.io/github/sehirsig/connectFour?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/sehirsig/connectFour/badge.svg?branch=SA-01_Scala-3)](https://coveralls.io/github/sehirsig/connectFour?branch=SA-01_Scala-3)
 
 
 Connect Four is a two-player connection board game, in which the players choose a color and then take turns dropping colored discs into a seven-column, six-row vertically suspended grid. \
