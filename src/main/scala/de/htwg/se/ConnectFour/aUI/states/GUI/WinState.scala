@@ -9,7 +9,6 @@ import scalafx.scene.control.Alert.AlertType
  * WinState of GUI
  */
 case class WinState(controller: Controller) extends State[GameState]:
-
   override def handle(input: String, gui: GUI, state: GameState) =
     if input == "won" then
       if controller.currentPlayer.color.equals("red") then
