@@ -61,11 +61,11 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
    * when method is running
    */
   def begin() =
-    while (controller.players.size < 2) {
+    while controller.players.size < 2 do
         controller.players.size match
           case 0 => typeName()
           case 1 => typeName()
-    }
+
     execute("") // changing the state
 
   /**
@@ -162,7 +162,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
         controller.saveGame()
       }
       onMouseEntered = _ => effect = new Glow(0.7)
-      onMouseExited = _ => effect = null
+      onMouseExited = _ => effect = new Glow(0)
     }
 
     val load = new Button("Load") {
@@ -173,7 +173,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
         controller.loadGame()
       }
       onMouseEntered = _ => effect = new Glow(0.7)
-      onMouseExited = _ => effect = null
+      onMouseExited = _ => effect = new Glow(0)
     }
 
     val undo = new Button("Undo") {
@@ -184,7 +184,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
         execute("u")
       }
       onMouseEntered = _ => effect = new Glow(0.7)
-      onMouseExited = _ => effect = null
+      onMouseExited = _ => effect = new Glow(0)
     }
 
     val redo = new Button("Redo") {
@@ -195,7 +195,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
         execute("r")
       }
       onMouseEntered = _ => effect = new Glow(0.7)
-      onMouseExited = _ => effect = null
+      onMouseExited = _ => effect = new Glow(0)
     }
 
     val newGame = new Button("New Game") {
@@ -206,7 +206,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
         execute("n")
       }
       onMouseEntered = _ => effect = new Glow(0.7)
-      onMouseExited = _ => effect = null
+      onMouseExited = _ => effect = new Glow(0)
     }
     add(undo, 0, 0)
     add(redo, 0, 1)

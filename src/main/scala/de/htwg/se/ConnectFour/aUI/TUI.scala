@@ -22,7 +22,7 @@ case class TUI(controller: Controller) extends UI with Observer:
     println(Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙" + Console.GREEN + " With typing 'q' you can quit " + Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙")
 
     var input:String = ""
-    while (input != "q")
+    while input != "q" do
       input = readLine()
       if !input.isEmpty then
         processInput(input)
@@ -33,7 +33,7 @@ case class TUI(controller: Controller) extends UI with Observer:
 
   def execute(input:String) =
     gameState.handle(input)
-
+  
   override def update: Boolean =
-    print(controller.gridToString())
+    print(this.controller.gridToString())
     true

@@ -7,7 +7,6 @@ import de.htwg.se.ConnectFour.controller.Controller
  * InitialState of GUI
  */
 case class InitialState(controller: Controller, gui:GUI) extends State[GameState]:
-  
   override def handle(input: String,gui:GUI,state: GameState) =
     if controller.players.size == controller.maxPlayers then
       state.changeState(DropState(controller))

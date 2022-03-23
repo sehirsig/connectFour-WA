@@ -15,9 +15,8 @@ case class DropState(controller: Controller) extends State[GameState]:
     if controller.checkWin() then
       state.changeState(WinState(controller))
       state.handle("won")
-    if input == "u" then
-      controller.undoDrop()
-    if input == "r" then
-      controller.redoDrop()
-    if input == "n" then
-      controller.reset()
+    input.toString match
+      case "u" => controller.undoDrop()
+      case "r" => controller.redoDrop()
+      case "n" => controller.reset()
+      case _ =>
