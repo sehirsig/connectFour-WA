@@ -6,7 +6,6 @@ lazy val root = project
     name := "ConnectFour",
     version := "0.5.0-SNAPSHOT",
     scalaVersion := scala3Version,
-    //crossScalaVersions ++= Seq("2.13.5", "3.0.2"),
     libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % "test",
     libraryDependencies += ("org.scalafx" %% "scalafx" % "17.0.1-R26"),

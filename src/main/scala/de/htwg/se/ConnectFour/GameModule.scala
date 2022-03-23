@@ -17,12 +17,10 @@ import net.codingwell.scalaguice.ScalaModule
  * here is dependency injection
  * being done for the game components
  */
-class GameModule extends AbstractModule {
-  override def configure(): Unit = {
+class GameModule extends AbstractModule:
+  override def configure() =
     bind(classOf[PlayerBuilder]).to(classOf[PlayerBuilderImpl])
     bind(classOf[Grid]).to(classOf[GridImpl])
     bind(classOf[FileIO]).to(classOf[json.FileIOImpl])
     //bind(classOf[FileIO]).to(classOf[xml.FileIOImpl])
     bind(classOf[Controller]).to(classOf[ControllerImpl])
-  }
-}

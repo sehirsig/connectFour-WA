@@ -6,24 +6,18 @@ import de.htwg.se.ConnectFour.controller.Controller
 /**
  * DropState of TUI
  */
-case class DropState(controller: Controller) extends State[GameState] {
-  override def handle(input: String,gui:GUI, state: GameState): Unit = {
+case class DropState(controller: Controller) extends State[GameState]:
+  
+  override def handle(input: String,gui:GUI, state: GameState) =
     val regExCheck = "([0-6])".r
-    if (regExCheck.matches(input))
+    if regExCheck.matches(input) then
       controller.drop(input)
-    if (controller.checkWin()) {
+    if controller.checkWin() then
       state.changeState(WinState(controller))
       state.handle("won")
-    }
-    if (input == "u") {
+    if input == "u" then
       controller.undoDrop()
-    }
-    if (input == "r") {
+    if input == "r" then
       controller.redoDrop()
-    }
-    if (input == "n") {
+    if input == "n" then
       controller.reset()
-    }
-  }
-
-}

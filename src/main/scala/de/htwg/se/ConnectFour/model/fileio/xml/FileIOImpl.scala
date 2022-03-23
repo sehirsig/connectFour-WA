@@ -11,9 +11,9 @@ import scala.xml.PrettyPrinter
  * FileIO implementation
  * for exporting the game as XML File
  */
-class FileIOImpl() extends FileIO {
+class FileIOImpl() extends FileIO:
 
-  override def load(controller:Controller): Unit = {
+  override def load(controller:Controller) =
     val file = scala.xml.XML.loadFile("game.xml")
     val currentPlayer = (file \\ "game" \\ "player" \\ "currentPlayer").text
     val player1 = (file \\ "game" \\ "player" \\ "player1").text
@@ -24,10 +24,9 @@ class FileIOImpl() extends FileIO {
     controller.setMoveCount(moveCount)
     controller.addPlayer(player1)
     controller.addPlayer(player2)
-    currentPlayer match {
+    currentPlayer match
       case player1 => controller.setCurrentPlayer(controller.players(0))
       case player2 => controller.setCurrentPlayer(controller.players(1))
-    }
 
     val cellNodes = (file \\ "grid" \\ "cell")
     for (cell <- cellNodes) {
@@ -35,16 +34,16 @@ class FileIOImpl() extends FileIO {
       val col: Int = (cell \\ "@col").text.toInt
       val value: Int = cell.text.trim.toInt
 
-      val optPiece = (value) match {
+      val optPiece = value match
         case 1 => Some(grid.Piece(controller.players(0)))
         case 2 => Some(grid.Piece(controller.players(1)))
         case _ => None
-      }
+
       newGrid = newGrid.replaceCell(row, col, Cell(optPiece))
     }
     controller.setGrid(newGrid)
-  }
-  def gameToXml(controller: Controller) = {
+
+  def gameToXml(controller: Controller) =
     <game>
       <player>
         <moveCount>
@@ -66,10 +65,9 @@ class FileIOImpl() extends FileIO {
     row <- (0 to controller.getGrid().rowCount - 1).reverse
     }
     yield {
-      var player = controller.getGrid().cell(row, col).piece match {
+      var player = controller.getGrid().cell(row, col).piece match
         case Some(s) => s.player.playerNumber
         case None => -1
-      }
       <cell row={ row.toString } col={ col.toString }>
         { player.toString }
       </cell>
@@ -77,13 +75,11 @@ class FileIOImpl() extends FileIO {
       }
     </grid>
     </game>
-  }
-  override def save(game: Controller): Unit = {
+
+  override def save(game: Controller) =
     import java.io._
     val pw = new PrintWriter(new File("game.xml"))
     val prettyPrinter = new PrettyPrinter(120, 4)
     val xml = prettyPrinter.format(gameToXml(game))
     pw.write(xml)
     pw.close()
-  }
-}

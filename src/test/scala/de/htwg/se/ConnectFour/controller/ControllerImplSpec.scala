@@ -10,7 +10,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Failure
 
-class ControllerImplSpec extends AnyWordSpec with Matchers {
+class ControllerImplSpec extends AnyWordSpec with Matchers:
   val controller = new ControllerImpl(new GridImpl, new PlayerBuilderImpl())
   controller.moveCount = 0
   controller.addPlayer("Player1")
@@ -103,4 +103,3 @@ class ControllerImplSpec extends AnyWordSpec with Matchers {
       controller.moveCount should be (203)
     }
   }
-}

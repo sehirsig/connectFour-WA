@@ -5,7 +5,7 @@ import de.htwg.se.ConnectFour.model.player.impl.{PlayerBuilderImpl, PlayerImpl}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class CellSpec extends AnyWordSpec with Matchers {
+class CellSpec extends AnyWordSpec with Matchers:
   "A Cell" when {
     "not set to any value " should {
       val emptyCell = Cell(None)
@@ -34,4 +34,3 @@ class CellSpec extends AnyWordSpec with Matchers {
       }
     }
   }
-}

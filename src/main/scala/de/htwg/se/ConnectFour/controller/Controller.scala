@@ -7,7 +7,7 @@ import de.htwg.se.ConnectFour.util.{Observable, UndoManager}
 /**
  * Controller Trait
  */
-trait Controller extends Observable{
+trait Controller extends Observable:
   var players: Vector[Player]
   var moveCount:Int
   var currentPlayer:Player
@@ -33,4 +33,3 @@ trait Controller extends Observable{
   def setGrid(grid:Grid): Unit
   def setCurrentPlayer(currentPlayer:Player): Unit
   def setMoveCount(moveCount:Int): Unit
-}

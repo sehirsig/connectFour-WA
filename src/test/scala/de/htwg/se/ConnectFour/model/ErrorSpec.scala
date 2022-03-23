@@ -4,7 +4,7 @@ import de.htwg.se.ConnectFour.model.Error
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class ErrorSpec extends AnyWordSpec with Matchers  {
+class ErrorSpec extends AnyWordSpec with Matchers:
   "An Error" when {
     "set up" should {
       var error1 = CannotDropPiece()
@@ -22,4 +22,3 @@ class ErrorSpec extends AnyWordSpec with Matchers  {
       }
     }
   }
-}

@@ -3,13 +3,10 @@ package de.htwg.se.ConnectFour.model.grid
 /**
  * Cell case class
  */
-case class Cell(piece: Option[Piece]) {
+case class Cell(piece: Option[Piece]):
   def isSet: Boolean = piece.isDefined
 
-  override def toString: String = {
-    piece match {
+  override def toString: String =
+    piece match
       case None => Console.BLUE + "_ "
       case Some(value) => value.toString
-    }
-  }
-}

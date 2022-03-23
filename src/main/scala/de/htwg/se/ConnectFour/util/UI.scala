@@ -4,7 +4,6 @@ package de.htwg.se.ConnectFour.util
  * UI Trait
  * Template pattern
  */
-trait UI{
+trait UI:
   def processInput(input: String): Unit
   def run(): Unit
-}

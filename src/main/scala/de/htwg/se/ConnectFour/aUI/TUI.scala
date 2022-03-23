@@ -9,11 +9,12 @@ import scala.io.StdIn.readLine
 /**
  * ConnectFour text-based user interface
  */
-case class TUI(controller: Controller) extends UI with Observer{
+case class TUI(controller: Controller) extends UI with Observer:
+
   controller.add(this)
   var gameState:GameState = GameState(controller)
 
-  override def run(): Unit = {
+  override def run() =
     println(Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙◙◙" + Console.RED + " WELCOME TO CONNECT FOUR " + Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙◙")
     println("◙◙◙◙◙◙◙◙◙◙◙◙◙" + Console.BLUE + "Type 2 player names first." + Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙")
     println(Console.BLUE + "◙◙" + Console.YELLOW + " You can start playing by typing a column number 0-6 " + Console.BLUE + "◙")
@@ -21,26 +22,18 @@ case class TUI(controller: Controller) extends UI with Observer{
     println(Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙" + Console.GREEN + " With typing 'q' you can quit " + Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙")
 
     var input:String = ""
-    while (input != "q") {
+    while (input != "q")
       input = readLine()
-      if (!input.isEmpty) {
+      if !input.isEmpty then
         processInput(input)
-      }
-    }
-  }
 
-  override def processInput(input: String):Unit = {
-    input match {
-      case _ => execute(input);
-    }
-  }
+  override def processInput(input: String) =
+    input match
+      case _ => execute(input)
 
-  def execute(input:String): Unit = {
+  def execute(input:String) =
     gameState.handle(input)
-  }
 
-  override def update: Boolean =  {
+  override def update: Boolean =
     print(controller.gridToString())
     true
-  }
-}

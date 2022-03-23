@@ -8,7 +8,7 @@ import de.htwg.se.ConnectFour.model.player.impl.PlayerImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class GridSpec extends AnyWordSpec with Matchers {
+class GridSpec extends AnyWordSpec with Matchers:
 
   "A Grid" when {
       val grid = new GridImpl()
@@ -185,5 +185,3 @@ class GridSpec extends AnyWordSpec with Matchers {
 
     }
   }
-
-}

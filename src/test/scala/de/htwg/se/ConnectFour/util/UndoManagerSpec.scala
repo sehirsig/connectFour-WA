@@ -3,8 +3,7 @@ package de.htwg.se.ConnectFour.util
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class UndoManagerSpec extends AnyWordSpec with Matchers {
-
+class UndoManagerSpec extends AnyWordSpec with Matchers:
   "An UndoManager" should {
     val undoManager = new UndoManager
 
@@ -44,4 +43,3 @@ class UndoManagerSpec extends AnyWordSpec with Matchers {
       command.state should be(0)
     }
   }
-}

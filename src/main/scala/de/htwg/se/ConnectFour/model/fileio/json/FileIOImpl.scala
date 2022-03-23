@@ -13,9 +13,9 @@ import scala.io.Source
  * FileIO implementation
  * for exporting the game as JSON File
  */
-class FileIOImpl @Inject () extends FileIO {
+class FileIOImpl @Inject () extends FileIO:
 
-  override def load(controller:Controller): Unit = {
+  override def load(controller:Controller) =
     val source: String = Source.fromFile("game.json").getLines.mkString
     val gameJson: JsValue = Json.parse(source)
     val grid = (gameJson \ "grid")
@@ -29,27 +29,25 @@ class FileIOImpl @Inject () extends FileIO {
     controller.setMoveCount(moveCount)
     controller.addPlayer(player1)
     controller.addPlayer(player2)
-    currentPlayer match {
+    currentPlayer match
       case player1 => controller.setCurrentPlayer(controller.players(0))
       case player2 => controller.setCurrentPlayer(controller.players(1))
-    }
+
     val cells = (grid \ "cells").as[JsArray]
-    for (cell <- cells.value) {
+    for (cell <- cells.value) do
       val row = (cell \ "row").get.as[Int]
       val col = (cell \ "col").get.as[Int]
       val value = (cell \ "value").get.as[Int]
 
-      val optPiece = (value) match {
+      val optPiece = value match
         case 1 => Some(Piece(controller.players(0)))
         case 2 => Some(Piece(controller.players(1)))
         case _ => None
-      }
       newGrid = newGrid.replaceCell(row, col, Cell(optPiece))
-    }
-    controller.setGrid(newGrid)
-  }
 
-  def gameToJson(controller: Controller): JsValue = {
+    controller.setGrid(newGrid)
+
+  def gameToJson(controller: Controller): JsValue =
     Json.obj(
       "player" -> Json.obj(
         "moveCount" -> Json.obj(
@@ -72,10 +70,10 @@ class FileIOImpl @Inject () extends FileIO {
                }
           yield {
 
-            var player = controller.getGrid().cell(row, col).piece match {
+            var player = controller.getGrid().cell(row, col).piece match
                 case Some(s) => s.player.playerNumber
                 case None => -1
-              }
+                
             Json.obj(
               "row" -> row,
               "col" -> col,
@@ -85,11 +83,8 @@ class FileIOImpl @Inject () extends FileIO {
         )
       )
     )
-  }
 
-  override def save(game: Controller): Unit = {
+  override def save(game: Controller) =
     val pw = new PrintWriter(new File("game.json"))
     pw.write(Json.prettyPrint(gameToJson(game)))
     pw.close
-  }
-}

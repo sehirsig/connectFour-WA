@@ -4,16 +4,15 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 
 
-class incrCommand extends Command {
-  var state:Int =0
+class incrCommand extends Command:
+  var state:Int = 0
   override def doStep: Unit = state+=1
 
   override def undoStep: Unit = state-=1
 
   override def redoStep: Unit = state+=1
-}
 
-class CommandSpec extends AnyWordSpec with Matchers {
+class CommandSpec extends AnyWordSpec with Matchers:
   "A Command" should {
 
     "have a do step" in {
@@ -44,4 +43,3 @@ class CommandSpec extends AnyWordSpec with Matchers {
       command.state should be(1)
     }
   }
-}

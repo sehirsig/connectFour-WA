@@ -4,15 +4,14 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 
 
-class ObservableSpec extends AnyWordSpec with Matchers {
+class ObservableSpec extends AnyWordSpec with Matchers:
   "An Observable" should {
     val observable = new Observable
-    val observer = new Observer {
+    val observer = new Observer:
       var updated: Boolean = false
       def isUpdated: Boolean = updated
       override def update: Boolean = { updated=true;updated}
       override def toString: String = updated.toString
-    }
     "add an Observer" in {
       observable.add(observer)
       observable.subscribers should contain (observer)
@@ -27,4 +26,3 @@ class ObservableSpec extends AnyWordSpec with Matchers {
       observable.subscribers should not contain (observer)
     }
   }
-}

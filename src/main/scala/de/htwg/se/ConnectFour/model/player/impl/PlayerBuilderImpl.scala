@@ -6,9 +6,7 @@ import com.google.inject.Inject
 /**
  *  Player Builder implementation
  */
-case class PlayerBuilderImpl @Inject()() extends PlayerBuilder {
+case class PlayerBuilderImpl @Inject()() extends PlayerBuilder:
 
-   override def createPlayer(name: String, number: Int): Player = {
+   override def createPlayer(name: String, number: Int): Player =
      PlayerImpl(name, number)
-  }
-}

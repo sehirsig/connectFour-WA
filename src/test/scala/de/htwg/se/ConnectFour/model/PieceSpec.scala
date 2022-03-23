@@ -5,7 +5,7 @@ import de.htwg.se.ConnectFour.model.player.impl.PlayerImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class PieceSpec extends AnyWordSpec with Matchers {
+class PieceSpec extends AnyWordSpec with Matchers:
   "A Piece" when {
     "new" should {
       val player1 = PlayerImpl("Your Name", 1)
@@ -18,4 +18,3 @@ class PieceSpec extends AnyWordSpec with Matchers {
       }
     }
   }
-}

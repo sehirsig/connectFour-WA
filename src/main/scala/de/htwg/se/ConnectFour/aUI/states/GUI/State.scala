@@ -7,6 +7,5 @@ import de.htwg.se.ConnectFour.aUI.GUI
  * Implementation of State
  * pattern in the GUI package
  */
-trait State[T] {
+trait State[T]:
   def handle(input:String,gui:GUI,state:T): Unit
-}

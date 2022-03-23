@@ -18,11 +18,11 @@ import scalafx.scene.text.Text
  * ConnectFour graphical user interface
  * based on ScalaFX
  */
-case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
+case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
   controller.add(this)
   var gameState: GameState = GameState(controller, this)
 
-  override def start(): Unit = {
+  override def start() =
     stage = new JFXApp3.PrimaryStage {
       title.value = "ConnectFour Game"
       minWidth = 650
@@ -38,13 +38,10 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
         begin()
       }
     }
-  }
 
-  def run(): Unit = {
-    main(Array())
-  }
+  def run() = main(Array())
 
-  def typeName(): Unit = {
+  def typeName() =
     val dialog = new TextInputDialog(defaultValue = "Player " + (controller.players.size + 1)) {
       initOwner(stage)
       title = "ConnectFour Game"
@@ -55,32 +52,28 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
     }
 
     val result = dialog.showAndWait()
-    result match {
+    result match
       case Some(name) => controller.addPlayer(name)
       case None => println("Please type a name!")
-    }
-  }
 
   /**
    * Force to type in names
    * when method is running
    */
-  def begin(): Unit = {
+  def begin() =
     while (controller.players.size < 2) {
-        controller.players.size match {
+        controller.players.size match
           case 0 => typeName()
           case 1 => typeName()
-        }
     }
     execute("") // changing the state
-  }
 
   /**
    * Method to create a gamefield button.
    * On mouse click the button passes
    * its y-value to the gameState
    */
-  def gameFieldButton(y: Int): Button = {
+  def gameFieldButton(y: Int): Button =
     val gameFieldButton = new Button {
       style = "-fx-font: normal bold 16pt sans-serif;  -fx-border-color: lightgrey; -fx-text-fill: black; -fx-background-color: #e6f3ff;"
       onMouseClicked = _ => {
@@ -88,7 +81,6 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
       }
     }
     gameFieldButton
-  }
 
   val gameLogo: HBox = new HBox {
     style = "-fx-background-color: #b3daff;"
@@ -127,19 +119,17 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
     gridLinesVisible = false
     padding = Insets(70)
     var i = 0
-    for (_ <- 0 until controller.getGrid().colCount) {
-      if (i < 6) {
+    for (_ <- 0 until controller.getGrid().colCount) do
+      if i < 6 then
         val row = new RowConstraints() {
           percentHeight = 100.0 / controller.getGrid().rowCount
         }
         rowConstraints.add(row)
-      }
       val column = new ColumnConstraints() {
         percentWidth = 100.0 / controller.getGrid().colCount
       }
       columnConstraints.add(column)
       i += 1
-    }
   }
 
   /**
@@ -158,12 +148,11 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
     rowConstraints.add(rows)
     rowConstraints.add(rows)
 
-    for (_ <- 0 until 3) {
+    for (_ <- 0 until 3) do
       val col = new ColumnConstraints() {
         percentWidth = 80
       }
       columnConstraints.add(col)
-    }
 
     val save = new Button("Save") {
       padding = Insets(10)
@@ -231,54 +220,46 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
    * This method needs to be run
    * to show the latest drops.
    */
-  def refreshView(): Unit = {
-    try {
-      for (x <- 0 to controller.getGrid().colCount - 1; y <- (0 to controller.getGrid().rowCount - 1).reverse) {
+  def refreshView() =
+    try
+      for (x <- 0 to controller.getGrid().colCount - 1; y <- (0 to controller.getGrid().rowCount - 1).reverse) do
         /**
          * Reversing the y values so the dropped pieces
          * are landing at the bottom
          **/
-        var reverseY = y match {
+        var reverseY = y match
           case 0 => 5
           case 1 => 4
           case 2 => 3
           case 3 => 2
           case 4 => 1
           case 5 => 0
-        }
+
         val piece: Button = gameFieldButton(x)
-        if (controller.getGrid().cell(y, x).isSet) {
-          val img = controller.getGrid().cell(y, x).piece.get.player.playerNumber match {
+        if controller.getGrid().cell(y, x).isSet then
+          val img = controller.getGrid().cell(y, x).piece.get.player.playerNumber match
             case 1 => new Image("/red.png")
             case 2 => new Image("/yellow.png")
-          }
+
           val imgView = new ImageView(img)
           imgView.setFitHeight(35)
           imgView.setFitWidth(35)
           imgView.setPreserveRatio(true)
           piece.setGraphic(imgView)
           piece.setMaxSize(Double.MaxValue, Double.MaxValue)
-        }
+
         piece.setMaxSize(Double.MaxValue, Double.MaxValue)
         gameGrid.add(piece, x, reverseY)
-      }
-    } catch {
+    catch
       case any => print(any)
-    }
-  }
 
-  override def processInput(input: String):Unit = {
-    input match {
-      case _ => execute(input);
-    }
-  }
+  override def processInput(input: String) =
+    input match
+      case _ => execute(input)
 
-  def execute(input:String): Unit = {
+  def execute(input:String) =
     gameState.handle(input)
-  }
 
-  override def update: Boolean = {
+  override def update: Boolean =
     refreshView()
     true
-  }
-}

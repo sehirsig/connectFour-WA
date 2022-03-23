@@ -5,7 +5,7 @@ import de.htwg.se.ConnectFour.model.player.Player
 /**
  * Grid Trait
  */
-trait Grid {
+trait Grid:
   val rows: Vector[Vector[Cell]]
   val rowCount:Int
   val colCount:Int
@@ -18,4 +18,3 @@ trait Grid {
   def winPatternVertical(currentPlayer:Player):Option[Boolean]
   def winPatternAscendingDiagonal(currentPlayer:Player):Option[Boolean]
   def winPatternDescendingDiagonal(currentPlayer:Player):Option[Boolean]
-}
