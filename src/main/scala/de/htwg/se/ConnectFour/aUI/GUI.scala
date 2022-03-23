@@ -2,8 +2,8 @@ package de.htwg.se.ConnectFour.aUI;
 import de.htwg.se.ConnectFour.aUI.states.GUI.GameState
 import de.htwg.se.ConnectFour.controller.Controller
 import de.htwg.se.ConnectFour.util.{Observer, UI}
-import scalafx.application.JFXApp
-import scalafx.application.JFXApp.PrimaryStage
+import scalafx.application.JFXApp3
+import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, TextInputDialog}
@@ -14,14 +14,31 @@ import scalafx.scene.paint.Color.{Black, DarkRed, LightYellow, Red, Yellow}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
 
-
 /**
  * ConnectFour graphical user interface
  * based on ScalaFX
  */
-case class GUI(controller: Controller) extends UI with Observer with JFXApp {
+case class GUI(controller: Controller) extends UI with Observer with JFXApp3 {
   controller.add(this)
   var gameState: GameState = GameState(controller, this)
+
+  override def start(): Unit = {
+    stage = new JFXApp3.PrimaryStage {
+      title.value = "ConnectFour Game"
+      minWidth = 650
+      minHeight = 900
+      resizable = true
+      scene = new Scene {
+        root = new BorderPane {
+          style = "-fx-border-color: #353535; -fx-background-color: #b3daff;"
+          top = gameLogo
+          center = gameGrid
+          bottom = bottombar
+        }
+        begin()
+      }
+    }
+  }
 
   def run(): Unit = {
     main(Array())
@@ -209,21 +226,6 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp {
     add(load, 2, 1)
   }
 
-  stage = new PrimaryStage {
-    title.value = "ConnectFour Game"
-    minWidth = 650
-    minHeight = 900
-    resizable = true
-    scene = new Scene {
-      root = new BorderPane {
-        style = "-fx-border-color: #353535; -fx-background-color: #b3daff;"
-        top = gameLogo
-        center = gameGrid
-        bottom = bottombar
-      }
-      begin()
-    }
-  }
 
   /**
    * This method needs to be run
