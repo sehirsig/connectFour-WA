@@ -8,9 +8,9 @@ import scala.util.{Failure, Success, Try}
 
 case object Game:
   @main def run =
-    val injector: Injector = Guice.createInjector(new GameModule())
+    val injector: Injector = Guice.createInjector(GameModule())
     val controller = injector.getInstance(classOf[Controller])
-    val uiType = "tui"
+    val uiType = "gui"
 
     Try(UIFactory(uiType,controller)) match
       case Success(v) => println("See you next time! Bye.")

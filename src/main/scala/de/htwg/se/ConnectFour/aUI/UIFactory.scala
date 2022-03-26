@@ -7,6 +7,6 @@ object UIFactory:
   def apply(uiType:String, controller:Controller) =
     uiType.toLowerCase() match
       case "gui" =>
-        new JFXPanel()
+        JFXPanel()
         GUI(controller).run()
       case "tui" => TUI(controller).run()

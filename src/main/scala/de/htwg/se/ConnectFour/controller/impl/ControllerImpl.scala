@@ -12,7 +12,7 @@ import de.htwg.se.ConnectFour.util.UndoManager
  *  Controller implementation
  */
 class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder) extends Controller:
-  val injector = Guice.createInjector(new GameModule)
+  val injector = Guice.createInjector(GameModule())
   val fileIo = injector.getInstance(classOf[FileIO])
 
   var players: Vector[Player] = Vector.empty
