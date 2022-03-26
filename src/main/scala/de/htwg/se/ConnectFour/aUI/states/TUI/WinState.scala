@@ -10,7 +10,7 @@ import scala.io.AnsiColor
 case class WinState(controller: Controller) extends State[GameState]:
   //Extension Methods
   extension (con:Controller)
-    def printWinner(color:String):Unit = println(color + "BOOOOOOOOOOM!!!! Player " +
+    def printWinner(color: "\u001B[31m" | "\u001B[33m"):Unit = println(color + "BOOOOOOOOOOM!!!! Player " +
       con.currentPlayer.playerNumber + " called " +
       con.currentPlayer.playerName + " has won the game.")
     def printWinnerRed:Unit = printWinner(AnsiColor.RED)
