@@ -6,13 +6,18 @@ lazy val root = project
     name := "ConnectFour",
     version := "0.5.0-SNAPSHOT",
     scalaVersion := scala3Version,
+
     libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % "test",
+
     libraryDependencies += ("org.scalafx" %% "scalafx" % "17.0.1-R26"),
+
     libraryDependencies += ("com.google.inject" % "guice"% "5.1.0"),
     libraryDependencies += ("net.codingwell" %% "scala-guice" % "5.0.1").cross(CrossVersion.for3Use2_13),
+
     libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.1",
     libraryDependencies += ("com.typesafe.play" %% "play-json" % "2.10.0-RC6"),
+
     jacocoCoverallsServiceName := "github-actions",
     jacocoCoverallsBranch := sys.env.get("CI_BRANCH"),
     jacocoCoverallsPullRequest := sys.env.get("GITHUB_EVENT_NAME"),
