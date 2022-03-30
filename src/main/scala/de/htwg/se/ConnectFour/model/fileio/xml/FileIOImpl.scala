@@ -78,7 +78,7 @@ class FileIOImpl() extends FileIO:
 
   override def save(game: Controller) =
     import java.io._
-    val pw = PrintWriter(new File("game.xml"))
+    val pw = PrintWriter(File("game.xml"))
     val prettyPrinter = PrettyPrinter(120, 4)
     val xml = prettyPrinter.format(gameToXml(game))
     pw.write(xml)
