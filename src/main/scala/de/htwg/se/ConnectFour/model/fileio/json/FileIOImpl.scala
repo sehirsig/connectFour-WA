@@ -85,6 +85,6 @@ class FileIOImpl @Inject () extends FileIO:
     )
 
   override def save(game: Controller) =
-    val pw = new PrintWriter(new File("game.json"))
+    val pw = PrintWriter(new File("game.json"))
     pw.write(Json.prettyPrint(gameToJson(game)))
     pw.close
