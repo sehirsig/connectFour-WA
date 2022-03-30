@@ -14,7 +14,6 @@ trait Grid:
   def drop(column: Int, piece: Piece): Grid
   def reset(): Grid
   def checkWin(currentPlayer:Player):Boolean
-  def winPatternHorizontal(currentPlayer:Player):Option[Boolean]
-  def winPatternVertical(currentPlayer:Player):Option[Boolean]
-  def winPatternAscendingDiagonal(currentPlayer:Player):Option[Boolean]
-  def winPatternDescendingDiagonal(currentPlayer:Player):Option[Boolean]
+  def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Option[Boolean]
+  def checkP(currentPiece:Option[Piece])(firstChip:(Int,Int), chipSet:(Int,Int)):Boolean
+  

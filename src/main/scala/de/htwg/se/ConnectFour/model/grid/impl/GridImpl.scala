@@ -29,42 +29,57 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
     new GridImpl()
 
   override def checkWin(currentPlayer:Player):Boolean =
-    val checkList:List[Option[Boolean]] = List(winPatternHorizontal(currentPlayer),winPatternVertical(currentPlayer),winPatternAscendingDiagonal(currentPlayer),winPatternDescendingDiagonal(currentPlayer))
+    val horizontal = winPattern(Some(Piece(currentPlayer)))(rowCount - 1,colCount - 4,(0,1))
+    val vertical = winPattern(Some(Piece(currentPlayer)))(rowCount - 3,colCount - 1,(1,0))
+    val ascendingDiagonal = winPattern(Some(Piece(currentPlayer)))(rowCount - 4,colCount - 4,(1,1))
+    val descendingDiagonal = winPattern(Some(Piece(currentPlayer)))(rowCount - 1,colCount - 3,(-1,1), 3)
+    val checkList:List[Option[Boolean]] = List(horizontal,vertical,ascendingDiagonal,descendingDiagonal)
 
-    val win = checkList.filterNot(f => f.isEmpty).contains(Some(true))
+    val win = checkList.filterNot(_.isEmpty).contains(Some(true))
     win
 
-  override def winPatternHorizontal(currentPlayer:Player):Option[Boolean] =
-    val currentPiece = Some(Piece(currentPlayer))
-    for (i <- 0 to rowCount - 1) do
-      for (j <- 0 to colCount - 4) do
-        if this.cell(i, j).piece == currentPiece && this.cell(i, j + 1).piece == currentPiece && this.cell(i, j + 2).piece == currentPiece && this.cell(i, j + 3).piece == currentPiece then
-          return Some(true)
-    None
+  def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Option[Boolean] =
+    //idx = rowMin für descendingDiagonla, damit idx bei rowMin anfängt!
+    if goThroughRow(currentPiece)(rowMin,rowMax,colMin, colMax,rowMin, chipSet) == Some(true) then
+      Some(true)
+    else
+      None
 
-  override def winPatternVertical(currentPlayer:Player):Option[Boolean] =
-    val currentPiece = Some(Piece(currentPlayer : Player))
-    for (i <- 0 to rowCount - 3) do
-      for (j <- 0 to colCount - 1) do
-        if this.cell(i, j).piece == currentPiece && this.cell(i + 1, j).piece == currentPiece && this.cell(i + 2, j).piece == currentPiece && this.cell(i + 3, j).piece == currentPiece then
-          return Some(true)
-    None
+  def goThroughRow(currentPiece:Option[Piece])(rowMin:Int,rowMax:Int, colMin:Int, colMax:Int, idx:Int,chipSet:(Int,Int)):Option[Boolean] =
+    if rowMax < idx || rowMin > idx then
+      Some(false)
+    else if goThroughCol(currentPiece)(colMin, colMax,0,idx, chipSet) == Some(true) then
+      Some(true)
+    else if goThroughRow(currentPiece)(rowMin, rowMax, colMin, colMax, idx + 1, chipSet) == Some(true) then
+      Some(true)
+    else
+      Some(false)
 
-  override def winPatternAscendingDiagonal(currentPlayer:Player):Option[Boolean] =
-    val currentPiece = Some(Piece(currentPlayer))
-    for (i <- 0 to rowCount - 4) do
-      for (j <- 0 to colCount - 4) do
-        if this.cell(i,j).piece == currentPiece && this.cell(i+1,j+1).piece == currentPiece && this.cell(i+2,j+2).piece == currentPiece && this.cell(i+3,j+3).piece == currentPiece then
-          return Some(true)
-    None
+  def goThroughCol(currentPiece:Option[Piece])(min:Int,max:Int,idx:Int,rowIdx:Int,chipSet:(Int,Int)):Option[Boolean] =
+    if max < idx || min > idx then
+      Some(false)
+    else if checkP(currentPiece)((rowIdx,idx), chipSet) then
+      Some(true)
+    else
+      goThroughCol(currentPiece)(min, max, idx + 1, rowIdx, chipSet)
 
-  override def winPatternDescendingDiagonal(currentPlayer:Player):Option[Boolean] =
-    val currentPiece = Some(Piece(currentPlayer))
-    for (i <- 3 to rowCount - 1) do
-      for (j <- 0 to colCount - 3) do
-        if this.cell(i, j).piece == currentPiece && this.cell(i - 1, j + 1).piece == currentPiece && this.cell(i - 2, j + 2).piece == currentPiece && this.cell(i - 3, j + 3).piece == currentPiece then
-          return Some(true)
-    None
+  extension (b:(Int,Int))
+    def add(c:(Int,Int)):(Int,Int)=
+      (b._1 + c._1, b._2 + c._2)
+    def multi(d:Int):(Int,Int)=
+      (b._1 * d, b._2 * d)
+
+  def checkP(currentPiece:Option[Piece])(firstChip:(Int,Int), chipSet:(Int,Int)):Boolean =
+    val c1 = firstChip.add(chipSet.multi(0))
+    val c2 = firstChip.add(chipSet.multi(1))
+    val c3 = firstChip.add(chipSet.multi(2))
+    val c4 = firstChip.add(chipSet.multi(3))
+
+    this.cell(c1._1,c1._2).piece == currentPiece &&
+      this.cell(c2._1, c2._2).piece == currentPiece &&
+      this.cell(c3._1, c3._2).piece == currentPiece &&
+      this.cell(c4._1, c4._2).piece == currentPiece
+
 
   override def toString: String =
     var empty = true

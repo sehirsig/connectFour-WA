@@ -87,7 +87,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         controller.grid = controller.grid.replaceCell(0,2, Cell(Some(Piece(controller.players(0)))))
         controller.grid = controller.grid.replaceCell(0,3, Cell(Some(Piece(controller.players(0)))))
         controller.currentPlayer = controller.players(0)
-        val horizontal = controller.grid.winPatternHorizontal(controller.currentPlayer)
+        val horizontal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 1,controller.grid.colCount - 4,(0,1))
         var bool = false
         horizontal match {
           case Some(v) => bool = v
@@ -104,7 +104,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         controller.grid = controller.grid.replaceCell(2,0, Cell(Some(Piece(controller.players(0)))))
         controller.grid = controller.grid.replaceCell(3,0, Cell(Some(Piece(controller.players(0)))))
         controller.currentPlayer = controller.players(0)
-        val vertical = controller.grid.winPatternVertical(controller.currentPlayer)
+        val vertical = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 3,controller.grid.colCount - 1,(1,0))
         var bool = false
         vertical match {
           case Some(v) => bool = v
@@ -121,7 +121,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         controller.grid = controller.grid.replaceCell(2,2, Cell(Some(Piece(controller.players(0)))))
         controller.grid = controller.grid.replaceCell(3,3, Cell(Some(Piece(controller.players(0)))))
         controller.currentPlayer = controller.players(0)
-        val ascDiagonal = controller.grid.winPatternAscendingDiagonal(controller.currentPlayer)
+        val ascDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 4,controller.grid.colCount - 4,(1,1))
         var bool = false
         ascDiagonal match {
           case Some(v) => bool = v
@@ -140,7 +140,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         controller.grid = controller.grid.replaceCell(3,4, Cell(Some(Piece(controller.players(0)))))
         controller.grid = controller.grid.replaceCell(2,3, Cell(Some(Piece(controller.players(0)))))
         controller.currentPlayer = controller.players(0)
-        val ascDiagonal = controller.grid.winPatternAscendingDiagonal(controller.currentPlayer)
+        val ascDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 4,controller.grid.colCount - 4,(1,1))
         var bool = false
         ascDiagonal match {
           case Some(v) => bool = v
@@ -157,7 +157,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         controller.grid = controller.grid.replaceCell(3,2, Cell(Some(Piece(controller.players(1)))))
         controller.grid = controller.grid.replaceCell(2,3, Cell(Some(Piece(controller.players(1)))))
         controller.currentPlayer = controller.players(1)
-        val descDiagonal = controller.grid.winPatternDescendingDiagonal(controller.currentPlayer)
+        val descDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 1,controller.grid.colCount - 3,(-1,1), 3)
         var bool = false
         descDiagonal match {
           case Some(v) => bool = v
@@ -174,7 +174,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         controller.grid = controller.grid.replaceCell(2,4, Cell(Some(Piece(controller.players(0)))))
         controller.grid = controller.grid.replaceCell(3,3, Cell(Some(Piece(controller.players(0)))))
         controller.currentPlayer = controller.players(0)
-        val descDiagonal = controller.grid.winPatternDescendingDiagonal(controller.currentPlayer)
+        val descDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 1,controller.grid.colCount - 3,(-1,1), 3)
         var bool = false
         descDiagonal match {
           case Some(v) => bool = v
