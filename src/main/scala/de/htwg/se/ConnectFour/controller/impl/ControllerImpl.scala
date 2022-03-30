@@ -47,7 +47,7 @@ class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder)
     var validCol = 0
     if col.toInt <= 6 then
       validCol = col.toInt
-    undoManager.doStep(new SetCommandImpl(validCol, Piece(currentPlayer),this));
+    undoManager.doStep(SetCommandImpl(validCol, Piece(currentPlayer),this));
     moveCount += 1
     notifyObservers
 
