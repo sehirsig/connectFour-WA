@@ -2,9 +2,9 @@ name: Scala CI
 
 on:
   push:
-    branches: [ SA-01_Scala-3 ]
+    branches: [ SA-02_Functional-Style ]
   pull_request:
-    branches: [ SA-01_Scala-3 ]
+    branches: [ SA-02_Functional-Style ]
 
 jobs:
   build:
