@@ -70,7 +70,7 @@ class FileIOImpl @Inject () extends FileIO:
                }
           yield {
 
-            var player = controller.getGrid().cell(row, col).piece match
+            val player = controller.getGrid().cell(row, col).piece match
                 case Some(s) => s.player.playerNumber
                 case None => -1
                 
