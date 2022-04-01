@@ -81,18 +81,11 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
       this.cell(c4._1, c4._2).piece == currentPiece
 
 
-  override def toString: String =
-    var empty = true
-    for row <- this.rows do
-      for col <- row do
-        if (col.isSet)
-          empty = false
+  def drawString:String =
+    val builder = new StringBuilder
+    this.rows.reverse.map(row => {row.map(col => builder.append(col)); builder.append("\n")})
+    builder.toString()
 
-    if !empty then
-      val builder = new StringBuilder
-      for row <- this.rows.reverse do
-        for (col <- row) do
-          builder.append(col)
-        builder.append("\n")
-      return builder.toString()
+  override def toString: String =
+    this.rows.map(row => row.map(col => if (col.isSet){ return drawString}))
     ""
