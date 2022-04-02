@@ -25,7 +25,7 @@ class FileIOImpl @Inject () extends FileIO:
     val player2 = (gameJson \ "player" \ "player2").get.toString()
 
 
-    var newGrid: Grid = controller.getGrid()
+    val newGrid: Grid = controller.getGrid()
     controller.setMoveCount(moveCount)
     controller.addPlayer(player1)
     controller.addPlayer(player2)
@@ -43,9 +43,8 @@ class FileIOImpl @Inject () extends FileIO:
         case 1 => Some(Piece(controller.players(0)))
         case 2 => Some(Piece(controller.players(1)))
         case _ => None
-      newGrid = newGrid.replaceCell(row, col, Cell(optPiece))
 
-    controller.setGrid(newGrid)
+    controller.setGrid(newGrid.replaceCell(row, col, Cell(optPiece)))
 
   def gameToJson(controller: Controller): JsValue =
     Json.obj(
