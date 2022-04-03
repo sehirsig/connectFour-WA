@@ -15,5 +15,5 @@ trait Grid:
   def reset(): Grid
   def checkWin(currentPlayer:Player):Boolean
   def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Option[Boolean]
-  def checkP(currentPiece:Option[Piece])(firstChip:(Int,Int), chipSet:(Int,Int)):Boolean
+
   
