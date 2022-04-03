@@ -61,17 +61,15 @@ class FileIOImpl() extends FileIO:
       </player>
     <grid>
       {
-      for {col <- 0 to controller.getGrid().colCount - 1;
-      row <- (0 to controller.getGrid().rowCount - 1).reverse
-      }
-      yield {
-        val player = controller.getGrid().cell(row, col).piece match
-          case Some(s) => s.player.playerNumber
-          case None => -1
-      <cell row={ row.toString } col={ col.toString }>
-        { player.toString }
-      </cell>
-    }
+      (0 to controller.getGrid().colCount - 1).flatMap(col =>
+        (0 to controller.getGrid().rowCount - 1).reverse.map(row => {
+          val player = controller.getGrid().cell(row, col).piece match
+            case Some(s) => s.player.playerNumber
+            case None => -1
+          <cell row={ row.toString } col={ col.toString }>
+            { player.toString }
+          </cell>
+        }))
       }
     </grid>
     </game>

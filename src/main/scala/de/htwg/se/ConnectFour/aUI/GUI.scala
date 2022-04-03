@@ -127,7 +127,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
     gridLinesVisible = false
     padding = Insets(70)
     var i = 0
-    for (_ <- 0 until controller.getGrid().colCount) do
+    (0 until controller.getGrid().colCount).map(_ => {
       if i < 6 then
         val row = new RowConstraints() {
           percentHeight = 100.0 / controller.getGrid().rowCount
@@ -138,6 +138,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
       }
       columnConstraints.add(column)
       i += 1
+    })
   }
 
   /**
@@ -156,11 +157,12 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
     rowConstraints.add(rows)
     rowConstraints.add(rows)
 
-    for (_ <- 0 until 3) do
-      val col = new ColumnConstraints() {
+    (0 until 3).map(_ => {
+      val col = new ColumnConstraints():
         percentWidth = 80
-      }
+
       columnConstraints.add(col)
+    })
 
     val save = new Button("Save") {
       padding = Insets(10)
@@ -235,7 +237,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
          * Reversing the y values so the dropped pieces
          * are landing at the bottom
          **/
-        var reverseY = y match
+        val reverseY = y match
           case 0 => 5
           case 1 => 4
           case 2 => 3
