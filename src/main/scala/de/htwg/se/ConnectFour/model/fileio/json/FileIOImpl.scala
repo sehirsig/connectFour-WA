@@ -34,7 +34,7 @@ class FileIOImpl @Inject () extends FileIO:
       case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cells = (grid \ "cells").as[JsArray]
-    for (cell <- cells.value) do
+    cells.value.map(cell => {
       val row = (cell \ "row").get.as[Int]
       val col = (cell \ "col").get.as[Int]
       val value = (cell \ "value").get.as[Int]
@@ -44,6 +44,7 @@ class FileIOImpl @Inject () extends FileIO:
         case 2 => Some(Piece(controller.players(1)))
         case _ => None
       newGrid = newGrid.replaceCell(row, col, Cell(optPiece))
+    })
 
     controller.setGrid(newGrid)
 

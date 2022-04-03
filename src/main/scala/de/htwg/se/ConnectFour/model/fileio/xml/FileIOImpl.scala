@@ -29,7 +29,7 @@ class FileIOImpl() extends FileIO:
       case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cellNodes = (file \\ "grid" \\ "cell")
-    for (cell <- cellNodes) do
+    cellNodes.map(cell => {
       val row: Int = (cell \\ "@row").text.toInt
       val col: Int = (cell \\ "@col").text.toInt
       val value: Int = cell.text.trim.toInt
@@ -39,7 +39,8 @@ class FileIOImpl() extends FileIO:
         case 2 => Some(grid.Piece(controller.players(1)))
         case _ => None
       newGrid = newGrid.replaceCell(row, col, Cell(optPiece))
-
+    })
+    
     controller.setGrid(newGrid)
 
   def gameToXml(controller: Controller) =
