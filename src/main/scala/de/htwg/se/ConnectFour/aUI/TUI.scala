@@ -20,12 +20,13 @@ case class TUI(controller: Controller) extends UI with Observer:
     println(Console.BLUE + "◙◙" + Console.YELLOW + " You can start playing by typing a column number 0-6 " + Console.BLUE + "◙")
     println(Console.BLUE + "◙◙◙" + Console.YELLOW + " There is an option 'u' for undo and 'r' for redo " + Console.BLUE + "◙◙◙")
     println(Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙" + Console.GREEN + " With typing 'q' you can quit " + Console.BLUE + "◙◙◙◙◙◙◙◙◙◙◙◙◙")
+    selectInput
 
-    var input:String = ""
-    while input != "q" do
-      input = readLine()
-      if !input.isEmpty then
-        processInput(input)
+  def selectInput:Unit =
+    val input = readLine()
+    input match
+      case "q" =>
+      case _ if !input.isEmpty => processInput(input); selectInput
 
   override def processInput(input: String) =
     input match
