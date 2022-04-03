@@ -10,12 +10,12 @@ class PlayerSpec extends AnyWordSpec with Matchers:
       val player1 = PlayerImpl("Your Name", 1)
       val player2 = PlayerImpl("Yo Name", 2)
       "have a name" in {
-        player1.name should be ("Your Name")
-        player2.name should be ("Yo Name")
+        player1.playerName should be ("Your Name")
+        player2.playerName should be ("Yo Name")
       }
       "have a number" in{
-        player1.number should be (1)
-        player2.number should be (2)
+        player1.playerNumber should be (1)
+        player2.playerNumber should be (2)
       }
       "have a color" in {
         player1.color should be (Some("red"))
@@ -23,11 +23,11 @@ class PlayerSpec extends AnyWordSpec with Matchers:
       }
       "have a nice String representation" in {
         player1.toString should be
-        "Der Spieler " + player1.name + " mit der Nummer "+
-          player1.number +" hat die Farbe "+ player1.color
+        "Der Spieler " + player1.playerName + " mit der Nummer "+
+          player1.playerNumber +" hat die Farbe "+ player1.color
         player2.toString should be
-        "Der Spieler " + player2.name + " mit der Nummer "+
-          player2.number +" hat die Farbe "+ player2.color
+        "Der Spieler " + player2.playerName + " mit der Nummer "+
+          player2.playerNumber +" hat die Farbe "+ player2.color
       }
     }
   }

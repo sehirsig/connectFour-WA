@@ -6,13 +6,11 @@ import de.htwg.se.ConnectFour.model.player.Player
  * Player implementation
  */
 case class PlayerImpl (playerName: String, playerNumber: Int) extends Player:
-  val name: String = playerName
-  val number: Int = playerNumber
 
   val color: Option[String] =
-    number match
+    this.playerNumber match
       case 1 => Some("red")
       case 2 => Some("yellow")
 
-  override def toString: String = "Der Spieler " + name + " mit der Nummer " +
-    number + " hat die Farbe " + color
+  override def toString: String = "Der Spieler " + this.playerName + " mit der Nummer " +
+    this.playerNumber + " hat die Farbe " + color
