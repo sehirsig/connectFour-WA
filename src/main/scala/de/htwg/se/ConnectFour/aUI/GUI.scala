@@ -232,34 +232,36 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
    */
   def refreshView() =
     try
-      for (x <- 0 to controller.getGrid().colCount - 1; y <- (0 to controller.getGrid().rowCount - 1).reverse) do
-        /**
-         * Reversing the y values so the dropped pieces
-         * are landing at the bottom
-         **/
-        val reverseY = y match
-          case 0 => 5
-          case 1 => 4
-          case 2 => 3
-          case 3 => 2
-          case 4 => 1
-          case 5 => 0
+      (0 to controller.getGrid().colCount - 1).map(x =>
+        (0 to controller.getGrid().rowCount - 1).reverse.map(y => {
+          /**
+           * Reversing the y values so the dropped pieces
+           * are landing at the bottom
+           **/
+          val reverseY = y match
+            case 0 => 5
+            case 1 => 4
+            case 2 => 3
+            case 3 => 2
+            case 4 => 1
+            case 5 => 0
 
-        val piece: Button = gameFieldButton(x)
-        if controller.getGrid().cell(y, x).isSet then
-          val img = controller.getGrid().cell(y, x).piece.get.player.playerNumber match
-            case 1 => new Image("/red.png")
-            case 2 => new Image("/yellow.png")
+          val piece: Button = gameFieldButton(x)
+          if controller.getGrid().cell(y, x).isSet then
+            val img = controller.getGrid().cell(y, x).piece.get.player.playerNumber match
+              case 1 => new Image("/red.png")
+              case 2 => new Image("/yellow.png")
 
-          val imgView = new ImageView(img)
-          imgView.setFitHeight(35)
-          imgView.setFitWidth(35)
-          imgView.setPreserveRatio(true)
-          piece.setGraphic(imgView)
+            val imgView = new ImageView(img)
+            imgView.setFitHeight(35)
+            imgView.setFitWidth(35)
+            imgView.setPreserveRatio(true)
+            piece.setGraphic(imgView)
+            piece.setMaxSize(Double.MaxValue, Double.MaxValue)
+
           piece.setMaxSize(Double.MaxValue, Double.MaxValue)
-
-        piece.setMaxSize(Double.MaxValue, Double.MaxValue)
-        gameGrid.add(piece, x, reverseY)
+          gameGrid.add(piece, x, reverseY)
+        }))
     catch
       case any => print(any)
 
