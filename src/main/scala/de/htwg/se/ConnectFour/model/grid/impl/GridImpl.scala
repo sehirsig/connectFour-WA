@@ -21,7 +21,7 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
 
   override def drop(column: Int, piece: Piece): Grid =
     val idx = this.rows.indexWhere(row => !row(column).isSet)
-    if (idx > -1)
+    if idx > -1 then
       return this.replaceCell(idx, column, Cell(Some(piece)))
     this
 
@@ -87,5 +87,5 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
     builder.toString()
 
   override def toString: String =
-    this.rows.map(row => row.map(col => if (col.isSet){ return drawString}))
+    this.rows.map(row => row.map(col => if col.isSet then return drawString ))
     ""
