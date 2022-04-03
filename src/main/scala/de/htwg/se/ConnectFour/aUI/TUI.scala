@@ -25,6 +25,7 @@ case class TUI(controller: Controller) extends UI with Observer:
   def selectInput:Unit =
     val input = readLine()
     input match
+      case _ if input.isEmpty => selectInput
       case "q" =>
       case _ if !input.isEmpty => processInput(input); selectInput
 
