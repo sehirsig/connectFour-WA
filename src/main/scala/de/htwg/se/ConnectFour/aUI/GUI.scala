@@ -61,12 +61,20 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
    * when method is running
    */
   def begin() =
-    while controller.players.size < 2 do
-        controller.players.size match
-          case 0 => typeName()
-          case 1 => typeName()
+    waitForPlayers
 
     execute("") // changing the state
+
+  /**
+   * Help Method to Force to type in names
+   * when method is running
+   */
+  def waitForPlayers:Unit =
+    if controller.players.size < 2 then
+      controller.players.size match
+        case 0 => typeName();waitForPlayers
+        case 1 => typeName();waitForPlayers
+        case _ =>
 
   /**
    * Method to create a gamefield button.
