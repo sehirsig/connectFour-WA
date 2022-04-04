@@ -35,7 +35,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
           center = gameGrid
           bottom = bottombar
         }
-        begin()
+        begin(execute)
       }
     }
 
@@ -60,10 +60,9 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
    * Force to type in names
    * when method is running
    */
-  def begin() =
+  def begin(callback: (s:String) => Unit) =
     waitForPlayers
-
-    execute("") // changing the state
+    callback("") // changing the state
 
   /**
    * Help Method to Force to type in names
