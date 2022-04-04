@@ -4,7 +4,7 @@ import de.htwg.se.ConnectFour.aUI.GUI
 import de.htwg.se.ConnectFour.controller.Controller
 
 /**
- * DropState of TUI
+ * DropState of GUI
  */
 case class DropState(controller: Controller) extends State[GameState]:
   
@@ -15,7 +15,7 @@ case class DropState(controller: Controller) extends State[GameState]:
     if controller.checkWin() then
       state.changeState(WinState(controller))
       state.handle("won")
-    input.toString match
+    input match
       case "u" => controller.undoDrop()
       case "r" => controller.redoDrop()
       case "n" => controller.reset()
