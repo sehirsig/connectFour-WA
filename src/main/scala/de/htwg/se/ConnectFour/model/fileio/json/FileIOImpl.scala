@@ -66,21 +66,18 @@ class FileIOImpl @Inject () extends FileIO:
       ),
       "grid" -> Json.obj(
         "cells" -> Json.toJson(
-          for {col <- 0 to controller.getGrid().colCount - 1;
-               row <- (0 to controller.getGrid().rowCount - 1).reverse
-               }
-          yield {
-
-            val player = controller.getGrid().cell(row, col).piece match
+          (0 to controller.getGrid().colCount - 1).flatMap(col =>
+            (0 to controller.getGrid().rowCount - 1).reverse.map(row => {
+              val player = controller.getGrid().cell(row, col).piece match
                 case Some(s) => s.player.playerNumber
                 case None => -1
-                
-            Json.obj(
-              "row" -> row,
-              "col" -> col,
-              "value" -> player
-            )
-          }
+
+              Json.obj(
+                "row" -> row,
+                "col" -> col,
+                "value" -> player
+              )
+          }))
         )
       )
     )

@@ -25,15 +25,12 @@ class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder)
     reset()
     notifyObservers
 
-  override def addPlayer(name:String) =
-    if players.size == 0 then
-      val player = playerBuilder.createPlayer(name,1)
-      players = players.appended(player)
-      println("Player 1 is called: " + name)
-    else
-      val player = playerBuilder.createPlayer(name,2)
-      players = players.appended(player)
-      println("Player 2 is called: " + name)
+  override def addPlayer(name:String) = if players.size == 0 then buildPlayer(name,1) else buildPlayer(name,2)
+
+  def buildPlayer(name:String, number:Int) =
+    val player = playerBuilder.createPlayer(name,number)
+    players = players.appended(player)
+    println("Player " + number + " is called: " + name)
 
   override def whoseTurnIsIt() =
     currentPlayer = if moveCount % 2 == 0 then players(0) else players(1)
@@ -41,7 +38,7 @@ class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder)
 
   override def checkWin():Boolean =
     grid.checkWin(currentPlayer)
-    
+
   override def drop(col:String) =
     whoseTurnIsIt()
     var validCol = 0
