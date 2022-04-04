@@ -30,7 +30,6 @@ class ControllerImpl @Inject () (var grid:Grid, val playerBuilder:PlayerBuilder)
   def buildPlayer(name:String, number:Int) =
     val player = playerBuilder.createPlayer(name,number)
     players = players.appended(player)
-    println("Player " + number + " is called: " + name)
 
   override def whoseTurnIsIt() =
     currentPlayer = if moveCount % 2 == 0 then players(0) else players(1)
