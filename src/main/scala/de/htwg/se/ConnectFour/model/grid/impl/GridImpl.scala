@@ -30,9 +30,9 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
 
   override def checkWin(currentPlayer:Player):Boolean =
     val horizontal = winPattern(Some(Piece(currentPlayer)))(rowCount - 1,colCount - 4,(0,1))
-    val vertical = winPattern(Some(Piece(currentPlayer)))(rowCount - 3,colCount - 1,(1,0))
+    val vertical = winPattern(Some(Piece(currentPlayer)))(rowCount - 4,colCount - 1,(1,0))
     val ascendingDiagonal = winPattern(Some(Piece(currentPlayer)))(rowCount - 4,colCount - 4,(1,1))
-    val descendingDiagonal = winPattern(Some(Piece(currentPlayer)))(rowCount - 1,colCount - 3,(-1,1), 3)
+    val descendingDiagonal = winPattern(Some(Piece(currentPlayer)))(rowCount - 1,colCount - 4,(-1,1), 3)
     val checkList:List[Option[Boolean]] = List(horizontal,vertical,ascendingDiagonal,descendingDiagonal)
 
     val win = checkList.filterNot(_.isEmpty).contains(Some(true))
@@ -56,7 +56,7 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
       Some(false)
 
   def goThroughCol(currentPiece:Option[Piece])(min:Int,max:Int,idx:Int,rowIdx:Int,chipSet:(Int,Int)):Option[Boolean] =
-    if max < idx || min > idx then
+    if (max < idx) || (min > idx) then
       Some(false)
     else if checkP(currentPiece)((rowIdx,idx), chipSet) then
       Some(true)
@@ -70,16 +70,10 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
       (b._1 * d, b._2 * d)
 
   def checkP(currentPiece:Option[Piece])(firstChip:(Int,Int), chipSet:(Int,Int)):Boolean =
-    val c1 = firstChip.add(chipSet.multi(0))
-    val c2 = firstChip.add(chipSet.multi(1))
-    val c3 = firstChip.add(chipSet.multi(2))
-    val c4 = firstChip.add(chipSet.multi(3))
-
-    this.cell(c1._1,c1._2).piece == currentPiece &&
-      this.cell(c2._1, c2._2).piece == currentPiece &&
-      this.cell(c3._1, c3._2).piece == currentPiece &&
-      this.cell(c4._1, c4._2).piece == currentPiece
-
+    (0 to 3).map(x => {
+      val c = firstChip.add(chipSet.multi(x))
+      this.cell(c._1, c._2).piece == currentPiece
+    }).forall(_ == true)
 
   def drawString:String =
     val builder = new StringBuilder
