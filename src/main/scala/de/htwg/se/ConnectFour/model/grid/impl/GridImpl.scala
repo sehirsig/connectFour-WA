@@ -29,14 +29,15 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
     new GridImpl()
 
   override def checkWin(currentPlayer:Player):Boolean =
-    val horizontal = winPattern(Some(Piece(currentPlayer)))(rowCount - 1,colCount - 4,(0,1))
-    val vertical = winPattern(Some(Piece(currentPlayer)))(rowCount - 4,colCount - 1,(1,0))
-    val ascendingDiagonal = winPattern(Some(Piece(currentPlayer)))(rowCount - 4,colCount - 4,(1,1))
-    val descendingDiagonal = winPattern(Some(Piece(currentPlayer)))(rowCount - 1,colCount - 4,(-1,1), 3)
-    val checkList:List[Option[Boolean]] = List(horizontal,vertical,ascendingDiagonal,descendingDiagonal)
+    val playerPiece = Some(Piece(currentPlayer))
 
-    val win = checkList.filterNot(_.isEmpty).contains(Some(true))
-    win
+    val horizontal = winPattern(playerPiece)(rowCount - 1,colCount - 4,(0,1))
+    val vertical = winPattern(playerPiece)(rowCount - 4,colCount - 1,(1,0))
+    val ascendingDiagonal = winPattern(playerPiece)(rowCount - 4,colCount - 4,(1,1))
+    val descendingDiagonal = winPattern(playerPiece)(rowCount - 1,colCount - 4,(-1,1), 3)
+    val checkList:List[Option[Boolean]] = List(horizontal,vertical,ascendingDiagonal,descendingDiagonal)
+    //Check ob es einen Win gab
+    checkList.filterNot(_.isEmpty).contains(Some(true))
 
   def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Option[Boolean] =
     //idx = rowMin für descendingDiagonla, damit idx bei rowMin anfängt!
