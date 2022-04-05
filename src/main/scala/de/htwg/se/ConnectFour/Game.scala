@@ -14,4 +14,4 @@ case object Game:
 
     Try(UIFactory(uiType,controller)) match
       case Success(v) => println("See you next time! Bye.")
-      case Failure(v) => println("Could not create UI" + v.getMessage + v.getCause)
+      case Failure(v) => println("Could not create UI: " + v.getMessage + v.getCause)
