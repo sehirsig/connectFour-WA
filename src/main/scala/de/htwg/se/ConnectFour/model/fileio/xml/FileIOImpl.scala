@@ -5,7 +5,7 @@ import de.htwg.se.ConnectFour.model.fileio.FileIO
 import de.htwg.se.ConnectFour.model.grid
 import de.htwg.se.ConnectFour.model.grid.{Cell, Grid, Piece}
 
-import scala.xml.PrettyPrinter
+import scala.xml.{NodeSeq, PrettyPrinter}
 
 /**
  * FileIO implementation
@@ -20,7 +20,6 @@ class FileIOImpl() extends FileIO:
     val player2 = (file \\ "game" \\ "player" \\ "player2").text
     val moveCount = (file \\ "game" \\ "player" \\ "moveCount").text.trim.toInt
 
-    var newGrid: Grid = controller.getGrid()
     controller.setMoveCount(moveCount)
     controller.addPlayer(player1)
     controller.addPlayer(player2)
@@ -29,19 +28,24 @@ class FileIOImpl() extends FileIO:
       case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cellNodes = (file \\ "grid" \\ "cell")
-    cellNodes.map(cell => {
-      val row: Int = (cell \\ "@row").text.toInt
-      val col: Int = (cell \\ "@col").text.toInt
-      val value: Int = cell.text.trim.toInt
+    val newGrid = recursiveSetGrid(controller, cellNodes, 0, controller.getGrid())
 
-      val optPiece = value match
-        case 1 => Some(grid.Piece(controller.players(0)))
-        case 2 => Some(grid.Piece(controller.players(1)))
-        case _ => None
-      newGrid = newGrid.replaceCell(row, col, Cell(optPiece))
-    })
-    
     controller.setGrid(newGrid)
+
+  def recursiveSetGrid(controller:Controller, cells:NodeSeq, idx:Int, grid:Grid):Grid =
+    if cells.length == idx then
+      return grid
+
+    val cell = cells(idx)
+
+    val row: Int = (cell \\ "@row").text.toInt
+    val col: Int = (cell \\ "@col").text.toInt
+    val value: Int = cell.text.trim.toInt
+    val optPiece = value match
+      case 1 => Some(Piece(controller.players(0)))
+      case 2 => Some(Piece(controller.players(1)))
+      case _ => None
+    recursiveSetGrid(controller, cells, idx + 1, grid.replaceCell(row, col, Cell(optPiece)))
 
   def gameToXml(controller: Controller) =
     <game>

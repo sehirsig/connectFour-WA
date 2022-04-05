@@ -24,8 +24,6 @@ class FileIOImpl @Inject () extends FileIO:
     val player1 = (gameJson \ "player" \ "player1").get.toString()
     val player2 = (gameJson \ "player" \ "player2").get.toString()
 
-
-    var newGrid: Grid = controller.getGrid()
     controller.setMoveCount(moveCount)
     controller.addPlayer(player1)
     controller.addPlayer(player2)
@@ -34,19 +32,23 @@ class FileIOImpl @Inject () extends FileIO:
       case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cells = (grid \ "cells").as[JsArray]
-    cells.value.map(cell => {
-      val row = (cell \ "row").get.as[Int]
-      val col = (cell \ "col").get.as[Int]
-      val value = (cell \ "value").get.as[Int]
-
-      val optPiece = value match
-        case 1 => Some(Piece(controller.players(0)))
-        case 2 => Some(Piece(controller.players(1)))
-        case _ => None
-      newGrid = newGrid.replaceCell(row, col, Cell(optPiece))
-    })
-
+    val newGrid = recursiveSetGrid(controller, cells, 0, controller.getGrid())
     controller.setGrid(newGrid)
+
+  def recursiveSetGrid(controller:Controller, cells:JsArray, idx:Int, grid:Grid):Grid =
+    if cells.value.length == idx then
+      return grid
+
+    val cell = cells.value(idx)
+
+    val row = (cell \ "row").get.as[Int]
+    val col = (cell \ "col").get.as[Int]
+    val value = (cell \ "value").get.as[Int]
+    val optPiece = value match
+      case 1 => Some(Piece(controller.players(0)))
+      case 2 => Some(Piece(controller.players(1)))
+      case _ => None
+    recursiveSetGrid(controller, cells, idx + 1, grid.replaceCell(row, col, Cell(optPiece)))
 
   def gameToJson(controller: Controller): JsValue =
     Json.obj(
