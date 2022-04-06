@@ -5,6 +5,7 @@ import de.htwg.se.ConnectFour.model.fileio.FileIO
 import de.htwg.se.ConnectFour.model.grid
 import de.htwg.se.ConnectFour.model.grid.{Cell, Grid, Piece}
 
+import scala.util.{Failure, Success, Try}
 import scala.xml.{NodeSeq, PrettyPrinter}
 
 /**
@@ -14,6 +15,11 @@ import scala.xml.{NodeSeq, PrettyPrinter}
 class FileIOImpl() extends FileIO:
 
   override def load(controller:Controller) =
+    Try(loadMethod(controller)) match
+      case Success(v) => controller.setGrid(v)
+      case Failure(v) =>
+
+  def loadMethod(controller: Controller):Grid =
     val file = scala.xml.XML.loadFile("game.xml")
     val currentPlayer = (file \\ "game" \\ "player" \\ "currentPlayer").text
     val player1 = (file \\ "game" \\ "player" \\ "player1").text
@@ -28,9 +34,9 @@ class FileIOImpl() extends FileIO:
       case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cellNodes = (file \\ "grid" \\ "cell")
-    val newGrid = recursiveSetGrid(controller, cellNodes, 0, controller.getGrid())
+    recursiveSetGrid(controller, cellNodes, 0, controller.getGrid())
 
-    controller.setGrid(newGrid)
+
 
   def recursiveSetGrid(controller:Controller, cells:NodeSeq, idx:Int, grid:Grid):Grid =
     if cells.length == idx then

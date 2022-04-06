@@ -8,6 +8,7 @@ import play.api.libs.json._
 
 import java.io.{File, PrintWriter}
 import scala.io.Source
+import scala.util.{Failure, Success, Try}
 
 /**
  * FileIO implementation
@@ -16,6 +17,11 @@ import scala.io.Source
 class FileIOImpl @Inject () extends FileIO:
 
   override def load(controller:Controller) =
+    Try(loadMethod(controller)) match
+      case Success(v) => controller.setGrid(v)
+      case Failure(v) =>
+
+  def loadMethod(controller: Controller):Grid =
     val source: String = Source.fromFile("game.json").getLines.mkString
     val gameJson: JsValue = Json.parse(source)
     val grid = (gameJson \ "grid")
@@ -32,8 +38,8 @@ class FileIOImpl @Inject () extends FileIO:
       case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cells = (grid \ "cells").as[JsArray]
-    val newGrid = recursiveSetGrid(controller, cells, 0, controller.getGrid())
-    controller.setGrid(newGrid)
+    recursiveSetGrid(controller, cells, 0, controller.getGrid())
+
 
   def recursiveSetGrid(controller:Controller, cells:JsArray, idx:Int, grid:Grid):Grid =
     if cells.value.length == idx then
