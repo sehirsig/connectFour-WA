@@ -9,10 +9,12 @@ import scalafx.scene.Scene
 import scalafx.scene.control.{Button, TextInputDialog}
 import scalafx.scene.effect.{Glow, InnerShadow}
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout._
+import scalafx.scene.layout.*
 import scalafx.scene.paint.Color.{Black, DarkRed, LightYellow, Red, Yellow}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
+
+import scala.util.{Success,Failure,Try}
 
 /**
  * ConnectFour graphical user interface
@@ -237,7 +239,6 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
    * to show the latest drops.
    */
   def refreshView() =
-    try
       (0 to controller.getGrid().colCount - 1).flatMap(x =>
         (0 to controller.getGrid().rowCount - 1).reverse.map(y => {
           /**
@@ -268,8 +269,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
           piece.setMaxSize(Double.MaxValue, Double.MaxValue)
           gameGrid.add(piece, x, reverseY)
         }))
-    catch
-      case any => print(any)
+
 
   override def processInput(input: String) =
     input match
@@ -279,5 +279,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
     gameState.handle(input)
 
   override def update: Boolean =
-    refreshView()
-    true
+    Try(refreshView()) match
+      case Success(v) => true
+      case Failure(v) => false
+
