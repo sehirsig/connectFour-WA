@@ -224,6 +224,9 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
     add(load, 2, 1)
   }
 
+  /** Images */
+  val redImage = new Image("/red.png")
+  val yellowImage = new Image("/yellow.png")
 
   /**
    * This method needs to be run
@@ -248,8 +251,8 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
           val piece: Button = gameFieldButton(x)
           if controller.getGrid().cell(y, x).isSet then
             val img = controller.getGrid().cell(y, x).piece.get.player.playerNumber match
-              case 1 => new Image("/red.png")
-              case 2 => new Image("/yellow.png")
+              case 1 => this.redImage
+              case 2 => this.yellowImage
 
             val imgView = new ImageView(img)
             imgView.setFitHeight(35)
