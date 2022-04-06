@@ -234,7 +234,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
    */
   def refreshView() =
     try
-      (0 to controller.getGrid().colCount - 1).map(x =>
+      (0 to controller.getGrid().colCount - 1).flatMap(x =>
         (0 to controller.getGrid().rowCount - 1).reverse.map(y => {
           /**
            * Reversing the y values so the dropped pieces
