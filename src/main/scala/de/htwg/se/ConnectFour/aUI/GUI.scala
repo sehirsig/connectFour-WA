@@ -13,7 +13,6 @@ import scalafx.scene.layout.*
 import scalafx.scene.paint.Color.{Black, DarkRed, LightYellow, Red, Yellow}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
-
 import scala.util.{Success,Failure,Try}
 
 /**
@@ -269,7 +268,6 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
           piece.setMaxSize(Double.MaxValue, Double.MaxValue)
           gameGrid.add(piece, x, reverseY)
         }))
-
 
   override def processInput(input: String) =
     input match
