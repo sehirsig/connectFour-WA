@@ -60,7 +60,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
    * Force to type in names
    * when method is running
    */
-  def begin(callback: (s:String) => Unit) =
+  def begin(callback: (String) => Unit) =
     waitForPlayers
     callback("") // changing the state
 
@@ -225,8 +225,8 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
   }
 
   /** Images */
-  val redImage = new Image("/red.png")
-  val yellowImage = new Image("/yellow.png")
+  val redImage = Image("/red.png")
+  val yellowImage = Image("/yellow.png")
 
   /**
    * This method needs to be run
