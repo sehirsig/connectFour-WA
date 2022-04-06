@@ -35,7 +35,7 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
           center = gameGrid
           bottom = bottombar
         }
-        begin(execute)
+        beginExec("")
       }
     }
 
@@ -56,13 +56,17 @@ case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
       case Some(name) => controller.addPlayer(name)
       case None => println("Please type a name!")
 
+  /** Partially applied function beginExec, to execute the execute method. */
+  def beginExec =
+    begin(execute)
+
   /**
    * Force to type in names
    * when method is running
    */
-  def begin(callback: (String) => Unit) =
+  def begin(callback: (String) => Unit)(msg:String) =
     waitForPlayers
-    callback("") // changing the state
+    callback(msg) // changing the state
 
   /**
    * Help Method to Force to type in names
