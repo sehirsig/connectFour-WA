@@ -1,7 +1,7 @@
 package de.htwg.se.ConnectFour.aUI
 
 import de.htwg.se.ConnectFour.aUI.states.TUI.GameState
-import de.htwg.se.ConnectFour.controller.Controller
+import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ConnectFour.util.{Observer, UI}
 
 import scala.io.StdIn.readLine
@@ -10,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 /**
  * ConnectFour text-based user interface
  */
-case class TUI(controller: Controller) extends UI with Observer:
+case class TUI(controller: ControllerInterface) extends UI with Observer:
 
   controller.add(this)
   var gameState:GameState = GameState(controller)

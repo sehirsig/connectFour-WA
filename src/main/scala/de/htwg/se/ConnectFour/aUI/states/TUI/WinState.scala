@@ -1,15 +1,15 @@
 package de.htwg.se.ConnectFour.aUI.states.TUI
 
-import de.htwg.se.ConnectFour.controller.Controller
+import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 
 import scala.io.AnsiColor
 
 /**
  * WinState of TUI
  */
-case class WinState(controller: Controller) extends State[GameState]:
+case class WinState(controller: ControllerInterface) extends State[GameState]:
   //Extension Methods
-  extension (con:Controller)
+  extension (con:ControllerInterface)
     def printWinner(color: "\u001B[31m" | "\u001B[33m"):Unit = println(color + "BOOOOOOOOOOM!!!! Player " +
       con.currentPlayer.playerNumber + " called " +
       con.currentPlayer.playerName + " has won the game.")

@@ -1,11 +1,11 @@
 package de.htwg.se.ConnectFour.aUI.states.TUI
 
-import de.htwg.se.ConnectFour.controller.Controller
+import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 
 /**
  * DropState of TUI
  */
-case class DropState(controller: Controller) extends State[GameState]:
+case class DropState(controller: ControllerInterface) extends State[GameState]:
 
   override def handle(input: String, state: GameState) =
     val regExCheck = "([0-6])".r

@@ -1,0 +1,93 @@
+package de.htwg.se.ConnectFour.model.fileIOComponent.xml
+
+import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
+import de.htwg.se.ConnectFour.model.fileIOComponent.FileIOInterface
+import de.htwg.se.ConnectFour.model.gridComponent
+import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
+
+import scala.util.{Failure, Success, Try}
+import scala.xml.{NodeSeq, PrettyPrinter}
+
+/**
+ * FileIO implementation
+ * for exporting the game as XML File
+ */
+class FileIO() extends FileIOInterface:
+
+  override def load(controller:ControllerInterface) =
+    Try(loadMethod(controller)) match
+      case Success(v) => controller.setGrid(v)
+      case Failure(v) =>
+
+  def loadMethod(controller: ControllerInterface):GridInterface =
+    val file = scala.xml.XML.loadFile("game.xml")
+    val currentPlayer = (file \\ "game" \\ "player" \\ "currentPlayer").text
+    val player1 = (file \\ "game" \\ "player" \\ "player1").text
+    val player2 = (file \\ "game" \\ "player" \\ "player2").text
+    val moveCount = (file \\ "game" \\ "player" \\ "moveCount").text.trim.toInt
+
+    controller.setMoveCount(moveCount)
+    controller.addPlayer(player1)
+    controller.addPlayer(player2)
+    currentPlayer match
+      case player1 => controller.setCurrentPlayer(controller.players(0))
+      case player2 => controller.setCurrentPlayer(controller.players(1))
+
+    val cellNodes = (file \\ "grid" \\ "cell")
+    recursiveSetGrid(controller, cellNodes, 0, controller.getGrid())
+
+
+
+  def recursiveSetGrid(controller:ControllerInterface, cells:NodeSeq, idx:Int, grid:GridInterface):GridInterface =
+    if cells.length == idx then
+      return grid
+
+    val cell = cells(idx)
+
+    val row: Int = (cell \\ "@row").text.toInt
+    val col: Int = (cell \\ "@col").text.toInt
+    val value: Int = cell.text.trim.toInt
+    val optPiece = value match
+      case 1 => Some(Piece(controller.players(0)))
+      case 2 => Some(Piece(controller.players(1)))
+      case _ => None
+    recursiveSetGrid(controller, cells, idx + 1, grid.replaceCell(row, col, Cell(optPiece)))
+
+  def gameToXml(controller: ControllerInterface) =
+    <game>
+      <player>
+        <moveCount>
+          { controller.moveCount }
+        </moveCount>
+        <currentPlayer>
+          { controller.currentPlayer.playerName }
+        </currentPlayer>
+        <player1>
+          { controller.players(0).playerName }
+        </player1>
+        <player2>
+          { controller.players(1).playerName }
+        </player2>
+      </player>
+    <grid>
+      {
+      (0 to controller.getGrid().colCount - 1).flatMap(col =>
+        (0 to controller.getGrid().rowCount - 1).reverse.map(row => {
+          val player = controller.getGrid().cell(row, col).piece match
+            case Some(s) => s.player.playerNumber
+            case None => -1
+          <cell row={ row.toString } col={ col.toString }>
+            { player.toString }
+          </cell>
+        }))
+      }
+    </grid>
+    </game>
+
+  override def save(game: ControllerInterface) =
+    import java.io._
+    val pw = PrintWriter(File("game.xml"))
+    val prettyPrinter = PrettyPrinter(120, 4)
+    val xml = prettyPrinter.format(gameToXml(game))
+    pw.write(xml)
+    pw.close()

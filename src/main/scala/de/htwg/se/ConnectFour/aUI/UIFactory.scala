@@ -1,10 +1,10 @@
 package de.htwg.se.ConnectFour.aUI
 import de.htwg.se.ConnectFour.aUI.*
-import de.htwg.se.ConnectFour.controller.Controller
+import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import javafx.embed.swing.JFXPanel
 
 object UIFactory:
-  def apply(uiType:String, controller:Controller) =
+  def apply(uiType:String, controller:ControllerInterface) =
     uiType.toLowerCase() match
       case "gui" =>
         JFXPanel()

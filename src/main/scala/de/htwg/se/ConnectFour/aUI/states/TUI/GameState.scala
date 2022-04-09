@@ -1,11 +1,11 @@
 package de.htwg.se.ConnectFour.aUI.states.TUI
 
-import de.htwg.se.ConnectFour.controller.Controller
+import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 
 /**
  * GameState of TUI
  */
-case class GameState(controller: Controller):
+case class GameState(controller: ControllerInterface):
   var state: State[GameState] = InitialState(controller)
 
   def handle(input: String) =

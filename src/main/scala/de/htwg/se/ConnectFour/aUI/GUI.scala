@@ -1,6 +1,6 @@
 package de.htwg.se.ConnectFour.aUI;
 import de.htwg.se.ConnectFour.aUI.states.GUI.GameState
-import de.htwg.se.ConnectFour.controller.Controller
+import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ConnectFour.util.{Observer, UI}
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
@@ -13,13 +13,14 @@ import scalafx.scene.layout.*
 import scalafx.scene.paint.Color.{Black, DarkRed, LightYellow, Red, Yellow}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
-import scala.util.{Success,Failure,Try}
+
+import scala.util.{Failure, Success, Try}
 
 /**
  * ConnectFour graphical user interface
  * based on ScalaFX
  */
-case class GUI(controller: Controller) extends UI with Observer with JFXApp3:
+case class GUI(controller: ControllerInterface) extends UI with Observer with JFXApp3:
   controller.add(this)
   var gameState: GameState = GameState(controller, this)
 
