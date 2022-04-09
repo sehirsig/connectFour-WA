@@ -1,6 +1,6 @@
-package de.htwg.se.ConnectFour.model
+package model
 
-import de.htwg.se.ConnectFour.model.Error
+import model.Error
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
