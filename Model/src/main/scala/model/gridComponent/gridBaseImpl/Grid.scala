@@ -1,8 +1,8 @@
-package de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl
+package model.gridComponent.gridBaseImpl
 
 import com.google.inject.Inject
-import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
-import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
+import model.gridComponent.{Cell, GridInterface, Piece}
+import model.playerComponent.PlayerInterface
 
 import scala.util.{Failure, Success, Try}
 

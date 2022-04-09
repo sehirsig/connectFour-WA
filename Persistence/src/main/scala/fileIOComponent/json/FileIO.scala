@@ -1,9 +1,9 @@
-package de.htwg.se.ConnectFour.model.fileIOComponent.json
-
+package fileIOComponent.json
+/*
 import com.google.inject.Inject
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import de.htwg.se.ConnectFour.model.fileIOComponent.FileIOInterface
-import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
+import fileIOComponent.FileIOInterface
+import model.gridComponent.{Cell, GridInterface, Piece}
 import play.api.libs.json.*
 
 import java.io.{File, PrintWriter}
@@ -15,6 +15,7 @@ import scala.util.{Failure, Success, Try}
  * for exporting the game as JSON File
  */
 class FileIO @Inject () extends FileIOInterface:
+  def
 
   override def load(controller:ControllerInterface) =
     Try(loadMethod(controller)) match
@@ -94,3 +95,4 @@ class FileIO @Inject () extends FileIOInterface:
     val pw = PrintWriter(File("game.json"))
     pw.write(Json.prettyPrint(gameToJson(game)))
     pw.close
+*/

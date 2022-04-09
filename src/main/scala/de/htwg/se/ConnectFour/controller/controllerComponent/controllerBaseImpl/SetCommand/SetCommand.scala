@@ -1,7 +1,7 @@
 package de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl.SetCommand
 
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import de.htwg.se.ConnectFour.model.gridComponent.{GridInterface, Piece}
+import model.gridComponent.{GridInterface, Piece}
 import de.htwg.se.ConnectFour.util.Command
 
 /**

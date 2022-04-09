@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.model
+package model
 
 /**
  * Error classes implementation

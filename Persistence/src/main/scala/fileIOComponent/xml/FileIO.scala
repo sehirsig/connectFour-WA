@@ -1,9 +1,8 @@
-package de.htwg.se.ConnectFour.model.fileIOComponent.xml
-
+package fileIOComponent.xml
+/*
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import de.htwg.se.ConnectFour.model.fileIOComponent.FileIOInterface
-import de.htwg.se.ConnectFour.model.gridComponent
-import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
+import fileIOComponent.FileIOInterface
+import model.gridComponent.{Cell, GridInterface, Piece}
 
 import scala.util.{Failure, Success, Try}
 import scala.xml.{NodeSeq, PrettyPrinter}
@@ -91,3 +90,4 @@ class FileIO() extends FileIOInterface:
     val xml = prettyPrinter.format(gameToXml(game))
     pw.write(xml)
     pw.close()
+*/

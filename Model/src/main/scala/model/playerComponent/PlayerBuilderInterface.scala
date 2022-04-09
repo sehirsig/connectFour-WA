@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.model.playerComponent
+package model.playerComponent
 
 /**
  * Player Builder Trait

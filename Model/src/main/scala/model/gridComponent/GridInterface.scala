@@ -1,6 +1,6 @@
-package de.htwg.se.ConnectFour.model.gridComponent
+package model.gridComponent
 
-import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
+import model.playerComponent.PlayerInterface
 
 /**
  * Grid Trait
