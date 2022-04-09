@@ -1,6 +1,5 @@
 package de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl
 
-import de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece, gridBaseImpl}
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
@@ -11,7 +10,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class GridSpec extends AnyWordSpec with Matchers:
 
   "A Grid" when {
-      val grid = new Grid()
+    val grid = new Grid()
     "initialised" should {
       "be created with 6 rows and 7 initialised with Cell type None" in {
         grid.cell(0, 0) should be(Cell(None))
@@ -25,15 +24,15 @@ class GridSpec extends AnyWordSpec with Matchers:
     }
     "when not full" should {
       "have a method to replace specific cells" in {
-        val replaced = grid.replaceCell(0,3, Cell(Some(Piece(Player("Your Name", 1)))))
-        replaced.cell(0,3).piece should be (Some(Piece(Player("Your Name", 1))))
+        val replaced = grid.replaceCell(0, 3, Cell(Some(Piece(Player("Your Name", 1)))))
+        replaced.cell(0, 3).piece should be(Some(Piece(Player("Your Name", 1))))
       }
       "have a method to put Pieces into the Grid" in {
         val dropped = grid.drop(0, Piece(Player("Your Name", 1)))
-        dropped.cell(0,0).piece should be (Some(Piece(Player("Your Name", 1))))
+        dropped.cell(0, 0).piece should be(Some(Piece(Player("Your Name", 1))))
       }
       "have a method to reset the whole Grid" in {
-        grid.reset() should be (new Grid())
+        grid.reset() should be(new Grid())
       }
     }
     "when full" should {
@@ -51,137 +50,128 @@ class GridSpec extends AnyWordSpec with Matchers:
     }
     "when filled specifically" should {
       "wrong it shouldn't be checked correctly" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.currentPlayer = controller.players(0)
-        controller.checkWin() should be(false)
+        var controller: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        controller.checkWin(player1) should be(false)
       }
       "all patterns should be checked correctly" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.grid = controller.grid.replaceCell(0,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(0,1, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(0,2, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(0,3, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(1,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(2,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(3,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(1,1, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(2,2, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(3,3, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(5,6, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(4,5, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(3,4, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(2,3, Cell(Some(Piece(controller.players(0)))))
-        controller.currentPlayer = controller.players(0)
-        controller.checkWin() should be (true)
+        var grid: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        grid = grid.replaceCell(0, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(0, 1, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(0, 2, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(0, 3, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(1, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(1, 1, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 2, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 3, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(5, 6, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(4, 5, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 4, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 3, Cell(Some(Piece(player1))))
+
+        grid.checkWin(player1) should be(true)
       }
       "any horizontal pattern be checked correctly" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.grid = controller.grid.replaceCell(0,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(0,1, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(0,2, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(0,3, Cell(Some(Piece(controller.players(0)))))
-        controller.currentPlayer = controller.players(0)
-        val horizontal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 1,controller.grid.colCount - 4,(0,1))
+        var grid: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        grid = grid.replaceCell(0, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(0, 1, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(0, 2, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(0, 3, Cell(Some(Piece(player1))))
+        val horizontal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (0, 1))
         var bool = false
         horizontal match {
           case Some(v) => bool = v
           case None => bool = false
         }
-        bool should be (true)
+        bool should be(true)
       }
       "any vertical pattern be checked correctly" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.grid = controller.grid.replaceCell(0,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(1,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(2,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(3,0, Cell(Some(Piece(controller.players(0)))))
-        controller.currentPlayer = controller.players(0)
-        val vertical = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 4,controller.grid.colCount - 1,(1,0))
+        var grid: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        grid = grid.replaceCell(0, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(1, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 0, Cell(Some(Piece(player1))))
+        val vertical = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 1, (1, 0))
         var bool = false
         vertical match {
           case Some(v) => bool = v
           case None => bool = false
         }
-        bool should be (true)
+        bool should be(true)
       }
       "the bottom left corner be checked correctly ascending diagonally" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.grid = controller.grid.replaceCell(0,0, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(1,1, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(2,2, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(3,3, Cell(Some(Piece(controller.players(0)))))
-        controller.currentPlayer = controller.players(0)
-        val ascDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 4,controller.grid.colCount - 4,(1,1))
+        var grid: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        grid = grid.replaceCell(0, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(1, 1, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 2, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 3, Cell(Some(Piece(player1))))
+        val ascDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 4, (1, 1))
         var bool = false
         ascDiagonal match {
           case Some(v) => bool = v
           case None => bool = false
         }
-        bool should be (true)
+        bool should be(true)
       }
 
       "the upper right corner be checked correctly ascending diagonally" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.grid.reset()
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.grid = controller.grid.replaceCell(5,6, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(4,5, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(3,4, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(2,3, Cell(Some(Piece(controller.players(0)))))
-        controller.currentPlayer = controller.players(0)
-        val ascDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 4,controller.grid.colCount - 4,(1,1))
+        var grid: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        grid = grid.replaceCell(5, 6, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(4, 5, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 4, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 3, Cell(Some(Piece(player1))))
+        val ascDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 4, (1, 1))
         var bool = false
         ascDiagonal match {
           case Some(v) => bool = v
           case None => bool = false
         }
-        bool should be (true)
+        bool should be(true)
       }
       "the upper left corner be checked correctly descending diagonally if a player has won the game" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.grid = controller.grid.replaceCell(5,0, Cell(Some(Piece(controller.players(1)))))
-        controller.grid = controller.grid.replaceCell(4,1, Cell(Some(Piece(controller.players(1)))))
-        controller.grid = controller.grid.replaceCell(3,2, Cell(Some(Piece(controller.players(1)))))
-        controller.grid = controller.grid.replaceCell(2,3, Cell(Some(Piece(controller.players(1)))))
-        controller.currentPlayer = controller.players(1)
-        val descDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 1,controller.grid.colCount - 4,(-1,1), 3)
+        var grid: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        grid = grid.replaceCell(5, 0, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(4, 1, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 2, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 3, Cell(Some(Piece(player1))))
+        val descDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (-1, 1), 3)
         var bool = false
         descDiagonal match {
           case Some(v) => bool = v
           case None => bool = false
         }
-        bool should be (true)
+        bool should be(true)
       }
       "the bottom right corner be checked correctly descending diagonally if a player has won the game" in {
-        var controller = new Controller(new Grid,new PlayerBuilder())
-        controller.addPlayer("Player1")
-        controller.addPlayer("Player2")
-        controller.grid = controller.grid.replaceCell(0,6, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(1,5, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(2,4, Cell(Some(Piece(controller.players(0)))))
-        controller.grid = controller.grid.replaceCell(3,3, Cell(Some(Piece(controller.players(0)))))
-        controller.currentPlayer = controller.players(0)
-        val descDiagonal = controller.grid.winPattern(Some(Piece(controller.currentPlayer)))(controller.grid.rowCount - 1,controller.grid.colCount - 4,(-1,1), 3)
+        var grid: GridInterface = new Grid()
+        var player1 = new Player("Player1", 1)
+        var player2 = new Player("Player2", 2)
+        grid = grid.replaceCell(0, 6, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(1, 5, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(2, 4, Cell(Some(Piece(player1))))
+        grid = grid.replaceCell(3, 3, Cell(Some(Piece(player1))))
+        val descDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (-1, 1), 3)
         var bool = false
         descDiagonal match {
           case Some(v) => bool = v
           case None => bool = false
         }
-        bool should be (true)
+        bool should be(true)
       }
-
     }
   }
