@@ -5,6 +5,7 @@ import de.htwg.se.ConnectFour.controller.Controller
 import de.htwg.se.ConnectFour.util.{Observer, UI}
 
 import scala.io.StdIn.readLine
+import scala.util.{Failure, Success, Try}
 
 /**
  * ConnectFour text-based user interface
@@ -37,5 +38,6 @@ case class TUI(controller: Controller) extends UI with Observer:
     gameState.handle(input)
   
   override def update: Boolean =
-    print(this.controller.gridToString())
-    true
+    Try(this.controller.gridToString()) match
+      case Success(v) => true
+      case Failure(v) => false

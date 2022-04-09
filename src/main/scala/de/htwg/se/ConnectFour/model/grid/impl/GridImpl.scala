@@ -4,6 +4,8 @@ import com.google.inject.Inject
 import de.htwg.se.ConnectFour.model.grid.{Cell, Grid, Piece}
 import de.htwg.se.ConnectFour.model.player.Player
 
+import scala.util.{Failure, Success, Try}
+
 /**
  * Game grid implementation
  */
@@ -29,6 +31,12 @@ case class GridImpl(rows: Vector[Vector[Cell]]) extends Grid:
     new GridImpl()
 
   override def checkWin(currentPlayer:Player):Boolean =
+    Try(checkWinTry(currentPlayer)) match
+      case Success(v) => v
+      case Failure(_) => false
+
+
+  def checkWinTry(currentPlayer:Player):Boolean =
     val playerPiece = Some(Piece(currentPlayer))
 
     val horizontal = winPattern(playerPiece)(rowCount - 1,colCount - 4,(0,1))
