@@ -2,12 +2,12 @@ package de.htwg.se.ConnectFour.controller
 
 import com.google.inject.Guice
 import de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl.Controller
+import tools.util.Observer
 //import model.fileIOComponent.FileIOInterface
 import model.gridComponent.GridInterface
 import model.gridComponent.gridBaseImpl.Grid
 import model.playerComponent.PlayerBuilderInterface
 import model.playerComponent.playerBuilderBaseImpl.PlayerBuilder
-import de.htwg.se.ConnectFour.util.Observer
 import de.htwg.se.ConnectFour.ConnectFourModule
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

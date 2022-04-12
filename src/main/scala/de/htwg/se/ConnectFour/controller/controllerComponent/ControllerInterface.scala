@@ -2,7 +2,7 @@ package de.htwg.se.ConnectFour.controller.controllerComponent
 
 import model.gridComponent.GridInterface
 import model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
-import de.htwg.se.ConnectFour.util.{Observable, UndoManager}
+import tools.util.{Observable, UndoManager}
 
 /**
  * Controller Trait

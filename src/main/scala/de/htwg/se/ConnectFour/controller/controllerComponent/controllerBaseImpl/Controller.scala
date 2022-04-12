@@ -3,10 +3,9 @@ package de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl
 import com.google.inject.{Guice, Inject, Key}
 import de.htwg.se.ConnectFour.ConnectFourModule
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-//import fileIOComponent.FileIOInterface
+import tools.util.UndoManager
 import model.gridComponent.{GridInterface, Piece}
 import model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
-import de.htwg.se.ConnectFour.util.UndoManager
 
 /**
  *  Controller implementation

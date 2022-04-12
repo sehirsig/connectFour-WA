@@ -1,7 +1,8 @@
-package de.htwg.se.ConnectFour.util
+package tools.util
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import tools.util.UndoManager
 
 class UndoManagerSpec extends AnyWordSpec with Matchers:
   "An UndoManager" should {

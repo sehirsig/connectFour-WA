@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.util
+package tools.util
 
 /**
  * Undo Manager implementation

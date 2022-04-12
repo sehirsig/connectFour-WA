@@ -1,26 +1,16 @@
-import sbt.Keys.libraryDependencies
-
 val scala3Version = "3.1.1"
 
-lazy val model = (project in file("Model"))
-lazy val persistence = (project in file("Persistence")).dependsOn(model).aggregate(model)
-lazy val tools = (project in file("Tools"))
 
-
-lazy val root = project
+lazy val tools = project
   .in(file("."))
-  .dependsOn(tools, model, persistence)
-  .aggregate(tools, model, persistence)
   .settings(
-    name := "ConnectFour",
+    name := "ConnectFour-Tools",
     version := "0.5.0-SNAPSHOT",
     scalaVersion := scala3Version,
     organization := "de.htwg.se",
 
     libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % "test",
-
-    libraryDependencies += ("org.scalafx" %% "scalafx" % "17.0.1-R26"),
 
     libraryDependencies += ("com.google.inject" % "guice"% "5.1.0"),
     libraryDependencies += ("net.codingwell" %% "scala-guice" % "5.0.1").cross(CrossVersion.for3Use2_13),

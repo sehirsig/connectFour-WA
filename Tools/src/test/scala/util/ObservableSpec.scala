@@ -1,7 +1,8 @@
-package de.htwg.se.ConnectFour.util
+package tools.util
 
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
+import tools.util.{Observable, Observer}
 
 
 class ObservableSpec extends AnyWordSpec with Matchers:

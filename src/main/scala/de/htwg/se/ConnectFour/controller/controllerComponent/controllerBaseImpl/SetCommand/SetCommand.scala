@@ -2,7 +2,7 @@ package de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import model.gridComponent.{GridInterface, Piece}
-import de.htwg.se.ConnectFour.util.Command
+import tools.util.Command
 
 /**
  *  Command/Memento pattern implementation

@@ -1,7 +1,7 @@
 package de.htwg.se.ConnectFour.aUI;
 import de.htwg.se.ConnectFour.aUI.states.GUI.GameState
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import de.htwg.se.ConnectFour.util.{Observer, UI}
+import tools.util.Observer
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.geometry.Insets
@@ -13,6 +13,7 @@ import scalafx.scene.layout.*
 import scalafx.scene.paint.Color.{Black, DarkRed, LightYellow, Red, Yellow}
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
+import tools.util.{Observer, UI}
 
 import scala.util.{Failure, Success, Try}
 
