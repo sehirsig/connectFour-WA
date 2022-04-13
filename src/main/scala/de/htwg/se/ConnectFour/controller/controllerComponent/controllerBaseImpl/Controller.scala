@@ -6,13 +6,14 @@ import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import tools.util.UndoManager
 import model.gridComponent.{GridInterface, Piece}
 import model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
+import fileIOComponent.FileIOInterface
 
 /**
  *  Controller implementation
  */
 class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuilderInterface) extends ControllerInterface:
   val injector = Guice.createInjector(ConnectFourModule())
-  //val fileIo = injector.getInstance(classOf[FileIOInterface])
+  val fileIo = injector.getInstance(classOf[FileIOInterface])
 
   var players: Vector[PlayerInterface] = Vector.empty
   var moveCount = 0
@@ -57,11 +58,11 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
     notifyObservers
 
   override def saveGame() =
-    //fileIo.save(this)
+    fileIo.save(this.grid)
     notifyObservers
 
   override def loadGame() =
-    //fileIo.load(this)
+    this.grid = fileIo.load(this.players(0), this.players(1), this.grid)
     notifyObservers
 
   override def reset() =
