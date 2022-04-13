@@ -47,7 +47,8 @@ lazy val model = (project in file("Model"))
     commonSettings,
   )
 
-lazy val persistence = (project in file("Persistence")).dependsOn(model).aggregate(model)
+lazy val persistence = (project in file("Persistence")).
+  dependsOn(model)
   .settings(
     name := "ConnectFour-Persistence",
     version := "0.5.0-SNAPSHOT",
