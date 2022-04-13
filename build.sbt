@@ -1,21 +1,64 @@
 import sbt.Keys.libraryDependencies
 
+/** ScalaVersion */
 val scala3Version = "3.1.1"
 
+/** Dependencies */
+lazy val commonDependencies = Seq(
+  dependencies.scalactic("3.2.11"),
+  dependencies.scalatest("3.2.11"),
+  dependencies.scalafx("17.0.1-R26"),
+  dependencies.codingwell("5.0.1"),
+  dependencies.googleinject,
+  dependencies.scalalangmodules,
+  dependencies.typesafeplay
+)
+
+/** Model Module */
+lazy val model = (project in file("Model"))
+  .settings(
+    name := "ConnectFour-Model",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+
+/** Persistence Module */
+lazy val persistence = (project in file("Persistence"))
+  .dependsOn(model)
+  .settings(
+    name := "ConnectFour-Persistence",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+
+/** Tools Module */
+lazy val tools = (project in file("Tools"))
+  .settings(
+    name := "ConnectFour-Tools",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+
+/** Root Module */
+lazy val root = project
+  .in(file("."))
+  .dependsOn(tools, model, persistence)
+  .aggregate(tools, model, persistence)
+  .settings(
+    name := "ConnectFour",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+  .enablePlugins(JacocoCoverallsPlugin)
+
+/** Common Settings */
 lazy val commonSettings = Seq(
   scalaVersion := scala3Version,
   organization := "de.htwg.se",
-
-  libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11",
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % "test",
-
-  libraryDependencies += ("org.scalafx" %% "scalafx" % "17.0.1-R26"),
-
-  libraryDependencies += ("com.google.inject" % "guice"% "5.1.0"),
-  libraryDependencies += ("net.codingwell" %% "scala-guice" % "5.0.1").cross(CrossVersion.for3Use2_13),
-
-  libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.1",
-  libraryDependencies += ("com.typesafe.play" %% "play-json" % "2.10.0-RC6"),
 
   jacocoCoverallsServiceName := "github-actions",
   jacocoCoverallsBranch := sys.env.get("CI_BRANCH"),
@@ -39,36 +82,3 @@ lazy val commonSettings = Seq(
       .map(m => "org.openjfx" % s"javafx-$m" % "17.0.1" classifier osName)
   }
 )
-
-lazy val model = (project in file("Model"))
-  .settings(
-    name := "ConnectFour-Model",
-    version := "0.5.0-SNAPSHOT",
-    commonSettings,
-  )
-
-lazy val persistence = (project in file("Persistence"))
-  .dependsOn(model)
-  .settings(
-    name := "ConnectFour-Persistence",
-    version := "0.5.0-SNAPSHOT",
-    commonSettings,
-  )
-
-lazy val tools = (project in file("Tools"))
-  .settings(
-    name := "ConnectFour-Tools",
-    version := "0.5.0-SNAPSHOT",
-    commonSettings,
-  )
-
-lazy val root = project
-  .in(file("."))
-  .dependsOn(tools, model, persistence)
-  .aggregate(tools, model, persistence)
-  .settings(
-    name := "ConnectFour",
-    version := "0.5.0-SNAPSHOT",
-    commonSettings,
-  )
-  .enablePlugins(JacocoCoverallsPlugin)
