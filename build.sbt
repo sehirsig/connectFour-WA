@@ -2,6 +2,7 @@ import sbt.Keys.libraryDependencies
 
 val scala3Version = "3.1.1"
 
+
 lazy val commonSettings = Seq(
   scalaVersion := scala3Version,
   organization := "de.htwg.se",

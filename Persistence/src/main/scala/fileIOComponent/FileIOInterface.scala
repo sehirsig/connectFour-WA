@@ -1,10 +1,12 @@
 package fileIOComponent
 
 //import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
+import model.gridComponent.GridInterface
+import model.playerComponent.PlayerInterface
 
 /**
  * FileIO Trait
  */
 trait FileIOInterface:
-  //def load(controller:ControllerInterface):Unit
-  //def save(game: ControllerInterface): Unit
+  def load(player1:PlayerInterface, player2:PlayerInterface, grid:GridInterface):GridInterface
+  def save(game: GridInterface): Unit

@@ -1,8 +1,10 @@
 package fileIOComponent.xml
-/*
-import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
+
+//import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
+import model.gridComponent.GridInterface
 import fileIOComponent.FileIOInterface
 import model.gridComponent.{Cell, GridInterface, Piece}
+import model.playerComponent.PlayerInterface
 
 import scala.util.{Failure, Success, Try}
 import scala.xml.{NodeSeq, PrettyPrinter}
@@ -13,31 +15,31 @@ import scala.xml.{NodeSeq, PrettyPrinter}
  */
 class FileIO() extends FileIOInterface:
 
-  override def load(controller:ControllerInterface) =
-    Try(loadMethod(controller)) match
-      case Success(v) => controller.setGrid(v)
-      case Failure(v) =>
+  override def load(player1:PlayerInterface, player2:PlayerInterface, grid:GridInterface):GridInterface =
+    Try(loadMethod(player1, player2, grid)) match
+      case Success(v) => v
+      case Failure(v) => grid
 
-  def loadMethod(controller: ControllerInterface):GridInterface =
+  def loadMethod(player1:PlayerInterface, player2:PlayerInterface, par_grid: GridInterface):GridInterface =
     val file = scala.xml.XML.loadFile("game.xml")
-    val currentPlayer = (file \\ "game" \\ "player" \\ "currentPlayer").text
-    val player1 = (file \\ "game" \\ "player" \\ "player1").text
-    val player2 = (file \\ "game" \\ "player" \\ "player2").text
-    val moveCount = (file \\ "game" \\ "player" \\ "moveCount").text.trim.toInt
+    //val currentPlayer = (file \\ "game" \\ "player" \\ "currentPlayer").text
+    //val player1 = (file \\ "game" \\ "player" \\ "player1").text
+    //val player2 = (file \\ "game" \\ "player" \\ "player2").text
+    //val moveCount = (file \\ "game" \\ "player" \\ "moveCount").text.trim.toInt
 
-    controller.setMoveCount(moveCount)
-    controller.addPlayer(player1)
-    controller.addPlayer(player2)
-    currentPlayer match
-      case player1 => controller.setCurrentPlayer(controller.players(0))
-      case player2 => controller.setCurrentPlayer(controller.players(1))
+    //controller.setMoveCount(moveCount)
+    //controller.addPlayer(player1)
+    //controller.addPlayer(player2)
+    //currentPlayer match
+    //  case player1 => controller.setCurrentPlayer(controller.players(0))
+    //  case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cellNodes = (file \\ "grid" \\ "cell")
-    recursiveSetGrid(controller, cellNodes, 0, controller.getGrid())
+    recursiveSetGrid(player1, player2, cellNodes, 0, par_grid)
 
 
 
-  def recursiveSetGrid(controller:ControllerInterface, cells:NodeSeq, idx:Int, grid:GridInterface):GridInterface =
+  def recursiveSetGrid(player1:PlayerInterface, player2:PlayerInterface, cells:NodeSeq, idx:Int, grid:GridInterface):GridInterface =
     if cells.length == idx then
       return grid
 
@@ -47,14 +49,14 @@ class FileIO() extends FileIOInterface:
     val col: Int = (cell \\ "@col").text.toInt
     val value: Int = cell.text.trim.toInt
     val optPiece = value match
-      case 1 => Some(Piece(controller.players(0)))
-      case 2 => Some(Piece(controller.players(1)))
+      case 1 => Some(Piece(player1))
+      case 2 => Some(Piece(player2))
       case _ => None
-    recursiveSetGrid(controller, cells, idx + 1, grid.replaceCell(row, col, Cell(optPiece)))
+    recursiveSetGrid(player1, player2, cells, idx + 1, grid.replaceCell(row, col, Cell(optPiece)))
 
-  def gameToXml(controller: ControllerInterface) =
-    <game>
-      <player>
+
+  /*
+  <player>
         <moveCount>
           { controller.moveCount }
         </moveCount>
@@ -68,26 +70,28 @@ class FileIO() extends FileIOInterface:
           { controller.players(1).playerName }
         </player2>
       </player>
-    <grid>
-      {
-      (0 to controller.getGrid().colCount - 1).flatMap(col =>
-        (0 to controller.getGrid().rowCount - 1).reverse.map(row => {
-          val player = controller.getGrid().cell(row, col).piece match
-            case Some(s) => s.player.playerNumber
-            case None => -1
-          <cell row={ row.toString } col={ col.toString }>
-            { player.toString }
-          </cell>
-        }))
-      }
-    </grid>
+  */
+  def gameToXml(par_grid: GridInterface) =
+    <game>
+      <grid>
+        {
+        (0 to par_grid.colCount - 1).flatMap(col =>
+          (0 to par_grid.rowCount - 1).reverse.map(row => {
+            val player = par_grid.cell(row, col).piece match
+              case Some(s) => s.player.playerNumber
+              case None => -1
+            <cell row={ row.toString } col={ col.toString }>
+              { player.toString }
+            </cell>
+          }))
+        }
+      </grid>
     </game>
 
-  override def save(game: ControllerInterface) =
+  override def save(game: GridInterface) =
     import java.io._
     val pw = PrintWriter(File("game.xml"))
     val prettyPrinter = PrettyPrinter(120, 4)
     val xml = prettyPrinter.format(gameToXml(game))
     pw.write(xml)
     pw.close()
-*/

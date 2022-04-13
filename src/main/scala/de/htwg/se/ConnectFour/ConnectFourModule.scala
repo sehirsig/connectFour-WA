@@ -4,8 +4,9 @@ import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl.Controller
-//import fileIOComponent.FileIOInterface
-//import fileIOComponent.*
+import fileIOComponent.FileIOInterface
+import fileIOComponent.json.FileIO
+import fileIOComponent.xml.FileIO
 import model.gridComponent.GridInterface
 import model.gridComponent.gridBaseImpl.Grid
 import model.playerComponent.PlayerBuilderInterface
@@ -27,6 +28,6 @@ class ConnectFourModule extends AbstractModule:
     bind(classOf[PlayerInterface]).to(classOf[Player])
     bind(classOf[PlayerBuilderInterface]).to(classOf[PlayerBuilder])
     bind(classOf[GridInterface]).to(classOf[Grid])
-    //bind(classOf[FileIOInterface]).to(classOf[json.FileIO])
-    //bind(classOf[FileIO]).to(classOf[xml.FileIOImpl])
+    bind(classOf[FileIOInterface]).to(classOf[fileIOComponent.json.FileIO])
+    //bind(classOf[FileIOInterface]).to(classOf[fileIOComponent.xml.FileIO])
     bind(classOf[ControllerInterface]).to(classOf[Controller])
