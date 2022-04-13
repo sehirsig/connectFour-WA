@@ -2,7 +2,6 @@ import sbt.Keys.libraryDependencies
 
 val scala3Version = "3.1.1"
 
-
 lazy val commonSettings = Seq(
   scalaVersion := scala3Version,
   organization := "de.htwg.se",
@@ -17,6 +16,7 @@ lazy val commonSettings = Seq(
 
   libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.1",
   libraryDependencies += ("com.typesafe.play" %% "play-json" % "2.10.0-RC6"),
+
   jacocoCoverallsServiceName := "github-actions",
   jacocoCoverallsBranch := sys.env.get("CI_BRANCH"),
   jacocoCoverallsPullRequest := sys.env.get("GITHUB_EVENT_NAME"),
@@ -47,8 +47,8 @@ lazy val model = (project in file("Model"))
     commonSettings,
   )
 
-lazy val persistence = (project in file("Persistence")).
-  dependsOn(model)
+lazy val persistence = (project in file("Persistence"))
+  .dependsOn(model)
   .settings(
     name := "ConnectFour-Persistence",
     version := "0.5.0-SNAPSHOT",
@@ -61,7 +61,6 @@ lazy val tools = (project in file("Tools"))
     version := "0.5.0-SNAPSHOT",
     commonSettings,
   )
-
 
 lazy val root = project
   .in(file("."))
