@@ -9,9 +9,13 @@ lazy val commonDependencies = Seq(
   dependencies.scalatest("3.2.11"),
   dependencies.scalafx("17.0.1-R26"),
   dependencies.codingwell("5.0.1"),
+  dependencies.akkaHttpVersion("10.2.9"),
   dependencies.googleinject,
   dependencies.scalalangmodules,
-  dependencies.typesafeplay
+  dependencies.typesafeplay,
+  dependencies.akkaActor,
+  dependencies.akkaStream,
+  dependencies.akkaActorTyped
 )
 
 /** Model Module */
