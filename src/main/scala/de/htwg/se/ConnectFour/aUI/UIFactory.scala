@@ -1,5 +1,7 @@
 package de.htwg.se.ConnectFour.aUI
 import de.htwg.se.ConnectFour.aUI.*
+import de.htwg.se.ConnectFour.aUI.gui.GUI
+import de.htwg.se.ConnectFour.aUI.tui.TUI
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import javafx.embed.swing.JFXPanel
 

@@ -1,9 +1,8 @@
-package de.htwg.se.ConnectFour.aUI;
-import de.htwg.se.ConnectFour.aUI.states.GUI.GameState
+package de.htwg.se.ConnectFour.aUI.gui
+
+import de.htwg.se.ConnectFour.aUI.gui.states.GameState
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import tools.util.Observer
 import scalafx.application.JFXApp3
-import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, TextInputDialog}
@@ -21,7 +20,7 @@ import scala.util.{Failure, Success, Try}
  * ConnectFour graphical user interface
  * based on ScalaFX
  */
-case class GUI(controller: ControllerInterface) extends UI with Observer with JFXApp3:
+case class GUI(controller: ControllerInterface) extends UI with Observer with JFXApp3 :
   controller.add(this)
   var gameState: GameState = GameState(controller, this)
 
@@ -67,7 +66,7 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
    * Force to type in names
    * when method is running
    */
-  def begin(callback: (String) => Unit)(msg:String) =
+  def begin(callback: (String) => Unit)(msg: String) =
     waitForPlayers
     callback(msg) // changing the state
 
@@ -75,11 +74,11 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
    * Help Method to Force to type in names
    * when method is running
    */
-  def waitForPlayers:Unit =
+  def waitForPlayers: Unit =
     if controller.players.size < 2 then
       controller.players.size match
-        case 0 => typeName();waitForPlayers
-        case 1 => typeName();waitForPlayers
+        case 0 => typeName(); waitForPlayers
+        case 1 => typeName(); waitForPlayers
         case _ =>
 
   /**
@@ -164,7 +163,7 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
     rowConstraints.add(rows)
 
     (0 until 3).map(_ => {
-      val col = new ColumnConstraints():
+      val col = new ColumnConstraints() :
         percentWidth = 80
 
       columnConstraints.add(col)
@@ -240,46 +239,45 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
    * to show the latest drops.
    */
   def refreshView() =
-      (0 to controller.getGrid().colCount - 1).flatMap(x =>
-        (0 to controller.getGrid().rowCount - 1).reverse.map(y => {
-          /**
-           * Reversing the y values so the dropped pieces
-           * are landing at the bottom
-           **/
-          val reverseY = y match
-            case 0 => 5
-            case 1 => 4
-            case 2 => 3
-            case 3 => 2
-            case 4 => 1
-            case 5 => 0
+    (0 to controller.getGrid().colCount - 1).flatMap(x =>
+      (0 to controller.getGrid().rowCount - 1).reverse.map(y => {
+        /**
+         * Reversing the y values so the dropped pieces
+         * are landing at the bottom
+         * */
+        val reverseY = y match
+          case 0 => 5
+          case 1 => 4
+          case 2 => 3
+          case 3 => 2
+          case 4 => 1
+          case 5 => 0
 
-          val piece: Button = gameFieldButton(x)
-          if controller.getGrid().cell(y, x).isSet then
-            val img = controller.getGrid().cell(y, x).piece.get.player.playerNumber match
-              case 1 => this.redImage
-              case 2 => this.yellowImage
+        val piece: Button = gameFieldButton(x)
+        if controller.getGrid().cell(y, x).isSet then
+          val img = controller.getGrid().cell(y, x).piece.get.player.playerNumber match
+            case 1 => this.redImage
+            case 2 => this.yellowImage
 
-            val imgView = new ImageView(img)
-            imgView.setFitHeight(35)
-            imgView.setFitWidth(35)
-            imgView.setPreserveRatio(true)
-            piece.setGraphic(imgView)
-            piece.setMaxSize(Double.MaxValue, Double.MaxValue)
-
+          val imgView = new ImageView(img)
+          imgView.setFitHeight(35)
+          imgView.setFitWidth(35)
+          imgView.setPreserveRatio(true)
+          piece.setGraphic(imgView)
           piece.setMaxSize(Double.MaxValue, Double.MaxValue)
-          gameGrid.add(piece, x, reverseY)
-        }))
+
+        piece.setMaxSize(Double.MaxValue, Double.MaxValue)
+        gameGrid.add(piece, x, reverseY)
+      }))
 
   override def processInput(input: String) =
     input match
       case _ => execute(input)
 
-  def execute(input:String) =
+  def execute(input: String) =
     gameState.handle(input)
 
   override def update: Boolean =
     Try(refreshView()) match
       case Success(v) => true
       case Failure(v) => false
-
