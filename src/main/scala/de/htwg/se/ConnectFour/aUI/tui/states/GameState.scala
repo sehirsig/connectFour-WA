@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.aUI.states.TUI
+package de.htwg.se.ConnectFour.aUI.tui.states
 
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 

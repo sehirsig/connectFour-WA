@@ -1,14 +1,13 @@
-package de.htwg.se.ConnectFour.aUI.states.GUI
+package de.htwg.se.ConnectFour.aUI.tui.states
 
-import de.htwg.se.ConnectFour.aUI.GUI
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 
 /**
- * DropState of GUI
+ * DropState of TUI
  */
 case class DropState(controller: ControllerInterface) extends State[GameState]:
-  
-  override def handle(input: String,gui:GUI, state: GameState) =
+
+  override def handle(input: String, state: GameState) =
     val regExCheck = "([0-6])".r
     if regExCheck.matches(input) then
       controller.drop(input)
@@ -20,3 +19,4 @@ case class DropState(controller: ControllerInterface) extends State[GameState]:
       case "r" => controller.redoDrop()
       case "n" => controller.reset()
       case _ =>
+

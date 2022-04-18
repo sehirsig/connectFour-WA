@@ -1,6 +1,6 @@
-package de.htwg.se.ConnectFour.aUI.states.GUI
+package de.htwg.se.ConnectFour.aUI.gui.states
 
-import de.htwg.se.ConnectFour.aUI.GUI
+import de.htwg.se.ConnectFour.aUI.gui.GUI
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType

@@ -1,11 +1,11 @@
 package de.htwg.se.ConnectFour.controller.controllerComponent
+
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethods, HttpRequest}
 import akka.http.scaladsl.server.Directives._
 import com.google.inject.{Guice, Injector}
-import de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.ConnectFour.ConnectFourModule
 import scala.util.{Success,Failure}
 
