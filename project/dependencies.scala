@@ -15,7 +15,7 @@ object dependencies {
 }
 
 object versionNumber {
-  val akka = "2.6.18"
+  val akka = "2.6.19"
   val scalactic = "3.2.11"
   val scalatest = "3.2.11"
   val scalafx = "17.0.1-R26"
