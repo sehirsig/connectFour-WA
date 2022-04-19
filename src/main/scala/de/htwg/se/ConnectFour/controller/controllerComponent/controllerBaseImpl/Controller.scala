@@ -6,14 +6,31 @@ import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import tools.util.UndoManager
 import model.gridComponent.{GridInterface, Piece}
 import model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
-import fileIOComponent.FileIOInterface
+import fileIOComponent.json.FileIO
+
+
+import akka.http.scaladsl.server.Directives.{complete, concat, get, path}
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Directives.*
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCode, HttpMethods, HttpResponse, HttpRequest}
+import akka.http.scaladsl.server.{ExceptionHandler, Route}
+
+import akka.http.scaladsl.unmarshalling.Unmarshal
+
+import play.api.libs.json.{JsValue, Json}
+
+import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
+
 
 /**
  *  Controller implementation
  */
 class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuilderInterface) extends ControllerInterface:
   val injector = Guice.createInjector(ConnectFourModule())
-  val fileIo = injector.getInstance(classOf[FileIOInterface])
+  // fileIo = injector.getInstance(classOf[FileIOInterface])
 
   var players: Vector[PlayerInterface] = Vector.empty
   var moveCount = 0
@@ -58,11 +75,40 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
     notifyObservers
 
   override def saveGame() =
-    fileIo.save(this.grid)
+    //FileIO.save(this.grid)
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+
+    implicit val executionContext = system.executionContext
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
+      method = HttpMethods.POST,
+      uri = "http://localhost:8081/fileio/save",
+      entity = grid.toJsonString
+    ))
     notifyObservers
 
   override def loadGame() =
-    this.grid = fileIo.load(this.players(0), this.players(1), this.grid)
+    //this.grid = FileIO.load(this.players(0), this.players(1), this.grid)
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+
+    implicit val executionContext = system.executionContext
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/fileio/load"))
+
+    responseFuture
+      .onComplete {
+        case Failure(_) => sys.error("Failed getting Json")
+        case Success(value) => {
+          Unmarshal(value.entity).to[String].onComplete {
+            case Failure(_) => sys.error("Failed unmarshalling")
+            case Success(value) => {
+              val loadedGame = grid.jsonToGrid(players(0), players(1), grid, value)
+              this.grid = loadedGame
+              notifyObservers
+            }
+          }
+        }
+      }
     notifyObservers
 
   override def reset() =
