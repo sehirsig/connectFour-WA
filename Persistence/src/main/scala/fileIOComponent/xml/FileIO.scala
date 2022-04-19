@@ -5,6 +5,7 @@ import model.gridComponent.GridInterface
 import fileIOComponent.FileIOInterface
 import model.gridComponent.{Cell, GridInterface, Piece}
 import model.playerComponent.PlayerInterface
+import model.playerComponent.playerBaseImpl.Player
 
 import scala.util.{Failure, Success, Try}
 import scala.xml.{NodeSeq, PrettyPrinter}
@@ -15,7 +16,9 @@ import scala.xml.{NodeSeq, PrettyPrinter}
  */
 class FileIO() extends FileIOInterface:
 
-  override def load(player1:PlayerInterface, player2:PlayerInterface, grid:GridInterface):GridInterface =
+  override def load(grid:GridInterface):GridInterface =
+    val player1 = Player("Player 1", 1)
+    val player2 = Player("Player 2", 2)
     Try(loadMethod(player1, player2, grid)) match
       case Success(v) => v
       case Failure(v) => grid

@@ -38,6 +38,6 @@ case class TUI(controller: ControllerInterface) extends UI with Observer :
     gameState.handle(input)
 
   override def update: Boolean =
-    Try(this.controller.gridToString()) match
+    Try(println(this.controller.gridToString())) match
       case Success(v) => true
       case Failure(v) => false

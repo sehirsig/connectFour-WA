@@ -3,7 +3,6 @@ package fileIOComponent.json
 import com.google.inject.Inject
 import model.playerComponent.playerBaseImpl.Player
 import model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
-//import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import fileIOComponent.FileIOInterface
 import model.gridComponent.{Cell, GridInterface, Piece}
 import play.api.libs.json.*
@@ -16,9 +15,11 @@ import scala.util.{Failure, Success, Try}
  * FileIO implementation
  * for exporting the game as JSON File
  */
-class FileIO @Inject () extends FileIOInterface:
+object FileIO extends FileIOInterface:
 
-  override def load(player1:PlayerInterface, player2:PlayerInterface, grid:GridInterface):GridInterface =
+  override def load(grid:GridInterface):GridInterface =
+    val player1 = Player("Player 1", 1)
+    val player2 = Player("Player 2", 2)
     Try(loadMethod(player1, player2, grid)) match
       case Success(v) => v
       case Failure(v) => grid
@@ -27,17 +28,6 @@ class FileIO @Inject () extends FileIOInterface:
     val source: String = Source.fromFile("game.json").getLines.mkString
     val gameJson: JsValue = Json.parse(source)
     val grid = (gameJson \ "grid")
-    //val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
-    //val currentPlayer = (gameJson \ "player" \ "currentPlayer").get.toString()
-    //val player1 = (gameJson \ "player" \ "player1").get.toString()
-    //val player2 = (gameJson \ "player" \ "player2").get.toString()
-
-    //controller.setMoveCount(moveCount)
-    //controller.addPlayer(player1)
-    //controller.addPlayer(player2)
-    //currentPlayer match
-    //  case player1 => controller.setCurrentPlayer(controller.players(0))
-    //  case player2 => controller.setCurrentPlayer(controller.players(1))
 
     val cells = (grid \ "cells").as[JsArray]
     recursiveSetGrid(player1, player2, cells, 0, par_grid)
@@ -60,20 +50,6 @@ class FileIO @Inject () extends FileIOInterface:
 
   def gameToJson(par_grid: GridInterface): JsValue =
     Json.obj(
-      //"player" -> Json.obj(
-      //  "moveCount" -> Json.obj(
-      //    "value"  -> controller.moveCount
-      //  ),
-      //  "currentPlayer" -> Json.obj(
-      //    "name" -> controller.currentPlayer.playerName
-      //  ),
-      //  "player1" -> Json.obj(
-      //    "name" -> controller.players(0).playerName
-      //  ),
-      //  "player2" -> Json.obj(
-      //    "name" -> controller.players(1).playerName
-      //  )
-      //),
       "grid" -> Json.obj(
         "cells" -> Json.toJson(
           (0 to par_grid.colCount - 1).flatMap(col =>

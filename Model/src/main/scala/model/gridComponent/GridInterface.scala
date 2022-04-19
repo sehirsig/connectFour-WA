@@ -1,6 +1,8 @@
 package model.gridComponent
 
 import model.playerComponent.PlayerInterface
+import netscape.javascript.JSObject
+import play.api.libs.json.{JsValue, Json}
 
 /**
  * Grid Trait
@@ -15,5 +17,8 @@ trait GridInterface:
   def reset(): GridInterface
   def checkWin(currentPlayer:PlayerInterface):Boolean
   def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Option[Boolean]
+  def toJsonString:String
+  def toJson:JsValue
+  def jsonToGrid(player1:PlayerInterface, player2:PlayerInterface, par_grid:GridInterface, source: String):GridInterface
 
   

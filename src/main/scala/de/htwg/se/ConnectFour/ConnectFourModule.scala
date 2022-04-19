@@ -28,6 +28,6 @@ class ConnectFourModule extends AbstractModule:
     bind(classOf[PlayerInterface]).to(classOf[Player])
     bind(classOf[PlayerBuilderInterface]).to(classOf[PlayerBuilder])
     bind(classOf[GridInterface]).to(classOf[Grid])
-    bind(classOf[FileIOInterface]).to(classOf[fileIOComponent.json.FileIO])
+    //bind(classOf[FileIOInterface]).to(classOf[fileIOComponent.json.FileIO])
     //bind(classOf[FileIOInterface]).to(classOf[fileIOComponent.xml.FileIO])
     bind(classOf[ControllerInterface]).to(classOf[Controller])
