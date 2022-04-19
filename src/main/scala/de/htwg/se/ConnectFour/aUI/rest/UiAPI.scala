@@ -115,7 +115,16 @@ class UiAPI(controller: ControllerInterface) {
   }
 
   val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(route)
-  println(s"View server online at http://localhost:8080/\nPress RETURN to stop...")
+
+  bindingFuture.onComplete{
+    case Success(binding) => {
+      val address = binding.localAddress
+      println(s"View REST service online at http://${address.getHostName}:${address.getPort}\nPress RETURN to stop...")
+    }
+    case Failure(exception) => {
+      println("View REST service couldn't be started! Error: " + exception + "\n")
+    }
+  }
 
   def stop():Unit =
     bindingFuture
