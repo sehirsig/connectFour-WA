@@ -52,7 +52,7 @@ object FileIOAPI:
   bindingFuture.onComplete{
     case Success(binding) => {
       val address = binding.localAddress
-      println(s"File IO REST service online at http://${address.getHostName}:${address.getPort}\nPress RETURN to stop...")
+      println(s"File IO REST service online at http://localhost:${address.getPort}\nPress RETURN to stop...")
     }
     case Failure(exception) => {
       println("File IO REST service couldn't be started! Error: " + exception + "\n")
