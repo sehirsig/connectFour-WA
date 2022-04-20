@@ -32,6 +32,8 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
   val injector = Guice.createInjector(ConnectFourModule())
   // fileIo = injector.getInstance(classOf[FileIOInterface])
 
+  val fileIOServer = "http://localhost:8081/fileio"
+
   var players: Vector[PlayerInterface] = Vector.empty
   var moveCount = 0
   var currentPlayer:PlayerInterface = _
@@ -82,7 +84,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.POST,
-      uri = "http://localhost:8081/fileio/save",
+      uri = fileIOServer + "/save",
       entity = grid.toJsonString
     ))
     notifyObservers
@@ -93,7 +95,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
     implicit val executionContext = system.executionContext
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/fileio/load"))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = fileIOServer + "/load"))
 
     responseFuture
       .onComplete {
