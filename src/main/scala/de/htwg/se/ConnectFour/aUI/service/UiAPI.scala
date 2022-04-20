@@ -8,7 +8,6 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCode}
 import akka.http.scaladsl.server.{ExceptionHandler, Route, StandardRoute}
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import tools.util.API
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success, Try}
@@ -21,7 +20,7 @@ object UiAPI:
   val executionContext: ExecutionContextExecutor = system.executionContext
   given ExecutionContextExecutor = executionContext
 
-  def apply(controller: ControllerInterface):Any =
+  def apply(controller: ControllerInterface) =
     val routes: String =
       """
         Welcome to the View REST service! Available routes:
@@ -43,7 +42,15 @@ object UiAPI:
       path("undo") {
         concat(
           get {
-            controller.undoDrop()
+            UiController.undo(controller)
+            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
+          }
+        )
+      },
+      path("newgame") {
+        concat(
+          get {
+            UiController.newgame(controller)
             complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
           }
         )
@@ -54,12 +61,12 @@ object UiAPI:
             complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
           },
           post {
-            controller.redoDrop()
+            UiController.redo(controller)
             complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "redo success"))
           })
       },
       path("ui" / Segment) { command => {
-        controller.drop(command)
+        UiController.drop(controller, command)
         complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
       }
       }
@@ -68,7 +75,7 @@ object UiAPI:
     bindingFuture.onComplete {
       case Success(binding) => {
         val address = binding.localAddress
-        println(s"View REST service online at http://${address.getHostName}:${address.getPort}\nPress RETURN to stop...")
+        println(s"View REST service online at http://localhost:${address.getPort}\nPress RETURN to stop...")
       }
       case Failure(exception) => {
         println("View REST service couldn't be started! Error: " + exception + "\n")
