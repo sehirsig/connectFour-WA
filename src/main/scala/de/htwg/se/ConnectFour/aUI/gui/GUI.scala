@@ -174,7 +174,7 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
       style = "-fx-font: normal bold 16pt sans-serif; -fx-text-fill: black; -fx-background-color: #4169E1; -fx-background-radius: 15px;"
       this.setMaxSize(Double.MaxValue, Double.MaxValue)
       onMouseClicked = _ => {
-        controller.saveGame()
+        execute("s")
       }
       onMouseEntered = _ => effect = new Glow(0.7)
       onMouseExited = _ => effect = new Glow(0)
@@ -185,7 +185,8 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
       style = "-fx-font: normal bold 16pt sans-serif; -fx-text-fill: black; -fx-background-color: #4169E1; -fx-background-radius: 15px;"
       this.setMaxSize(Double.MaxValue, Double.MaxValue)
       onMouseClicked = _ => {
-        controller.loadGame()
+        execute("l")
+        execute("l")
       }
       onMouseEntered = _ => effect = new Glow(0.7)
       onMouseExited = _ => effect = new Glow(0)

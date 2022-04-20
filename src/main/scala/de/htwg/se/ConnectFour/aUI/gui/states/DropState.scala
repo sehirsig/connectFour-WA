@@ -19,4 +19,6 @@ case class DropState(controller: ControllerInterface) extends State[GameState]:
       case "u" => controller.undoDrop()
       case "r" => controller.redoDrop()
       case "n" => controller.reset()
+      case "l" => controller.loadGame()
+      case "s" => controller.saveGame()
       case _ =>
