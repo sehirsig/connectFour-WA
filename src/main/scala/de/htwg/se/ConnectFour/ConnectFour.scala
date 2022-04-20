@@ -14,10 +14,10 @@ case object ConnectFour:
     val controller = injector.getInstance(classOf[ControllerInterface])
     val uiType = "gui"
     Try(UiAPI(controller)) match
-      case Success(v) =>  println("View Rest Server is running!")
+      case Success(v) => println("View Rest Server is running!")
       case Failure(v) => println("View Rest Server couldn't be started! " + v.getMessage + v.getCause)
     Try(FileIOAPI) match
-      case Success(v) =>  println("Persistance Rest Server is running!")
+      case Success(v) => println("Persistance Rest Server is running!")
       case Failure(v) => println("Persistance Server couldn't be started! " + v.getMessage + v.getCause)
 
     Try(UIFactory(uiType,controller)) match
