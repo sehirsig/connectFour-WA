@@ -22,7 +22,6 @@ object UiAPI:
   given ExecutionContextExecutor = executionContext
 
   def apply(controller: ControllerInterface):Any =
-    val uiapi = UiAPI(controller)
     val routes: String =
       """
         Welcome to the View REST service! Available routes:
@@ -75,11 +74,6 @@ object UiAPI:
         println("View REST service couldn't be started! Error: " + exception + "\n")
       }
     }
-
-  def stop(bindingFuture: Future[Http.ServerBinding]):Unit =
-      bindingFuture
-        .flatMap(_.unbind()) // trigger unbinding from the port
-        .onComplete(_ => system.terminate()) // and shutdown when done
 
 
 

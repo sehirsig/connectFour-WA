@@ -8,7 +8,6 @@ import java.io._
 import play.api.libs.json.{JsValue, Json}
 import scala.io.Source
 
-
 object FileIOController {
 
   def load(): String = {

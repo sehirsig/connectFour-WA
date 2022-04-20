@@ -11,10 +11,10 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
 
-class FileIOAPI {
+object FileIOAPI:
   val routes: String =
     """
-        persistence-service! Available routes:
+        Welcome to the Persistence REST service! Available routes:
           GET   /fileio/load
           POST  /fileio/save
         """.stripMargin
@@ -28,7 +28,7 @@ class FileIOAPI {
 
   val route = concat(
     pathSingleSlash {
-      complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>FileIO</h1>"))
+      complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, routes))
     },
     path("fileio" / "load") {
       get {
@@ -59,8 +59,3 @@ class FileIOAPI {
     }
   }
 
-  def stop():Unit =
-    bindingFuture
-      .flatMap(_.unbind()) // trigger unbinding from the port
-      .onComplete(_ => system.terminate()) // and shutdown when done
-}

@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.aUI.rest
+package de.htwg.se.ConnectFour.aUI.service
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethods, HttpRequest, StatusCode}
 import akka.actor.typed.ActorSystem
@@ -18,9 +18,6 @@ object UiController {
 
   val persistenceApiBaseUrl: String = "http://persistence:8080/"
 
-  //implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
-  //implicit val executionContext = system.executionContext
-
   val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "SingleRequest")
   given ActorSystem[Any] = system
 
@@ -29,7 +26,6 @@ object UiController {
 
   def load(): GridInterface =
     null
-
 
   def save(controller: ControllerInterface): Boolean =
     Try (Await.result(Http().singleRequest(HttpRequest(
