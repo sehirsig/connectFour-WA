@@ -4,15 +4,15 @@ import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl.Controller
-import fileIOComponent.FileIOInterface
-import fileIOComponent.json.FileIO
-import fileIOComponent.xml.FileIO
-import model.gridComponent.GridInterface
-import model.gridComponent.gridBaseImpl.Grid
-import model.playerComponent.PlayerBuilderInterface
-import model.playerComponent.playerBuilderBaseImpl.PlayerBuilder
-import model.playerComponent.PlayerInterface
-import model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
+import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.ConnectFour.model.playerComponent.PlayerBuilderInterface
+import de.htwg.se.ConnectFour.model.playerComponent.playerBuilderBaseImpl.PlayerBuilder
+import de.htwg.se.ConnectFour.model.gridComponent.GridInterface
+import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
+//import fileIOComponent.FileIOInterface
+//import fileIOComponent.json.FileIO
+//import fileIOComponent.xml.FileIO
 import net.codingwell.scalaguice.ScalaModule
 
 /**

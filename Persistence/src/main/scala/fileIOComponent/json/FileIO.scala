@@ -1,21 +1,32 @@
 package fileIOComponent.json
 
 import com.google.inject.Inject
-import model.playerComponent.playerBaseImpl.Player
-import model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
 import fileIOComponent.FileIOInterface
-import model.gridComponent.{Cell, GridInterface, Piece}
 import play.api.libs.json.*
 
 import java.io.{File, PrintWriter}
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
+import java.io.*
 
 /**
  * FileIO implementation
  * for exporting the game as JSON File
  */
 object FileIO extends FileIOInterface:
+
+  override def load(): String =
+    val file = scala.io.Source.fromFile("game.json")
+    try file.mkString finally file.close()
+
+  override def save(gameAsText: String): Unit =
+    val pw = new PrintWriter(new File("." + File.separator + "game.json"))
+    pw.write(gameAsText)
+    pw.close
+
+
+/*
+  OLD Code (nice resursive functions)
 
   override def load(grid:GridInterface):GridInterface =
     val player1 = Player("Player 1", 1)
@@ -72,3 +83,4 @@ object FileIO extends FileIOInterface:
     val pw = PrintWriter(File("game.json"))
     pw.write(Json.prettyPrint(gameToJson(game)))
     pw.close
+*/

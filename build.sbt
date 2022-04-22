@@ -21,29 +21,13 @@ lazy val commonDependencies = Seq(
   dependencies.akkaActorTyped
 )
 
-/** Model Module */
-lazy val model = (project in file("Model"))
-  .settings(
-    name := "ConnectFour-Model",
-    version := "0.5.0-SNAPSHOT",
-    commonSettings,
-    libraryDependencies ++= commonDependencies,
-  )
+/** Docker */
+val dockerAppPath = "/app/"
 
 /** Persistence Module */
 lazy val persistence = (project in file("Persistence"))
-  .dependsOn(model)
   .settings(
     name := "ConnectFour-Persistence",
-    version := "0.5.0-SNAPSHOT",
-    commonSettings,
-    libraryDependencies ++= commonDependencies,
-  )
-
-/** Tools Module */
-lazy val tools = (project in file("Tools"))
-  .settings(
-    name := "ConnectFour-Tools",
     version := "0.5.0-SNAPSHOT",
     commonSettings,
     libraryDependencies ++= commonDependencies,
@@ -52,8 +36,8 @@ lazy val tools = (project in file("Tools"))
 /** Root Module */
 lazy val root = project
   .in(file("."))
-  .dependsOn(tools, model, persistence)
-  .aggregate(tools, model, persistence)
+  .dependsOn(persistence)
+  .aggregate(persistence)
   .settings(
     name := "ConnectFour",
     version := "0.5.0-SNAPSHOT",

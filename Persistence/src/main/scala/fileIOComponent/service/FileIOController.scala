@@ -1,24 +1,19 @@
 package fileIOComponent.service
 
-import com.google.inject.{Guice, Inject}
-import model.playerComponent.playerBaseImpl.Player
-import model.gridComponent.GridInterface
+import com.google.inject.{Guice, Inject, Injector}
 
-import java.io._
-import play.api.libs.json.{JsValue, Json}
+import java.io.*
 import scala.io.Source
 
 object FileIOController {
 
+
   def load(): String = {
-    val file = scala.io.Source.fromFile("game.json")
-    try file.mkString finally file.close()
+    fileIOComponent.json.FileIO.load()
   }
 
-  def save(gameAsJson: String): Unit = {
-    val pw = new PrintWriter(new File("." + File.separator + "game.json"))
-    pw.write(gameAsJson)
-    pw.close
+  def save(gameAsText: String): Unit = {
+    fileIOComponent.json.FileIO.save(gameAsText)
   }
 
 }

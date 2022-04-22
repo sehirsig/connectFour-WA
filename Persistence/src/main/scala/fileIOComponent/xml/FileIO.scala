@@ -1,12 +1,9 @@
 package fileIOComponent.xml
 
 //import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import model.gridComponent.GridInterface
 import fileIOComponent.FileIOInterface
-import model.gridComponent.{Cell, GridInterface, Piece}
-import model.playerComponent.PlayerInterface
-import model.playerComponent.playerBaseImpl.Player
 
+import java.io.{File, PrintWriter}
 import scala.util.{Failure, Success, Try}
 import scala.xml.{NodeSeq, PrettyPrinter}
 
@@ -15,7 +12,19 @@ import scala.xml.{NodeSeq, PrettyPrinter}
  * for exporting the game as XML File
  */
 class FileIO() extends FileIOInterface:
+  
+  override def load(): String =
+    val file = scala.io.Source.fromFile("game.xml")
+    try file.mkString finally file.close()
 
+  override def save(gameAsText: String): Unit =
+    val pw = new PrintWriter(new File("." + File.separator + "game.xml"))
+    pw.write(gameAsText)
+    pw.close
+  
+  /*
+  Old Code (Nice recursive methods)
+  
   override def load(grid:GridInterface):GridInterface =
     val player1 = Player("Player 1", 1)
     val player2 = Player("Player 2", 2)
@@ -98,3 +107,4 @@ class FileIO() extends FileIOInterface:
     val xml = prettyPrinter.format(gameToXml(game))
     pw.write(xml)
     pw.close()
+*/

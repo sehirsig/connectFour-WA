@@ -2,7 +2,7 @@ package de.htwg.se.ConnectFour.aUI.tui
 
 import de.htwg.se.ConnectFour.aUI.tui.states.GameState
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
-import tools.util.{Observer, UI}
+import de.htwg.se.ConnectFour.util.{Observer, UI}
 
 import scala.io.StdIn.readLine
 import scala.util.{Failure, Success, Try}
