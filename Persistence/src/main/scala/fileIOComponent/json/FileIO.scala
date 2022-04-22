@@ -13,7 +13,7 @@ import java.io.*
  * FileIO implementation
  * for exporting the game as JSON File
  */
-object FileIO extends FileIOInterface:
+class FileIO @Inject () extends FileIOInterface:
 
   override def load(): String =
     val file = scala.io.Source.fromFile("game.json")

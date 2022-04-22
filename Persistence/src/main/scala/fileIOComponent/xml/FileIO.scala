@@ -1,6 +1,7 @@
 package fileIOComponent.xml
 
 //import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
+import com.google.inject.Inject
 import fileIOComponent.FileIOInterface
 
 import java.io.{File, PrintWriter}
@@ -11,7 +12,7 @@ import scala.xml.{NodeSeq, PrettyPrinter}
  * FileIO implementation
  * for exporting the game as XML File
  */
-class FileIO() extends FileIOInterface:
+class FileIO @Inject () extends FileIOInterface:
   
   override def load(): String =
     val file = scala.io.Source.fromFile("game.xml")
