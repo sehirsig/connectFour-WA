@@ -66,9 +66,9 @@ object UiAPI:
           })
       },
       path("ui" / Segment) { command => {
-        UiController.drop(controller, command)
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
-      }
+          UiController.drop(controller, command)
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
+        }
       }
     )
     val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(route)
