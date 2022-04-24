@@ -9,7 +9,7 @@ services:
       - 8081:8081
     stdin_open: true
     container_name: persistence_service
-  connectFour:
+  connectfour:
     build:
       context: ./
       dockerfile: ./Dockerfile
