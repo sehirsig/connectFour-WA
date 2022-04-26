@@ -22,7 +22,7 @@ class FileIO @Inject () extends FileIOInterface:
     val pw = new PrintWriter(new File("." + File.separator + "game.xml"))
     pw.write(gameAsText)
     pw.close
-  
+
   /*
   Old Code (Nice recursive methods)
   

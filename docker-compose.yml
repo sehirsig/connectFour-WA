@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.9"
 
 services:
   persistence:
@@ -10,6 +10,7 @@ services:
     stdin_open: true
     container_name: persistence_service
   connectfour:
+    tty: true
     build:
       context: ./
       dockerfile: ./Dockerfile
@@ -19,5 +20,8 @@ services:
     container_name: connectfour_service
     depends_on:
       - persistence
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /connectFour/run.sh:/run.sh
     environment:
-      - DISPLAY=host.docker.internal:0
+      DISPLAY: $DISPLAY

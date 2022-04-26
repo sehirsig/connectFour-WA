@@ -36,8 +36,6 @@ lazy val persistence = (project in file("Persistence"))
 /** Root Module */
 lazy val root = project
   .in(file("."))
-  .dependsOn(persistence)
-  .aggregate(persistence)
   .settings(
     name := "ConnectFour",
     version := "0.5.0-SNAPSHOT",

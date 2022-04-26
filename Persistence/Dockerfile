@@ -1,9 +1,11 @@
-FROM hseeberger/scala-sbt:16.0.1_1.5.4_2.13.6
+FROM hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1
+
+RUN apt-get update
 
 EXPOSE 8081
 
 WORKDIR /Persistence
 
-COPY . /Persistence
+ADD . /Persistence
 
 CMD sbt run

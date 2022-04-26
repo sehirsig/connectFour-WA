@@ -8,6 +8,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCode}
 import akka.http.scaladsl.server.{ExceptionHandler, Route}
 
 import scala.concurrent.ExecutionContextExecutor
+import scala.io.StdIn.readLine
 import scala.util.{Failure, Success}
 
 
@@ -53,6 +54,8 @@ object FileIOAPI:
     case Success(binding) => {
       val address = binding.localAddress
       println(s"File IO REST service online at http://localhost:${address.getPort}\nPress RETURN to stop...")
+      val input = readLine()
+      System.exit(0)
     }
     case Failure(exception) => {
       println("File IO REST service couldn't be started! Error: " + exception + "\n")
