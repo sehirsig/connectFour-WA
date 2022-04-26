@@ -7,8 +7,10 @@ import javafx.embed.swing.JFXPanel
 
 object UIFactory:
   def apply(uiType:String, controller:ControllerInterface) =
+    
     uiType.toLowerCase() match
       case "gui" =>
         JFXPanel()
         GUI(controller).run()
       case "tui" => TUI(controller).run()
+      case _ => TUI(controller).run()
