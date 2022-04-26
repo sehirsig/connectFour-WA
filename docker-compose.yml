@@ -10,7 +10,6 @@ services:
     stdin_open: true
     container_name: persistence_service
   connectfour:
-    tty: true
     build:
       context: ./
       dockerfile: ./Dockerfile
@@ -22,6 +21,5 @@ services:
       - persistence
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - /connectFour/run.sh:/run.sh
     environment:
       DISPLAY: $DISPLAY

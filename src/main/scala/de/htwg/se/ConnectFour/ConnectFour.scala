@@ -28,4 +28,3 @@ case object ConnectFour:
       case Success(_) => println("See you next time! Bye.")
       case Failure(v) => println("Could not create UI: " + v.getMessage + v.getCause)
 
-    System.exit(0)

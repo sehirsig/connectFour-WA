@@ -75,7 +75,7 @@ object UiAPI:
     bindingFuture.onComplete {
       case Success(binding) => {
         val address = binding.localAddress
-        println(s"View REST service online at http://localhost:${address.getPort}\nPress RETURN to stop...")
+        println(s"View REST service online at http://localhost:${address.getPort}\n")
       }
       case Failure(exception) => {
         println("View REST service couldn't be started! Error: " + exception + "\n")
