@@ -27,7 +27,11 @@ object UiAPI:
           GET   /ui
           GET   /undo
           GET   /redo
-          POST  /ui/[param]
+          GET   /save
+          GET   /load
+          GET   /newgame
+          GET   /addPlayer/[String]
+          GET   /drop/[param]
         """.stripMargin
 
     val route = concat(
@@ -36,41 +40,56 @@ object UiAPI:
       },
       path("ui") {
         get {
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
+          complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, controller.grid.toPlainString))
         }
       },
       path("undo") {
         concat(
           get {
-            UiController.undo(controller)
-            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
-          }
-        )
-      },
-      path("newgame") {
-        concat(
-          get {
-            UiController.newgame(controller)
-            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
+            complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.undo(controller)))
           }
         )
       },
       path("redo") {
         concat(
           get {
-            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
+            complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.redo(controller)))
           },
           post {
-            UiController.redo(controller)
-            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "redo success"))
+            complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "redo success"))
           })
       },
-      path("ui" / Segment) { command => {
-          UiController.drop(controller, command)
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, controller.grid.toJsonString))
+      path("newgame") {
+        concat(
+          get {
+            complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.newgame(controller)))
+          }
+        )
+      },
+      path("drop" / Segment) { command => {
+          complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.drop(controller, command)))
         }
+      },
+      path("load") {
+        concat(
+          get {
+            complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.load(controller)))
+          }
+        )
+      },
+      path("save") {
+        concat(
+          get {
+            complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.save(controller)))
+          }
+        )
+      },
+      path("addPlayer" / Segment) { command => {
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.addPlayer(controller, command)))
+      }
       }
     )
+
     val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(route)
     bindingFuture.onComplete {
       case Success(binding) => {

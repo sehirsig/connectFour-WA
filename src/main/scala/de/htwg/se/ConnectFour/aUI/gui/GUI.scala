@@ -197,6 +197,7 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
       style = "-fx-font: normal bold 16pt sans-serif; -fx-text-fill: black; -fx-background-color: #00BFFF; -fx-background-radius: 15px;"
       this.setMaxSize(Double.MaxValue, Double.MaxValue)
       onMouseClicked = _ => {
+        print(controller.grid.toPlainString)
         execute("u")
       }
       onMouseEntered = _ => effect = new Glow(0.7)

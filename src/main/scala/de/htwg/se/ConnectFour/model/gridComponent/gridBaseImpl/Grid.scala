@@ -140,6 +140,15 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
       case _ => None
     recursiveSetGrid(player1, player2, cells, idx + 1, grid.replaceCell(row, col, Cell(optPiece)))
 
+  def drawPlainString:String =
+    val builder = new StringBuilder
+    this.rows.reverse.map(row => {row.map(col => builder.append(col.toPlainString)); builder.append("\n")})
+    builder.toString()
+
+  override def toPlainString: String =
+    print(drawPlainString);
+    this.rows.map(row => row.map(col => if col.isSet then return drawPlainString ))
+    ""
 
   override def toString: String =
     this.rows.map(row => row.map(col => if col.isSet then return drawString ))

@@ -20,5 +20,6 @@ trait GridInterface:
   def toJsonString:String
   def toJson:JsValue
   def jsonToGrid(player1:PlayerInterface, player2:PlayerInterface, par_grid:GridInterface, source: String):GridInterface
+  def toPlainString:String
 
   
