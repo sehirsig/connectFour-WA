@@ -1,8 +1,7 @@
-package fileIOComponent.service
+package de.htwg.se.ConnectFour.fileIOComponent.service
 
 import com.google.inject.{Guice, Inject, Injector}
-import fileIOComponent.FileIOInterface
-import fileIOComponent.FileIOModule
+import de.htwg.se.ConnectFour.fileIOComponent.{FileIOInterface, FileIOModule}
 
 import java.io.*
 import scala.io.Source

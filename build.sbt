@@ -55,7 +55,7 @@ lazy val commonSettings = Seq(
   jacocoCoverallsRepoToken := sys.env.get("COVERALLS_REPO_TOKEN"),
   jacocoExcludes in Test := Seq(
     "de.htwg.se.ConnectFour.aUI*",
-    "fileIOComponent*",
+    "de.htwg.se.ConnectFour.fileIOComponent*",
     "de.htwg.se.ConnectFour.ConnectFour*"
   ),
   libraryDependencies ++= {

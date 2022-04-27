@@ -9,3 +9,7 @@ game.json
 game.xml
 null/
 null
+.sbt/
+.cache
+/.sbt/
+/.cache/
