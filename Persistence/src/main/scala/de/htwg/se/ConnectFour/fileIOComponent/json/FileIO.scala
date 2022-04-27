@@ -13,19 +13,17 @@ import java.io.*
  * FileIO implementation
  * for exporting the game as JSON File
  */
-class FileIO @Inject () extends FileIOInterface {
+class FileIO @Inject () extends FileIOInterface:
 
-  override def load(): String = {
+  override def load(): String =
     val file = scala.io.Source.fromFile("game.json")
     try file.mkString finally file.close()
-  }
 
-  override def save(gameAsText: String): Unit = {
+  override def save(gameAsText: String) =
     val pw = new PrintWriter(new File("." + File.separator + "game.json"))
     pw.write(gameAsText)
     pw.close
-  }
-}
+
 /*
   OLD Code (nice resursive functions)
 

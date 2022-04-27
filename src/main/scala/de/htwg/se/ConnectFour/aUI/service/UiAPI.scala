@@ -13,6 +13,10 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success, Try}
 
 object UiAPI:
+
+  val connectIP = sys.env.getOrElse("CONNECTFOUR_SERVICE_HOST", "localhost").toString
+  val connectPort = sys.env.getOrElse("CONNECTFOUR_SERVICE_PORT", 8080).toString.toInt
+
   // needed to run the route
   val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "my-system")
   given ActorSystem[Any] = system
@@ -90,11 +94,11 @@ object UiAPI:
       }
     )
 
-    val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(route)
+    val bindingFuture = Http().newServerAt(connectIP, connectPort).bind(route)
     bindingFuture.onComplete {
       case Success(binding) => {
         val address = binding.localAddress
-        println(s"View REST service online at http://localhost:${address.getPort}\n")
+        println(s"View REST service online at http://$connectIP:$connectPort/\n")
       }
       case Failure(exception) => {
         println("View REST service couldn't be started! Error: " + exception + "\n")

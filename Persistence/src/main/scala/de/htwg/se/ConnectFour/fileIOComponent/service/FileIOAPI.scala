@@ -8,54 +8,63 @@ import akka.http.scaladsl.server.Directives.*
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
+import scala.util.{Failure, Success}
 
-case object FileIOAPI {
+object FileIOAPI:
 
-  val connectIP = "localhost"
-  val connectPort = 8081
+  val connectIP = sys.env.getOrElse("FILEIO_SERVICE_HOST", "localhost").toString
+  val connectPort = sys.env.getOrElse("FILEIO_SERVICE_PORT", 8081).toString.toInt
 
-  def main(args: Array[String]): Unit = {
 
-    implicit val system = ActorSystem(Behaviors.empty, "my-system")
-    // needed for the future flatMap/onComplete in the end
-    implicit val executionContext = system.executionContext
-
-    val routes: String =
-      """
+  val routes: String =
+    """
         Welcome to the Persistence REST service! Available routes:
           GET   /fileio/load
           POST  /fileio/save
         """.stripMargin
 
-    val route = concat(
-      pathSingleSlash {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, routes))
-      },
-      path("fileio" / "load") {
-        get {
-          complete(HttpEntity(ContentTypes.`application/json`, FileIOController.load()))
-        }
-      },
-      path("fileio" / "save") {
-        concat(
-          post {
-            entity(as[String]) { game =>
-              FileIOController.save(game)
-              complete("Game Saved!")
-            }
-          }
-        )
+  // needed to run the route
+  val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "my-system")
+  given ActorSystem[Any] = system
+  // needed for the future flatMap/onComplete in the end
+  val executionContext: ExecutionContextExecutor = system.executionContext
+  given ExecutionContextExecutor = executionContext
+
+  val route = concat(
+    pathSingleSlash {
+      complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, routes))
+    },
+    path("fileio" / "load") {
+      get {
+        complete(HttpEntity(ContentTypes.`application/json`, FileIOController.load()))
       }
-    )
+    },
+    path("fileio" / "save") {
+      concat(
+        post {
+          entity(as[String]) { game =>
+            FileIOController.save(game)
+            complete("game saved")
+          }
+        }
+      )
+    }
+  )
 
-    val bindingFuture = Http().newServerAt(connectIP, connectPort).bind(route)
 
-    println(s"Server online at http://$connectIP:$connectPort/\nPress RETURN to stop...")
+  val bindingFuture = Http().newServerAt(connectIP, connectPort).bind(route)
 
-    StdIn.readLine() // let it run until user presses return
-    bindingFuture
-      .flatMap(_.unbind()) // trigger unbinding from the port
-      .onComplete(_ => system.terminate()) // and shutdown when done
+  bindingFuture.onComplete{
+    case Success(binding) => {
+      val address = binding.localAddress
+      println(s"File IO REST service online at http://$connectIP:$connectPort/\nPress RETURN to stop...")
 
+      StdIn.readLine() // let it run until user presses return
+      bindingFuture
+        .flatMap(_.unbind()) // trigger unbinding from the port
+        .onComplete(_ => system.terminate()) // and shutdown when done
+    }
+    case Failure(exception) => {
+      println("File IO REST service couldn't be started! Error: " + exception + "\n")
+    }
   }
-}

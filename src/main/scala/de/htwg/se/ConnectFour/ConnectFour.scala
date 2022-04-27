@@ -12,17 +12,17 @@ case object ConnectFour:
     val injector: Injector = Guice.createInjector(ConnectFourModule())
     val controller = injector.getInstance(classOf[ControllerInterface])
 
-    var uiType = "gui"
-    sys.env.get("C4_UITYPE") match
-      case Some(v) => uiType = v
-      case _ =>
 
-    sys.env.get("C4_VIEWREST") match
-      case Some(v) if v == "n" =>
-      case _ =>
+    val uiType = sys.env.getOrElse("C4_UITYPE", "gui").toString
+
+    val uiRest = sys.env.getOrElse("C4_VIEWREST", "y").toString
+
+    uiRest match
+      case "y" =>
         Try(UiAPI(controller)) match
           case Success(_) => println("View Rest Server is running!")
           case Failure(v) => println("View Rest Server couldn't be started! " + v.getMessage + v.getCause)
+      case _ =>
 
     Try(UIFactory(uiType,controller)) match
       case Success(_) => println("See you next time! Bye.")

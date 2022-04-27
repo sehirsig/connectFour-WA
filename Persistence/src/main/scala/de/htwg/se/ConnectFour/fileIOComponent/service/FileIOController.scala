@@ -6,17 +6,13 @@ import de.htwg.se.ConnectFour.fileIOComponent.{FileIOInterface, FileIOModule}
 import java.io.*
 import scala.io.Source
 
-object FileIOController {
+object FileIOController:
 
   val injector: Injector = Guice.createInjector(FileIOModule())
   val fileIO = injector.getInstance(classOf[FileIOInterface])
 
-  def load(): String = {
+  def load(): String =
     fileIO.load()
-  }
 
-  def save(gameAsText: String): Unit = {
+  def save(gameAsText: String) =
     fileIO.save(gameAsText)
-  }
-
-}

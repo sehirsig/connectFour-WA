@@ -25,9 +25,12 @@ import scala.util.{Failure, Success, Try}
  */
 class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuilderInterface) extends ControllerInterface:
   val injector = Guice.createInjector(ConnectFourModule())
-  // fileIo = injector.getInstance(classOf[FileIOInterface])
 
-  val fileIOServer = "http://localhost:8081/fileio"
+
+  val fileIOIP = sys.env.getOrElse("FILEIO_SERVICE_HOST", "localhost").toString
+  val fileIOPort = sys.env.getOrElse("FILEIO_SERVICE_PORT", 8081).toString.toInt
+
+  val fileIOURI = "http://" + fileIOIP + ":" + fileIOPort + "/fileio"
 
   var players: Vector[PlayerInterface] = Vector.empty
   var moveCount = 0
@@ -79,7 +82,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.POST,
-      uri = fileIOServer + "/save",
+      uri = fileIOURI + "/save",
       entity = grid.toJsonString
     ))
     notifyObservers
@@ -90,7 +93,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
     implicit val executionContext = system.executionContext
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = fileIOServer + "/load"))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = fileIOURI + "/load"))
 
     responseFuture
       .onComplete {

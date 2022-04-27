@@ -2,20 +2,25 @@ version: "3.9"
 
 services:
   persistence:
+    image: connectfour-persistence-service
     build:
       context: ./Persistence/
       dockerfile: ./Dockerfile
     ports:
-      - 8081:8081
+      - "8081:8081"
     stdin_open: true
     container_name: persistence_service
-    tty: true
+    environment:
+      FILEIO_SERVICE_HOST: persistence
+      FILEIO_SERVICE_PORT: 8081
+
   connectfour:
+    image: connectfour-service
     build:
       context: ./
       dockerfile: ./Dockerfile
     ports:
-      - 8080:8080
+      - "8080:8080"
     stdin_open: true
     container_name: connectfour_service
     depends_on:
@@ -24,3 +29,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
       DISPLAY: $DISPLAY
+      CONNECTFOUR_SERVICE_HOST: connectfour
+      CONNECTFOUR_SERVICE_PORT: 8080
+      FILEIO_SERVICE_HOST: persistence
+      FILEIO_SERVICE_PORT: 8081
