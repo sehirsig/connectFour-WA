@@ -1,9 +1,9 @@
-package de.htwg.se.ConnectFour.fileIOComponent
+package de.htwg.se.ConnectFour
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
-import net.codingwell.scalaguice.ScalaModule
 import de.htwg.se.ConnectFour.fileIOComponent.*
+import net.codingwell.scalaguice.ScalaModule
 
 class FileIOModule extends AbstractModule:
   override def configure() =
