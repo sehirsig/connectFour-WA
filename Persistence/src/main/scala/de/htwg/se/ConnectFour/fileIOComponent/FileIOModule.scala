@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour
+package de.htwg.se.ConnectFour.fileIOComponent
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
