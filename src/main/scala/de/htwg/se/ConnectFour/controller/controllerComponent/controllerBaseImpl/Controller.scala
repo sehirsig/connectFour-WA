@@ -14,7 +14,7 @@ import akka.http.scaladsl.unmarshalling.Unmarshal
 import de.htwg.se.ConnectFour.model.gridComponent.{GridInterface, Piece}
 import de.htwg.se.ConnectFour.model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
 import de.htwg.se.ConnectFour.util.UndoManager
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsArray, JsValue, Json}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -83,8 +83,18 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.POST,
       uri = fileIOURI + "/save",
-      entity = grid.toJsonString
+      entity = gridToJsonString()
     ))
+    responseFuture
+      .onComplete {
+        case Failure(_) => println(responseFuture)
+        case Success(value) => Unmarshal(value.entity).to[String].onComplete {
+          case Failure(_) => sys.error("Failed unmarshalling")
+          case Success(value) => {
+            println("Response: " + value)
+          }
+        }
+      }
     notifyObservers
 
   override def loadGame() =
@@ -102,7 +112,23 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
           Unmarshal(value.entity).to[String].onComplete {
             case Failure(_) => sys.error("Failed unmarshalling")
             case Success(value) => {
-              val loadedGame = grid.jsonToGrid(players(0), players(1), grid, value)
+              val gameJson: JsValue = Json.parse(value)
+              val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
+              val currentPlayer = (gameJson \ "player" \ "currentPlayer").get.toString()
+              val player1 = (gameJson \ "player" \ "player1" \ "name").get.toString()
+              val player2 = (gameJson \ "player" \ "player2" \ "name").get.toString()
+              setMoveCount(moveCount)
+              players = Vector.empty
+              addPlayer(player1)
+              addPlayer(player2)
+              currentPlayer match
+                case player1 => setCurrentPlayer(players(0))
+                case player2 => setCurrentPlayer(players(1))
+
+              print(gameJson)
+              print("YES")
+
+              val loadedGame = this.grid.jsonToGridM(players(0), players(1), this.grid, value)
               this.grid = loadedGame
               notifyObservers
             }
@@ -114,6 +140,9 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
   override def reset() =
     grid = grid.reset()
     notifyObservers
+
+  override def gridToJsonString(): String =
+    this.grid.toJsonString(this.moveCount, this.currentPlayer.playerName, this.players(0).playerName, this.players(1).playerName)
 
   override def gridToString(): String = this.grid.toString
   override def getGrid(): GridInterface = this.grid
