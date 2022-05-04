@@ -125,9 +125,6 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
                 case player1 => setCurrentPlayer(players(0))
                 case player2 => setCurrentPlayer(players(1))
 
-              print(gameJson)
-              print("YES")
-
               val loadedGame = this.grid.jsonToGridM(players(0), players(1), this.grid, value)
               this.grid = loadedGame
               notifyObservers
