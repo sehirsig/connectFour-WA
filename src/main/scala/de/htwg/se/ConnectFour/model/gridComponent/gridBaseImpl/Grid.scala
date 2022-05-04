@@ -92,8 +92,22 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
     this.rows.reverse.map(row => {row.map(col => builder.append(col)); builder.append("\n")})
     builder.toString()
 
-  def gameToJson: JsValue =
+  def gameToJson(moveCount:Int, curPlayerName:String, player1Name:String, player2Name:String): JsValue =
     Json.obj(
+      "player" -> Json.obj(
+        "moveCount" -> Json.obj(
+          "value"  -> moveCount
+        ),
+        "currentPlayer" -> Json.obj(
+          "name" -> curPlayerName
+        ),
+        "player1" -> Json.obj(
+          "name" -> player1Name
+        ),
+        "player2" -> Json.obj(
+          "name" -> player2Name
+        )
+      ),
       "grid" -> Json.obj(
         "cells" -> Json.toJson(
           (0 to this.colCount - 1).flatMap(col =>
@@ -111,19 +125,18 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
       )
     )
 
-  override def toJsonString: String =
-    Json.prettyPrint(gameToJson)
+  override def toJsonString(moveCount:Int, curPlayerName:String, player1Name:String, player2Name:String): String =
+    Json.prettyPrint(gameToJson(moveCount, curPlayerName, player1Name, player2Name))
 
-  override def toJson: JsValue =
-    gameToJson
+  override def toJson(moveCount:Int, curPlayerName:String, player1Name:String, player2Name:String): JsValue =
+    gameToJson(moveCount, curPlayerName, player1Name, player2Name)
 
-  override def jsonToGrid(player1:PlayerInterface, player2:PlayerInterface, par_grid: GridInterface, source:String): GridInterface =
+  override def jsonToGridM(player1:PlayerInterface, player2:PlayerInterface, par_grid: GridInterface, source:String): GridInterface =
     val gameJson: JsValue = Json.parse(source)
     val grid = (gameJson \ "grid")
 
     val cells = (grid \ "cells").as[JsArray]
     recursiveSetGrid(player1, player2, cells, 0, par_grid)
-
 
   def recursiveSetGrid(player1:PlayerInterface, player2:PlayerInterface, cells:JsArray, idx:Int, grid:GridInterface):GridInterface =
     if cells.value.length == idx then

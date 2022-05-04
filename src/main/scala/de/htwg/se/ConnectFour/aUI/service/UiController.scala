@@ -44,5 +44,5 @@ object UiController {
       "Too many Players. You already have " + controller.players(0).playerName + " and " + controller.players(1).playerName
 
   def JsonToString(controller: ControllerInterface):String =
-    controller.grid.toJsonString
+    controller.gridToJsonString()
 }

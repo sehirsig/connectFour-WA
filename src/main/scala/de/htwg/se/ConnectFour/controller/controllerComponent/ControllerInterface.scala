@@ -51,3 +51,5 @@ trait ControllerInterface extends Observable :
   def setCurrentPlayer(currentPlayer: PlayerInterface): Unit
 
   def setMoveCount(moveCount: Int): Unit
+
+  def gridToJsonString(): String
