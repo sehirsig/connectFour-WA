@@ -18,7 +18,9 @@ lazy val commonDependencies = Seq(
   dependencies.typesafeplay,
   dependencies.akkaActor,
   dependencies.akkaStream,
-  dependencies.akkaActorTyped
+  dependencies.akkaActorTyped,
+  dependencies.slick,
+  dependencies.slf4jNop
 )
 
 libraryDependencies ++= commonDependencies

@@ -18,11 +18,22 @@ lazy val commonDependencies = Seq(
   dependencies.typesafeplay,
   dependencies.akkaActor,
   dependencies.akkaStream,
-  dependencies.akkaActorTyped
+  dependencies.akkaActorTyped,
+  dependencies.slick,
+  dependencies.slf4jNop
 )
 
-/** Docker */
-val dockerAppPath = "/app/"
+/** Database */
+lazy val database = (project in file("Database"))
+  .settings(
+    name := "ConnectFour-Database",
+    organization  := "de.htwg.se",
+    version := "0.5.0-SNAPSHOT",
+    crossScalaVersions ++= Seq("2.13.6", "3.1.1"),
+    libraryDependencies += "org.slf4j" % "slf4j-nop" % "2.0.0-alpha7",
+    libraryDependencies += "com.typesafe.slick" %% "slick" % "3.4.0-M1",
+    commonSettings,
+  )
 
 /** Persistence Module */
 lazy val persistence = (project in file("Persistence"))
@@ -36,6 +47,7 @@ lazy val persistence = (project in file("Persistence"))
 /** Root Module */
 lazy val root = project
   .in(file("."))
+  .dependsOn(database)
   .settings(
     name := "ConnectFour",
     version := "0.5.0-SNAPSHOT",

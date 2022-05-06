@@ -5,4 +5,5 @@ package de.htwg.se.ConnectFour.fileIOComponent
  */
 trait FileIOInterface:
   def load(): String
+
   def save(gameAsText: String): Unit

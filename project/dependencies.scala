@@ -23,7 +23,6 @@ object dependencies {
   val akkaActor = ("com.typesafe.akka" %% "akka-actor" % versionNumber.akka).cross(CrossVersion.for3Use2_13)
   val slf4jNop = "org.slf4j" % "slf4j-nop" % versionNumber.slf4jNop
   val slick = ("com.typesafe.slick" %% "slick" % versionNumber.slick).cross(CrossVersion.for3Use2_13)
-  val logback = ("ch.qos.logback" % "logback-classic" % versionNumber.logback).cross(CrossVersion.for3Use2_13)
 }
 
 object versionNumber {
@@ -37,6 +36,5 @@ object versionNumber {
   val scalalangmodules = "2.0.1"
   val typesafeplay = "2.10.0-RC6"
   val slf4jNop = "2.0.0-alpha7"
-  val slick = "3.3.3"
-  val logback = "1.1.12"
+  val slick = "3.4.0-M1"
 }

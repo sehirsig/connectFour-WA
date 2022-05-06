@@ -11,8 +11,10 @@ services:
     stdin_open: true
     container_name: persistence_service
     environment:
-      FILEIO_SERVICE_HOST: persistence
+      FILEIO_SERVICE_HOST: fileio
       FILEIO_SERVICE_PORT: 8081
+      SLICK_SERVICE_HOST: slick
+      SLICK_SERVICE_PORT: 8082
     tty: true
 
   connectfour:
@@ -32,5 +34,7 @@ services:
       DISPLAY: $DISPLAY
       CONNECTFOUR_SERVICE_HOST: connectfour
       CONNECTFOUR_SERVICE_PORT: 8080
-      FILEIO_SERVICE_HOST: persistence
+      FILEIO_SERVICE_HOST: fileio
       FILEIO_SERVICE_PORT: 8081
+      SLICK_SERVICE_HOST: slick
+      SLICK_SERVICE_PORT: 8082
