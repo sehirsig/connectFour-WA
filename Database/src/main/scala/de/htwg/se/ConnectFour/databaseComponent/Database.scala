@@ -2,6 +2,7 @@ package de.htwg.se.ConnectFour.databaseComponent
 
 
 import de.htwg.se.ConnectFour.databaseComponent.Slick.DaoSlick
+import de.htwg.se.ConnectFour.model.playerComponent.Player
 
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
@@ -18,6 +19,8 @@ object Database {
 
     println(s"Running\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
+    val play = Player("seb", 1)
+    slick.create(play)
     //print(slick.read(1))
     StdIn.readLine() // let it run until user presses return
   }

@@ -16,13 +16,13 @@ import scala.util.{Failure, Success}
 object DaoSlick extends DatabaseInterface {
 
   val connectIP = sys.env.getOrElse("SLICK_SERVICE_HOST", "localhost").toString
-  val connectPort = sys.env.getOrElse("SLICK_SERVICE_PORT", 8082).toString.toInt
+  val connectPort = sys.env.getOrElse("SLICK_SERVICE_PORT", 5432).toString.toInt
   val database_user = sys.env.getOrElse("SLICK_USER", "connectfour").toString
   val database_pw = sys.env.getOrElse("SLICK_USER_PW", "connectfour").toString
 
   val database =
     Database.forURL(
-      url = "jdbc:postgresql://" + connectIP + ":" + connectPort + "/postgres",
+      url = "jdbc:postgresql://localhost:5432/postgres",
       user = database_user,
       password = database_pw,
       driver = "org.postgresql.Driver")
@@ -66,8 +66,10 @@ object DaoSlick extends DatabaseInterface {
   }
 
 
-  override def create(player: Player): Option[Int] = {
-    None
+  override def create(player: Player): Int = {
+    val playerIDQuery = (playerTable returning playerTable.map(_.id)) += ((player.playerNumber, player.playerNumber, player.color, player.playerName))
+    val playerID = Await.result(database.run(playerIDQuery), Duration("10s"))
+    player.playerNumber
   }
 
 }

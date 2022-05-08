@@ -14,5 +14,5 @@ trait DatabaseInterface {
 
   def create(): Unit
 
-  def create(player: Player): Option[Int]
+  def create(player: Player): Int
 }
