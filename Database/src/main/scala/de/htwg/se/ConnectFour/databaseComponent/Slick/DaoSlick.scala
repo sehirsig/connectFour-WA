@@ -22,7 +22,7 @@ object DaoSlick extends DatabaseInterface {
 
   val database =
     Database.forURL(
-      url = "jdbc:postgresql://localhost:5432/postgres",
+      url = "jdbc:postgresql://localhost:5432/postgres?serverTimezone=UTC",
       user = database_user,
       password = database_pw,
       driver = "org.postgresql.Driver")
@@ -48,7 +48,7 @@ object DaoSlick extends DatabaseInterface {
   }
 
   override def read(playerId: Int): Option[(Int, Int, Option[String], String)] = {
-    val action = playerTable.filter(_.id == playerId).result
+    val action = playerTable.filter(_.id === playerId).result
     val result = Await.result(database.run(action), atMost = 10.second)
     result match {
       case Seq(a) => Some((a._1, a._2, a._3, a._4))
