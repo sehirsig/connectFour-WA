@@ -13,3 +13,5 @@ null
 .cache
 /.sbt/
 /.cache/
+.run
+/.run/

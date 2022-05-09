@@ -15,14 +15,15 @@ import scala.util.{Failure, Success}
 
 object DaoSlick extends DatabaseInterface {
 
-  val connectIP = sys.env.getOrElse("SLICK_SERVICE_HOST", "localhost").toString
-  val connectPort = sys.env.getOrElse("SLICK_SERVICE_PORT", 5432).toString.toInt
-  val database_user = sys.env.getOrElse("SLICK_USER", "connectfour").toString
-  val database_pw = sys.env.getOrElse("SLICK_USER_PW", "connectfour").toString
+  val connectIP = sys.env.getOrElse("POSTGRES_IP", "localhost").toString
+  val connectPort = sys.env.getOrElse("POSTGRES_PORT", 5432).toString.toInt
+  val database_user = sys.env.getOrElse("POSTGRES_USER", "connectfour").toString
+  val database_pw = sys.env.getOrElse("POSTGRES_PASSWORD", "connectfour").toString
+  val database_name = sys.env.getOrElse("POSTGRES_DB", "postgres").toString
 
   val database =
     Database.forURL(
-      url = "jdbc:postgresql://localhost:5432/postgres?serverTimezone=UTC",
+      url = "jdbc:postgresql://" + connectIP + ":" + connectPort + "/" + database_name + "?serverTimezone=UTC",
       user = database_user,
       password = database_pw,
       driver = "org.postgresql.Driver")
