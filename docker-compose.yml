@@ -10,10 +10,8 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_IP: localhost
       POSTGRES_PORT: 5432
-    volumes:
-      - type: bind
-        source: ./database-data
-        target: /database-data
+    ports:
+      - "5432:5432"
 
   persistence:
     image: connectfour-persistence-service

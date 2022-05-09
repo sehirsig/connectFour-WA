@@ -17,8 +17,8 @@ object DaoSlick extends DatabaseInterface {
 
   val connectIP = sys.env.getOrElse("POSTGRES_IP", "localhost").toString
   val connectPort = sys.env.getOrElse("POSTGRES_PORT", 5432).toString.toInt
-  val database_user = sys.env.getOrElse("POSTGRES_USER", "connectfour").toString
-  val database_pw = sys.env.getOrElse("POSTGRES_PASSWORD", "connectfour").toString
+  val database_user = sys.env.getOrElse("POSTGRES_USER", "postgres").toString
+  val database_pw = sys.env.getOrElse("POSTGRES_PASSWORD", "postgres").toString
   val database_name = sys.env.getOrElse("POSTGRES_DB", "postgres").toString
 
   val database =
