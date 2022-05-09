@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{Await, Future}
 import scala.io.StdIn
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 object DaoSlick extends DatabaseInterface {
 
@@ -49,8 +49,8 @@ object DaoSlick extends DatabaseInterface {
   }
 
   override def read(playerId: Int): Option[(Int, Int, Option[String], String)] = {
-    val action = playerTable.filter(_.id === playerId).result
-    val result = Await.result(database.run(action), atMost = 10.second)
+    val result = Await.result(database.run(playerTable.result.map(_.map(v => (v._1, v._2, v._3, v._4)))), atMost = 10.second)
+    println(result)
     result match {
       case Seq(a) => Some((a._1, a._2, a._3, a._4))
       case _ => None
@@ -68,9 +68,15 @@ object DaoSlick extends DatabaseInterface {
 
 
   override def create(player: Player): Int = {
-    val playerIDQuery = (playerTable returning playerTable.map(_.id)) += ((player.playerNumber, player.playerNumber, player.color, player.playerName))
-    val playerID = Await.result(database.run(playerIDQuery), Duration("10s"))
-    player.playerNumber
+    //val playerIDQuery = (playerTable returning playerTable.map(_.id)) += ((player.playerNumber, player.playerNumber, player.color, player.playerName))
+    //val playerID = Await.result(database.run(playerIDQuery), Duration("10s"))
+    Try({
+      database.run(playerTable += (1, player.playerNumber, player.color, player.playerName))
+      player.playerNumber
+    }) match {
+      case Success(_) => println("Geklappt");0
+      case Failure(exception) => println(exception); 1
+    }
   }
 
 }

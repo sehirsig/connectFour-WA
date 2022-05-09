@@ -16,12 +16,12 @@ object Database {
       case Failure(v) => println("Slick couldn't be started! " + v.getMessage + v.getCause)
     }
 
-
+    slick.create()
     println(s"Running\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
     val play = Player("seb", 1)
     slick.create(play)
-    //print(slick.read(1))
+    print(slick.read(1))
     StdIn.readLine() // let it run until user presses return
   }
 }
