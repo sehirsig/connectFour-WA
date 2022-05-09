@@ -6,7 +6,7 @@ import slick.jdbc.PostgresProfile.api._
 class PlayerTable(tag: Tag) extends Table[(Int, Int, Option[String], String)](tag, "PLAYER") {
 
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-  def num = column[Int]("number", O.PrimaryKey)
+  def num = column[Int]("number")
   def col = column[Option[String]]("color")
   def name = column[String]("name")
 

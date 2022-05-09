@@ -21,7 +21,11 @@ object Database {
     StdIn.readLine() // let it run until user presses return
     val play = Player("seb", 1)
     slick.create(play)
-    print(slick.read(1))
+    val result = slick.read(1)
+    print("Player Index: " + result.get._1)
+    print("\nPlayer Number: " + result.get._2)
+    print("\nPlayer Color: " + result.get._3)
+    print("\nPlayer Name: " + result.get._4)
     StdIn.readLine() // let it run until user presses return
   }
 }

@@ -30,18 +30,11 @@ object DaoSlick extends DatabaseInterface {
 
   val playerTable = TableQuery[PlayerTable]
 
-  val setup = DBIO.seq(
-    playerTable.schema.createIfNotExists
-  )
-  val run = Future(database.run(setup))
-
-  run.onComplete {
-    case Success(_) => print("Started successfully!")
-    case _ => print("Something failed!")
-  }
+  //Create Database
+  //Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf)
 
   override def create(): Unit = {
-    val d = Future(Await.result(database.run(setup), atMost = 10.second))
+    val d = Future(Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf))
     d.onComplete {
       case Success(_) => print("Created successfully!")
       case _ => print("Creating failed!")
@@ -49,8 +42,8 @@ object DaoSlick extends DatabaseInterface {
   }
 
   override def read(playerId: Int): Option[(Int, Int, Option[String], String)] = {
-    val result = Await.result(database.run(playerTable.result.map(_.map(v => (v._1, v._2, v._3, v._4)))), atMost = 10.second)
-    println(result)
+    val action = playerTable.filter(_.id === playerId).result
+    val result = Await.result(database.run(action), atMost = 10.second)
     result match {
       case Seq(a) => Some((a._1, a._2, a._3, a._4))
       case _ => None
