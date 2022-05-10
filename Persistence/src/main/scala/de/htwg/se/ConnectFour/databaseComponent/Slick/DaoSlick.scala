@@ -2,7 +2,7 @@ package de.htwg.se.ConnectFour.databaseComponent.Slick
 
 import com.google.inject.Inject
 import de.htwg.se.ConnectFour.databaseComponent.DaoInterface
-import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.PlayerTable
+import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.{GridTable, PlayerTable}
 import de.htwg.se.ConnectFour.model.playerComponent.Player
 //import slick.driver.PostgresDriver.api.*
 import slick.jdbc.JdbcBackend.Database
@@ -31,18 +31,24 @@ class DaoSlick @Inject () extends DaoInterface:
       driver = "org.postgresql.Driver")
 
   val playerTable = TableQuery[PlayerTable]
+  val gridTable = TableQuery[GridTable]
 
   //Create Database
   //Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf)
 
   override def createDB(): Unit =
-    val d = Future(Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf))
-    d.onComplete {
-      case Success(_) => print("Connection to database worked!")
+    val playerDB = Future(Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf))
+    val gridDB = Future(Await.result(database.run(gridTable.schema.createIfNotExists), Duration.Inf))
+    playerDB.onComplete {
+      case Success(_) => print("Connection to DB & Creation of playerTable successful!")
+      case Failure(e) => print("Error: " + e)
+    }
+    gridDB.onComplete {
+      case Success(_) => print("Connection to DB & Creation of gridTable successful!")
       case Failure(e) => print("Error: " + e)
     }
 
-  override def read(playerId: Int): Option[(Int, Int, Option[String], String)] =
+  override def readPlayer(playerId: Int): Option[(Int, Int, Option[String], String)] =
     val actionQuery = sql"""SELECT * FROM "PLAYER" WHERE "number" = $playerId""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result match {
@@ -50,20 +56,20 @@ class DaoSlick @Inject () extends DaoInterface:
       case _ => None
     }
 
-  override def update(id: Int, name: String):String  =
-    if read(id) == None then
+  override def updatePlayer(id: Int, name: String):String  =
+    if readPlayer(id) == None then
       return "Player non existent."
     val actionQuery =
       sql"""UPDATE "PLAYER" SET "number" = id, "name" = $name WHERE "number" = $id""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result.toString()
 
-  override def delete(num:Int): Future[Any] =
+  override def deletePlayer(num:Int): Future[Any] =
     val action = playerTable.filter(_.id === num ).delete
     Future(Await.result(database.run(action), atMost = 10.second))
 
-  override def create(player: Player): Int =
-    if readAll().length > 1 then
+  override def createPlayer(player: Player): Int =
+    if readAllPlayers().length > 1 then
       return -1
     Try({
       database.run(playerTable += (1, player.playerNumber, player.color, player.playerName))
@@ -74,12 +80,13 @@ class DaoSlick @Inject () extends DaoInterface:
       case Failure(exception) => println(exception); -1
     }
 
-  override def readAll(): List[(Int, Int, Option[String], String)] =
+
+  override def readAllPlayers(): List[(Int, Int, Option[String], String)] =
     val actionQuery = sql"""SELECT * FROM "PLAYER"""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result.toList
 
-  override def deleteAll() =
+  override def deleteAllPlayers() =
     val action = playerTable.delete
     Future(Await.result(database.run(action), atMost = 10.second))
     val deleteQuery = sql"""ALTER SEQUENCE player_id_seq RESTART WITH 1"""

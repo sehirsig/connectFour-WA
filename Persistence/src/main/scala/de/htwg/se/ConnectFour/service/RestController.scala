@@ -23,27 +23,27 @@ object RestController:
     fileIO.save(gameAsText)
 
   def deletePlayer(input:String) =
-    database.delete(input.toInt)
+    database.deletePlayer(input.toInt)
 
   def addPlayer1(input:String) =
     val play = Player(input, 1)
-    database.create(play)
+    database.createPlayer(play)
 
   def addPlayer2(input:String) =
     val play = Player(input, 2)
-    database.create(play)
+    database.createPlayer(play)
 
   def getPlayer(input:String): Option[(Int, Int, Option[String], String)]=
-    database.read(input.toInt)
+    database.readPlayer(input.toInt)
 
   def createDB() =
     database.createDB()
 
   def updatePlayer(num:Int, name:String) =
-    database.update(num, name)
+    database.updatePlayer(num, name)
 
   def getPlayers():String=
-    database.readAll().toString()
+    database.readAllPlayers().toString()
 
   def deleteAllPlayers() =
-    database.deleteAll()
+    database.deleteAllPlayers()

@@ -1,21 +1,31 @@
 package de.htwg.se.ConnectFour.databaseComponent
 
+import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.GridTable
 import de.htwg.se.ConnectFour.model.playerComponent.Player
+import de.htwg.se.ConnectFour.model.gridComponent.Grid
 
 import scala.concurrent.Future
 
 trait DaoInterface:
 
-  def read(playerId: Int): Option[(Int, Int, Option[String], String)]
+  def readPlayer(playerId: Int): Option[(Int, Int, Option[String], String)]
 
-  def update(id: Int, name: String): String
+  def updatePlayer(id: Int, name: String): String
 
-  def delete(num:Int): Future[Any]
+  def deletePlayer(num:Int): Future[Any]
 
   def createDB(): Unit
 
-  def create(player: Player): Int
+  def createPlayer(player: Player): Int
 
-  def readAll():List[(Int, Int, Option[String], String)]
+  def readAllPlayers():List[(Int, Int, Option[String], String)]
 
-  def deleteAll(): Unit
+  def deleteAllPlayers(): Unit
+
+  def createGrid(): Grid
+
+  def resetGrid(): Grid
+
+  def updateGrid(): Unit
+
+  def deleteGrid(): Unit
