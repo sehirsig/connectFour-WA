@@ -1,6 +1,7 @@
 package de.htwg.se.ConnectFour.databaseComponent
 
 import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.GridTable
+import de.htwg.se.ConnectFour.model.gridComponent.GridInterface
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 
@@ -24,12 +25,14 @@ trait DaoInterface:
 
   def createGrid(): Unit
 
-  def readPiece(): Unit
+  def readPiece(row: Int, col: Int): Option[(Int, Int, Int, String)]
 
-  def updatePiece(): Unit
+  def updatePiece(row: Int, col: Int, value: String): String
 
   def resetGrid(): Unit
 
   def updateGrid(): Unit
 
   def deleteGrid(): Unit
+
+  def readGrid(): GridInterface

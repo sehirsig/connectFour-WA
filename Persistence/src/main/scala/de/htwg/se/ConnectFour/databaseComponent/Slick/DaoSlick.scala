@@ -3,7 +3,7 @@ package de.htwg.se.ConnectFour.databaseComponent.Slick
 import com.google.inject.Inject
 import de.htwg.se.ConnectFour.databaseComponent.DaoInterface
 import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.{GridTable, PlayerTable}
-import de.htwg.se.ConnectFour.model.gridComponent.Cell
+import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import play.api.libs.json.Json
@@ -60,7 +60,7 @@ class DaoSlick @Inject () extends DaoInterface:
     }
 
   override def readPiece(row: Int, col: Int): Option[(Int, Int, Int, String)] =
-    val actionQuery = sql"""SELECT * FROM "GRID" WHERE "row" = $row AND "col" = $col""".as[(Int, Int, Int, String)]
+    val actionQuery = sql"""SELECT * FROM "GRID" WHERE "row" = $row AND "column" = $col""".as[(Int, Int, Int, String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result match {
       case Seq(a) => Some((a._1, a._2, a._3, a._4))
@@ -71,7 +71,7 @@ class DaoSlick @Inject () extends DaoInterface:
     if readPiece(row,col) == None then
       return "Grid Piece non existent."
     val actionQuery =
-      sql"""UPDATE "GRID" SET "value" = $value WHERE "row" = $row AND "col" = $col""".as[(Int, Int, String)]
+      sql"""UPDATE "GRID" SET "value" = $value WHERE "row" = $row AND "column" = $col""".as[(Int, Int, String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result.toString()
 
@@ -91,7 +91,7 @@ class DaoSlick @Inject () extends DaoInterface:
     if readAllPlayers().length > 1 then
       return -1
     Try({
-      database.run(playerTable += (1, player.playerNumber, player.color, player.playerName))
+      database.run(playerTable += (0, player.playerNumber, player.color, player.playerName))
       player.playerNumber
     }) match {
       case Success(_) =>
@@ -99,7 +99,11 @@ class DaoSlick @Inject () extends DaoInterface:
       case Failure(exception) => println(exception); -1
     }
 
-  override def createGrid(): Unit =
+  override def createGrid() =
+    if isGridCreated() then
+      resetGrid()
+      return println("Grid already created! Resetting Grid.")
+
     Try({
       var counter = 1
       (0 to 7 - 1).flatMap(col =>
@@ -110,8 +114,13 @@ class DaoSlick @Inject () extends DaoInterface:
     }) match {
       case Success(_) =>
         println("42 Grid Felder wurden erstellt");
-      case Failure(exception) => println(exception); -1
+      case Failure(exception) => println(exception);
     }
+
+  def isGridCreated():Boolean =
+    val actionQuery = sql"""SELECT * FROM "GRID"""".as[(Int, Int, Int, String)]
+    val result = Await.result(database.run(actionQuery), atMost = 10.second)
+    !result.toList.isEmpty
 
   override def readAllPlayers(): List[(Int, Int, Option[String], String)] =
     val actionQuery = sql"""SELECT * FROM "PLAYER"""".as[(Int, Int, Option[String], String)]
@@ -120,8 +129,38 @@ class DaoSlick @Inject () extends DaoInterface:
 
   override def deleteAllPlayers() =
     val action = playerTable.delete
-    Future(Await.result(database.run(action), atMost = 10.second))
-    val deleteQuery = sql"""ALTER SEQUENCE player_id_seq RESTART WITH 1""".as[(Int, Int, Option[String], String)]
-    Future(Await.result(database.run(deleteQuery), atMost = 10.second))
+    Await.result(database.run(action), atMost = 10.second)
+    val deleteQuery = sql"""ALTER SEQUENCE "PLAYER_id_seq" RESTART WITH 1""".as[Int]
+    Await.result(database.run(deleteQuery), atMost = 10.second)
+
+  override def deleteGrid() =
+    val action = gridTable.delete
+    Await.result(database.run(action), atMost = 10.second)
+    val deleteQuery = sql"""ALTER SEQUENCE "GRID_id_seq" RESTART WITH 1""".as[Int]
+    Await.result(database.run(deleteQuery), atMost = 10.second)
+
+  override def resetGrid() =
+    val new_value = "None"
+    val actionQuery = sql"""UPDATE "GRID" SET "value" = $new_value WHERE "value" != $new_value""".as[Int]
+    Await.result(database.run(actionQuery), atMost = 10.second)
 
 
+  override def updateGrid(): Unit = ???
+
+  override def readGrid(): GridInterface =
+    val m_player1 = readPlayer(1)
+    val player1 = m_player1 match
+      case Some(a) => Cell(Some(Piece(Player(a._4, a._2))))
+      case None => Cell(Some(Piece(Player("Player_1", 1))))
+    val m_player2 = readPlayer(2)
+    val player2 = m_player1 match
+      case Some(a) => Cell(Some(Piece(Player(a._4, a._2))))
+      case None => Cell(Some(Piece(Player("Player_2", 2))))
+    val actionQuery = sql"""SELECT * FROM "GRID"""".as[(Int, Int, Int, String)]
+    val result = Await.result(database.run(actionQuery), atMost = 10.second)
+    var temp_grid = Grid(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
+    val r = result.toList.map(x => x._4 match
+      case "1" => temp_grid = temp_grid.replaceCell(x._2, x._3, player1)
+      case "2" => temp_grid = temp_grid.replaceCell(x._2, x._3, player2)
+      case _ => temp_grid = temp_grid.replaceCell(x._2, x._3, Cell(None)))
+    return temp_grid

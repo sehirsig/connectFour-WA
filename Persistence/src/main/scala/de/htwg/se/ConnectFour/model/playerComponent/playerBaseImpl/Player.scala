@@ -1,9 +1,11 @@
 package de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl
 
+import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
+
 /**
  * Player implementation
  */
-case class Player(playerName: String, playerNumber: Int):
+case class Player(playerName: String, playerNumber: Int) extends PlayerInterface:
 
   val color: Option[String] =
     this.playerNumber match
