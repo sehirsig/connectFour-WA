@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.fileIOComponent.service
+package de.htwg.se.ConnectFour.service
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
@@ -10,7 +10,7 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
 import scala.util.{Failure, Success}
 
-object FileIOAPI:
+object RestAPI:
 
   val connectIP = sys.env.getOrElse("FILEIO_SERVICE_HOST", "localhost").toString
   val connectPort = sys.env.getOrElse("FILEIO_SERVICE_PORT", 8081).toString.toInt
@@ -36,23 +36,41 @@ object FileIOAPI:
     },
     path("fileio" / "load") {
       get {
-        complete(HttpEntity(ContentTypes.`application/json`, FileIOController.load()))
+        complete(HttpEntity(ContentTypes.`application/json`, RestController.load()))
       }
     },
     path("fileio" / "save") {
       concat(
         post {
           entity(as[String]) { game =>
-            FileIOController.save(game)
+            RestController.save(game)
             complete("game saved")
           }
         }
       )
+    },
+    path("db" / "addplayer" / Segment) { command => {
+       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer(command).toString))
+     }
+    },
+    path("db" / "getplayer" / Segment) { command => {
+       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.getPlayer(command).toString))
+      }
+    },
+    path("db" / "deleteplayer" / Segment) { command => {
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.deletePlayer(command).toString))
+      }
+    },
+    path("db" / "updateplayer" / "1" / Segment) { command => {
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.updatePlayer(1, command).toString))
+      }
     }
   )
 
 
   val bindingFuture = Http().newServerAt(connectIP, connectPort).bind(route)
+
+  RestController.createDB()
 
   bindingFuture.onComplete{
     case Success(binding) => {

@@ -12,29 +12,16 @@ lazy val commonDependencies = Seq(
   dependencies.akkaHttp,
   dependencies.akkaHttpSpray,
   dependencies.akkaHttpCore,
-  dependencies.slf4jNop,
   dependencies.googleinject,
   dependencies.scalalangmodules,
   dependencies.typesafeplay,
   dependencies.akkaActor,
   dependencies.akkaStream,
   dependencies.akkaActorTyped,
-  dependencies.slick,
-  dependencies.slf4jNop
+  dependencies.slf4jNop,
+  dependencies.githubslick,
+  dependencies.postgresql
 )
-
-/** Database */
-lazy val database = (project in file("Database"))
-  .settings(
-    name := "ConnectFour-Database",
-    organization  := "de.htwg.se",
-    version := "0.5.0-SNAPSHOT",
-    crossScalaVersions ++= Seq("2.13.6", "3.1.1"),
-    libraryDependencies += "org.slf4j" % "slf4j-nop" % "2.0.0-alpha7",
-    libraryDependencies += "com.typesafe.slick" %% "slick" % "3.4.0-M1",
-    libraryDependencies += "org.postgresql" % "postgresql" % "42.3.4",
-    commonSettings,
-  )
 
 /** Persistence Module */
 lazy val persistence = (project in file("Persistence"))
@@ -48,7 +35,6 @@ lazy val persistence = (project in file("Persistence"))
 /** Root Module */
 lazy val root = project
   .in(file("."))
-  .dependsOn(database)
   .settings(
     name := "ConnectFour",
     version := "0.5.0-SNAPSHOT",
@@ -71,6 +57,9 @@ lazy val commonSettings = Seq(
     "de.htwg.se.ConnectFour.fileIOComponent*",
     "de.htwg.se.ConnectFour.ConnectFour*"
   ),
+
+  resolvers += "jitpack" at "https://jitpack.io",
+
   libraryDependencies ++= {
     // Determine OS version of JavaFX binaries
     lazy val osName = System.getProperty("os.name") match {

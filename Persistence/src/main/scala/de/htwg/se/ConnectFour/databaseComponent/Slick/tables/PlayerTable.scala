@@ -1,7 +1,7 @@
 package de.htwg.se.ConnectFour.databaseComponent.Slick.tables
 
 import de.htwg.se.ConnectFour.model.playerComponent.Player
-import slick.jdbc.PostgresProfile.api._
+import slick.jdbc.PostgresProfile.api.*
 
 class PlayerTable(tag: Tag) extends Table[(Int, Int, Option[String], String)](tag, "PLAYER") {
 

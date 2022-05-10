@@ -25,8 +25,8 @@ services:
     environment:
       FILEIO_SERVICE_HOST: fileio
       FILEIO_SERVICE_PORT: 8081
-      SLICK_SERVICE_HOST: slick
-      SLICK_SERVICE_PORT: 8082
+      POSTGRES_IP: postgres
+      POSTGRES_PORT: 5432
     tty: true
 
   connectfour:
@@ -38,8 +38,6 @@ services:
       - "8080:8080"
     stdin_open: true
     container_name: connectfour_service
-    depends_on:
-      - persistence
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
@@ -48,5 +46,3 @@ services:
       CONNECTFOUR_SERVICE_PORT: 8080
       FILEIO_SERVICE_HOST: fileio
       FILEIO_SERVICE_PORT: 8081
-      SLICK_SERVICE_HOST: slick
-      SLICK_SERVICE_PORT: 8082

@@ -4,15 +4,14 @@ import de.htwg.se.ConnectFour.model.playerComponent.Player
 
 import scala.concurrent.Future
 
-trait DatabaseInterface {
+trait DaoInterface:
 
   def read(playerId: Int): Option[(Int, Int, Option[String], String)]
 
-  def update(id: Int, game: Future[String]): Unit
+  def update(id: Int, name: String): Unit
 
-  def deletePlayer(num:Int): Future[Any]
+  def delete(num:Int): Future[Any]
 
-  def create(): Unit
+  def createDB(): Unit
 
   def create(player: Player): Int
-}

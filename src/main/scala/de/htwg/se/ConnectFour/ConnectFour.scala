@@ -4,7 +4,6 @@ import com.google.inject.{Guice, Injector}
 import de.htwg.se.ConnectFour.aUI.UIFactory
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ConnectFour.aUI.service.UiAPI
-import de.htwg.se.ConnectFour.databaseComponent.Slick.DaoSlick
 
 import scala.util.{Failure, Success, Try}
 
@@ -25,11 +24,6 @@ case object ConnectFour:
           case Success(_) => println("View Rest Server is running!")
           case Failure(v) => println("View Rest Server couldn't be started! " + v.getMessage + v.getCause)
       case _ =>
-
-    Try(DaoSlick) match {
-      case Success(_) => println("Slick is running!")
-      case Failure(v) => println("Slick couldn't be started! " + v.getMessage + v.getCause)
-    }
 
     Try(UIFactory(uiType,controller)) match
       case Success(_) => println("See you next time! Bye.")

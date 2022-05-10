@@ -1,11 +1,10 @@
 package de.htwg.se.ConnectFour
 
-import de.htwg.se.ConnectFour.fileIOComponent.service.FileIOAPI
-
+import de.htwg.se.ConnectFour.service.RestAPI
 import scala.util.{Failure, Success, Try}
 
-object Rest:
+object Persistence:
   @main def run =
-    Try(FileIOAPI) match
+    Try(RestAPI) match
       case Success(_) => println("FileIO Rest Server is running!")
       case Failure(v) => println("FileIO Server couldn't be started! " + v.getMessage + v.getCause)
