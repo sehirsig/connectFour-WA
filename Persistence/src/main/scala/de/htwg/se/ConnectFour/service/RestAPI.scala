@@ -49,6 +49,26 @@ object RestAPI:
         }
       )
     },
+    path("db" / "loadUI") {
+      get {
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.loadDB_UI())) //Change here to json, to be able to load json to SRC Controller
+      }
+    },
+    path("db" / "load") {
+      get {
+        complete(HttpEntity(ContentTypes.`application/json`, RestController.loadDB())) //Change here to json, to be able to load json to SRC Controller
+      }
+    },
+    path("db" / "save") {
+      concat(
+        post {
+          entity(as[String]) { game =>
+            RestController.saveDB(game)
+            complete("Game saved to DB")
+          }
+        }
+      )
+    },
     path("db" / "addplayer" / "1" / Segment) { command => {
        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer1(command).toString))
      }

@@ -31,8 +31,12 @@ trait DaoInterface:
 
   def resetGrid(): Unit
 
-  def updateGrid(): Unit
+  def updateGrid(grid:String): Unit
 
   def deleteGrid(): Unit
 
   def readGrid(): GridInterface
+
+  def loadGrid():String
+
+  def loadGrid_UI():String

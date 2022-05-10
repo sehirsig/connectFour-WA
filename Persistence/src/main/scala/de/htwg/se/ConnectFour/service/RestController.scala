@@ -22,6 +22,15 @@ object RestController:
   def save(gameAsText: String) =
     fileIO.save(gameAsText)
 
+  def loadDB_UI(): String =
+    database.loadGrid_UI()
+
+  def loadDB(): String =
+    database.loadGrid()
+
+  def saveDB(grid:String) =
+    database.updateGrid(grid)
+
   def deletePlayer(input:String) =
     database.deletePlayer(input.toInt)
 

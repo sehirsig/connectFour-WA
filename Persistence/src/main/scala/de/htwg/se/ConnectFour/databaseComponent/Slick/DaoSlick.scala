@@ -5,8 +5,9 @@ import de.htwg.se.ConnectFour.databaseComponent.DaoInterface
 import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.{GridTable, PlayerTable}
 import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
+import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, JsValue, Json}
 //import slick.driver.PostgresDriver.api.*
 import slick.jdbc.JdbcBackend.Database
 import slick.lifted.TableQuery
@@ -144,16 +145,13 @@ class DaoSlick @Inject () extends DaoInterface:
     val actionQuery = sql"""UPDATE "GRID" SET "value" = $new_value WHERE "value" != $new_value""".as[Int]
     Await.result(database.run(actionQuery), atMost = 10.second)
 
-
-  override def updateGrid(): Unit = ???
-
   override def readGrid(): GridInterface =
     val m_player1 = readPlayer(1)
     val player1 = m_player1 match
       case Some(a) => Cell(Some(Piece(Player(a._4, a._2))))
       case None => Cell(Some(Piece(Player("Player_1", 1))))
     val m_player2 = readPlayer(2)
-    val player2 = m_player1 match
+    val player2 = m_player2 match
       case Some(a) => Cell(Some(Piece(Player(a._4, a._2))))
       case None => Cell(Some(Piece(Player("Player_2", 2))))
     val actionQuery = sql"""SELECT * FROM "GRID"""".as[(Int, Int, Int, String)]
@@ -164,3 +162,39 @@ class DaoSlick @Inject () extends DaoInterface:
       case "2" => temp_grid = temp_grid.replaceCell(x._2, x._3, player2)
       case _ => temp_grid = temp_grid.replaceCell(x._2, x._3, Cell(None)))
     return temp_grid
+
+  override def loadGrid():String =
+    val m_player1 = readPlayer(1)
+    val player1 = m_player1 match
+      case Some(a) => a._4
+      case None => "Player 1"
+    val m_player2 = readPlayer(2)
+    val player2 = m_player2 match
+      case Some(a) => a._4
+      case None => "Player 2"
+    this.readGrid().toJsonString(1, player1, player1, player2)
+
+  override def loadGrid_UI():String =
+    this.readGrid().toPlainString
+
+
+  override def updateGrid(input: String) =
+    createGrid()
+    val gameJson: JsValue = Json.parse(input)
+    val grid = (gameJson \ "grid")
+    val cells = (grid \ "cells").as[JsArray]
+    recUpdateGrid(cells, 0)
+
+
+  def recUpdateGrid(cells:JsArray, idx:Int):Unit =
+    if cells.value.length == idx then
+      return
+    val cell = cells.value(idx)
+    val row = (cell \ "row").get.as[Int]
+    val col = (cell \ "col").get.as[Int]
+    val value = (cell \ "value").get.as[Int]
+
+    val actionQuery =
+      sql"""UPDATE "GRID" SET "value" = $value WHERE "row" = $row AND "column" = $col""".as[(Int, Int, String)]
+    Await.result(database.run(actionQuery), atMost = 10.second)
+    recUpdateGrid(cells, idx + 1)

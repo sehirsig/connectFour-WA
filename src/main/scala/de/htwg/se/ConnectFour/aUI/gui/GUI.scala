@@ -43,7 +43,17 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
 
   def run() = main(Array())
 
+  //Security, if player have been added yet.
+  var playerNum = 0
+
+  def waitForDatabase(): Unit=
+    if playerNum != controller.players.size then
+      Thread.sleep(1000)
+      waitForDatabase()
+
   def typeName() =
+    waitForDatabase()
+
     val dialog = new TextInputDialog(defaultValue = "Player " + (controller.players.size + 1)) {
       initOwner(stage)
       title = "ConnectFour Game"
@@ -55,7 +65,7 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
 
     val result = dialog.showAndWait()
     result match
-      case Some(name) => controller.addPlayer(name)
+      case Some(name) => if playerNum == controller.players.size then controller.addPlayer(name);playerNum += 1;
       case None => println("Please type a name!")
 
   /** Partially applied function beginExec, to execute the execute method. */
