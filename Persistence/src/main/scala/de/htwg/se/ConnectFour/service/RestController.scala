@@ -25,8 +25,12 @@ object RestController:
   def deletePlayer(input:String) =
     database.delete(input.toInt)
 
-  def addPlayer(input:String) =
+  def addPlayer1(input:String) =
     val play = Player(input, 1)
+    database.create(play)
+
+  def addPlayer2(input:String) =
+    val play = Player(input, 2)
     database.create(play)
 
   def getPlayer(input:String): Option[(Int, Int, Option[String], String)]=
@@ -37,3 +41,9 @@ object RestController:
 
   def updatePlayer(num:Int, name:String) =
     database.update(num, name)
+
+  def getPlayers():String=
+    database.readAll().toString()
+
+  def deleteAllPlayers() =
+    database.deleteAll()

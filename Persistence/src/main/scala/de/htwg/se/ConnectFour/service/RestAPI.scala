@@ -49,12 +49,27 @@ object RestAPI:
         }
       )
     },
-    path("db" / "addplayer" / Segment) { command => {
-       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer(command).toString))
+    path("db" / "addplayer" / "1" / Segment) { command => {
+       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer1(command).toString))
      }
+    },
+    path("db" / "addplayer" / "2" / Segment) { command => {
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer2(command).toString))
+      }
     },
     path("db" / "getplayer" / Segment) { command => {
        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.getPlayer(command).toString))
+      }
+    },
+    path("db" / "getplayer") {
+      get {
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.getPlayers().toString()))
+      }
+    },
+    path("db" / "deleteall") {
+      get {
+        RestController.deleteAllPlayers()
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Deleted all Players"))
       }
     },
     path("db" / "deleteplayer" / Segment) { command => {

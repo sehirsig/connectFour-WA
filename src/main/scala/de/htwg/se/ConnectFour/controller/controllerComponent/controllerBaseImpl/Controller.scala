@@ -31,6 +31,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
   val fileIOPort = sys.env.getOrElse("FILEIO_SERVICE_PORT", 8081).toString.toInt
 
   val fileIOURI = "http://" + fileIOIP + ":" + fileIOPort + "/fileio"
+  val databaseURI = "http://" + fileIOIP + ":" + fileIOPort + "/db"
 
   var players: Vector[PlayerInterface] = Vector.empty
   var moveCount = 0
@@ -42,11 +43,29 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
     reset()
     notifyObservers
 
-  override def addPlayer(name:String) = if players.size == 0 then buildPlayer(name,1) else buildPlayer(name,2)
+  override def addPlayer(name:String) =
+    if players.size == 0 then
+      buildPlayer(name,1)
+    else
+      buildPlayer(name,2)
 
   def buildPlayer(name:String, number:Int) =
     val player = playerBuilder.createPlayer(name,number)
     players = players.appended(player)
+
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext = system.executionContext
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/addplayer/" + number + "/" + name.replace(" ", "_")))
+    responseFuture
+      .onComplete {
+        case Failure(_) => println(responseFuture)
+        case Success(value) => Unmarshal(value.entity).to[String].onComplete {
+          case Failure(_) => sys.error("Failed unmarshalling")
+          case Success(value) => {
+            println("Response: " + value)
+          }
+        }
+      }
 
   override def whoseTurnIsIt() =
     currentPlayer = if moveCount % 2 == 0 then players(0) else players(1)
@@ -103,7 +122,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
     implicit val executionContext = system.executionContext
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = fileIOURI + "/load"))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = fileIOURI + "/load"))
 
     responseFuture
       .onComplete {
@@ -112,13 +131,13 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
           Unmarshal(value.entity).to[String].onComplete {
             case Failure(_) => sys.error("Failed unmarshalling")
             case Success(value) => {
+              this.deletePlayers
               val gameJson: JsValue = Json.parse(value)
               val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
               val currentPlayer = (gameJson \ "player" \ "currentPlayer").get.toString()
               val player1 = (gameJson \ "player" \ "player1" \ "name").get.toString()
               val player2 = (gameJson \ "player" \ "player2" \ "name").get.toString()
               setMoveCount(moveCount)
-              players = Vector.empty
               addPlayer(player1)
               addPlayer(player2)
               currentPlayer match
@@ -133,6 +152,23 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
         }
       }
     notifyObservers
+
+  def deletePlayers =
+    players = Vector.empty
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+    implicit val executionContext = system.executionContext
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/deleteall"))
+    responseFuture
+      .onComplete {
+        case Failure(_) => println(responseFuture)
+        case Success(value) => Unmarshal(value.entity).to[String].onComplete {
+          case Failure(_) => sys.error("Failed unmarshalling")
+          case Success(value) => {
+            println("Response: " + value)
+          }
+        }
+      }
+
 
   override def reset() =
     grid = grid.reset()

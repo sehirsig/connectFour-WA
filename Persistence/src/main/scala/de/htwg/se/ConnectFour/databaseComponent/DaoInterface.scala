@@ -8,10 +8,14 @@ trait DaoInterface:
 
   def read(playerId: Int): Option[(Int, Int, Option[String], String)]
 
-  def update(id: Int, name: String): Unit
+  def update(id: Int, name: String): String
 
   def delete(num:Int): Future[Any]
 
   def createDB(): Unit
 
   def create(player: Player): Int
+
+  def readAll():List[(Int, Int, Option[String], String)]
+
+  def deleteAll(): Unit

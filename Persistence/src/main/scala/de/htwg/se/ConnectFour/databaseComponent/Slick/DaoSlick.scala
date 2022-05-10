@@ -43,32 +43,44 @@ class DaoSlick @Inject () extends DaoInterface:
     }
 
   override def read(playerId: Int): Option[(Int, Int, Option[String], String)] =
-    val actionQuery = sql"""SELECT * FROM "PLAYER" WHERE id = $playerId""".as[(Int, Int, Option[String], String)]
+    val actionQuery = sql"""SELECT * FROM "PLAYER" WHERE "number" = $playerId""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result match {
       case Seq(a) => Some((a._1, a._2, a._3, a._4))
       case _ => None
     }
 
-  override def update(id: Int, game: String)  =
+  override def update(id: Int, name: String):String  =
+    if read(id) == None then
+      return "Player non existent."
     val actionQuery =
-      sql"""UPDATE "PLAYER"
-            SET "num" = 5, "name" = game
-            WHERE id = $id""".as[(Int, Int, Option[String], String)]
+      sql"""UPDATE "PLAYER" SET "number" = id, "name" = $name WHERE "number" = $id""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
-
+    result.toString()
 
   override def delete(num:Int): Future[Any] =
     val action = playerTable.filter(_.id === num ).delete
     Future(Await.result(database.run(action), atMost = 10.second))
 
   override def create(player: Player): Int =
-    //val playerIDQuery = (playerTable returning playerTable.map(_.id)) += ((player.playerNumber, player.playerNumber, player.color, player.playerName))
-    //val playerID = Await.result(database.run(playerIDQuery), Duration("10s"))
+    if readAll().length > 1 then
+      return -1
     Try({
       database.run(playerTable += (1, player.playerNumber, player.color, player.playerName))
       player.playerNumber
     }) match {
-      case Success(_) => println("Geklappt");0
-      case Failure(exception) => println(exception); 1
+      case Success(_) =>
+        println("Geklappt");player.playerNumber
+      case Failure(exception) => println(exception); -1
     }
+
+  override def readAll(): List[(Int, Int, Option[String], String)] =
+    val actionQuery = sql"""SELECT * FROM "PLAYER"""".as[(Int, Int, Option[String], String)]
+    val result = Await.result(database.run(actionQuery), atMost = 10.second)
+    result.toList
+
+  override def deleteAll() =
+    val action = playerTable.delete
+    Future(Await.result(database.run(action), atMost = 10.second))
+
+
