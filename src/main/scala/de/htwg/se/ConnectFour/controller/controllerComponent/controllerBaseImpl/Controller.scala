@@ -132,7 +132,6 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
           Unmarshal(value.entity).to[String].onComplete {
             case Failure(_) => sys.error("Failed unmarshalling")
             case Success(value) => {
-              this.deletePlayers
               val gameJson: JsValue = Json.parse(value)
               val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
               val currentPlayer = (gameJson \ "player" \ "currentPlayer").get.toString()
