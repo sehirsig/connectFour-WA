@@ -24,6 +24,10 @@ trait DaoInterface:
 
   def createGrid(): Unit
 
+  def readPiece(): Unit
+
+  def updatePiece(): Unit
+
   def resetGrid(): Unit
 
   def updateGrid(): Unit
