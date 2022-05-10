@@ -5,7 +5,7 @@ import de.htwg.se.ConnectFour.PersistenceModule
 import de.htwg.se.ConnectFour.fileIOComponent.FileIOInterface
 import com.google.inject.name.Names
 import de.htwg.se.ConnectFour.databaseComponent.DaoInterface
-import de.htwg.se.ConnectFour.model.playerComponent.Player
+import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 
 import java.io.*
 import scala.io.Source

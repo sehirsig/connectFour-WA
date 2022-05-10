@@ -1,4 +1,4 @@
-package de.htwg.se.ConnectFour.model.playerComponent
+package de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl
 
 /**
  * Player implementation
