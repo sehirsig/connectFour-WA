@@ -186,7 +186,6 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
       this.setMaxSize(Double.MaxValue, Double.MaxValue)
       onMouseClicked = _ => {
         execute("l")
-        execute("l")
       }
       onMouseEntered = _ => effect = new Glow(0.7)
       onMouseExited = _ => effect = new Glow(0)
