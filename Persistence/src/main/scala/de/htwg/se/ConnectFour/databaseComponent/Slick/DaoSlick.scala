@@ -82,5 +82,7 @@ class DaoSlick @Inject () extends DaoInterface:
   override def deleteAll() =
     val action = playerTable.delete
     Future(Await.result(database.run(action), atMost = 10.second))
+    val deleteQuery = sql"""ALTER SEQUENCE player_id_seq RESTART WITH 1"""
+    Future(Await.result(database.run(deleteQuery), atMost = 10.second))
 
 
