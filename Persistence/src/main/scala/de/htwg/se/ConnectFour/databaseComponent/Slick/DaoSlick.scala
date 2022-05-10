@@ -75,7 +75,7 @@ class DaoSlick @Inject () extends DaoInterface:
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result.toString()
 
-  override def update(id: Int, name: String):String   =
+  override def updatePlayer(id: Int, name: String):String   =
     if readPlayer(id) == None then
       return "Player non existent."
     val actionQuery =
