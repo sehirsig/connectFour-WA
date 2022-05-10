@@ -45,6 +45,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
   override def addPlayer(name:String) =
     if players.size == 0 then
+      this.deletePlayers
       buildPlayer(name,1)
     else
       buildPlayer(name,2)
