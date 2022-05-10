@@ -3,7 +3,10 @@ package de.htwg.se.ConnectFour.databaseComponent.Slick
 import com.google.inject.Inject
 import de.htwg.se.ConnectFour.databaseComponent.DaoInterface
 import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.{GridTable, PlayerTable}
-import de.htwg.se.ConnectFour.model.playerComponent.Player
+import de.htwg.se.ConnectFour.model.gridComponent.Cell
+import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
+import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
+import play.api.libs.json.Json
 //import slick.driver.PostgresDriver.api.*
 import slick.jdbc.JdbcBackend.Database
 import slick.lifted.TableQuery
@@ -56,7 +59,23 @@ class DaoSlick @Inject () extends DaoInterface:
       case _ => None
     }
 
-  override def updatePlayer(id: Int, name: String):String  =
+  override def readPiece(row: Int, col: Int): Option[(Int, Int, Int, String)] =
+    val actionQuery = sql"""SELECT * FROM "GRID" WHERE "row" = $row AND "col" = $col""".as[(Int, Int, Int, String)]
+    val result = Await.result(database.run(actionQuery), atMost = 10.second)
+    result match {
+      case Seq(a) => Some((a._1, a._2, a._3, a._4))
+      case _ => None
+    }
+
+  override def updatePiece(row: Int, col: Int, value: String):String  =
+    if readPiece(row,col) == None then
+      return "Grid Piece non existent."
+    val actionQuery =
+      sql"""UPDATE "GRID" SET "value" = $value WHERE "row" = $row AND "col" = $col""".as[(Int, Int, String)]
+    val result = Await.result(database.run(actionQuery), atMost = 10.second)
+    result.toString()
+
+  override def update(id: Int, name: String):String   =
     if readPlayer(id) == None then
       return "Player non existent."
     val actionQuery =
@@ -80,6 +99,19 @@ class DaoSlick @Inject () extends DaoInterface:
       case Failure(exception) => println(exception); -1
     }
 
+  override def createGrid(): Unit =
+    Try({
+      var counter = 1
+      (0 to 7 - 1).flatMap(col =>
+        (0 to 6 - 1).reverse.map(row => {
+          database.run(gridTable += (counter,row, col, "None"))
+          counter+1
+        }))
+    }) match {
+      case Success(_) =>
+        println("42 Grid Felder wurden erstellt");
+      case Failure(exception) => println(exception); -1
+    }
 
   override def readAllPlayers(): List[(Int, Int, Option[String], String)] =
     val actionQuery = sql"""SELECT * FROM "PLAYER"""".as[(Int, Int, Option[String], String)]

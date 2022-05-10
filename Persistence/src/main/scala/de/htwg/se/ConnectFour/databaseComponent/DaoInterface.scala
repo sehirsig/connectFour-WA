@@ -22,9 +22,9 @@ trait DaoInterface:
 
   def deleteAllPlayers(): Unit
 
-  def createGrid(): Grid
+  def createGrid(): Unit
 
-  def resetGrid(): Grid
+  def resetGrid(): Unit
 
   def updateGrid(): Unit
 
