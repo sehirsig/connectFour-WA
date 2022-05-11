@@ -5,6 +5,7 @@ import de.htwg.se.ConnectFour.databaseComponent.Slick.DaoSlick
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.ConnectFour.PersistenceModule
 import de.htwg.se.ConnectFour.databaseComponent.DaoInterface
+import de.htwg.se.ConnectFour.databaseComponent.DAO
 
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
@@ -13,13 +14,16 @@ object Database {
   def main(args: Array[String]): Unit = {
 
     val injector: Injector = Guice.createInjector(PersistenceModule())
-    val database = injector.getInstance(classOf[DaoInterface])
+    val database = injector.getInstance(classOf[DAO])
     
     Try(database) match {
       case Success(_) => println("Slick is running!")
       case Failure(v) => println("Slick couldn't be started! " + v.getMessage + v.getCause)
     }
 
+    database.create
+
+/*
     database.createDB()
     println(s"Running\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
@@ -59,5 +63,6 @@ object Database {
     //print("Deletion of player 1 succeded: " + deletePlayer1.isCompleted + "\n")
     //Thread.sleep(10000)
     //print("Deletion of player 1 succeded: " + deletePlayer1.isCompleted + "\n")
+*/
   }
 }

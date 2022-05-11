@@ -69,6 +69,33 @@ object RestAPI:
         }
       )
     },
+    path("db" / "loadDAO") {
+      get {
+        complete(HttpEntity(ContentTypes.`application/json`, RestController.loadDAO())) //Change here to json, to be able to load json to SRC Controller
+      }
+    },
+    path("db" / "saveDAO") {
+      concat(
+        post {
+          entity(as[String]) { game =>
+            RestController.saveDAO(game)
+            complete("Game saved to DB")
+          }
+        }
+      )
+    },
+    path("db" / "createDAO") {
+      get {
+        RestController.createDAO()
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Database created")) //Change here to json, to be able to load json to SRC Controller
+      }
+    },
+    path("db" / "deleteDAO") {
+      get {
+        RestController.deleteDAO()
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Database cleared.")) //Change here to json, to be able to load json to SRC Controller
+      }
+    },
     path("db" / "addplayer" / "1" / Segment) { command => {
        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer1(command).toString))
      }
@@ -105,7 +132,7 @@ object RestAPI:
 
   val bindingFuture = Http().newServerAt(connectIP, connectPort).bind(route)
 
-  RestController.createDB()
+  RestController.createDAO()
 
   bindingFuture.onComplete{
     case Success(binding) => {

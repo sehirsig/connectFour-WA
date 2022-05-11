@@ -174,7 +174,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.POST,
-      uri = databaseURI + "/save",
+      uri = databaseURI + "/saveDAO",
       entity = gridToJsonString()
     ))
     responseFuture
