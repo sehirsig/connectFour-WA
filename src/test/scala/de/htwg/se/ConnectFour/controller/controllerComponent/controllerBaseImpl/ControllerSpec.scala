@@ -20,8 +20,8 @@ class ControllerSpec extends AnyWordSpec with Matchers:
   val playerbuilder = injector.getInstance(classOf[PlayerBuilderInterface])
   val controller = new Controller(grid, new PlayerBuilder())
   controller.moveCount = 0
-  controller.addPlayer("Player1")
-  controller.addPlayer("Player2")
+  controller.buildPlayer("Player1", 1)
+  controller.buildPlayer("Player2", 2)
   controller.currentPlayer = controller.players(0)
 
   "A Controller" when {
