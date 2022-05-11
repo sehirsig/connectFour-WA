@@ -39,7 +39,16 @@ class DAOSlickImpl2 @Inject () extends DAO {
 
   /** CREATE */
   override def create =
-    val playerDB = Future(Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf))
+    val running = Future(Await.result(database.run(DBIO.seq(
+      playerTable.schema.createIfNotExists,
+      gridTable.schema.createIfNotExists,
+      settingsTable.schema.createIfNotExists
+    )), Duration.Inf))
+    running.onComplete{
+      case Success(_) => println("Connection to DB & Creation of Tables successful!")
+      case Failure(e) => println("Error: " + e)
+    }
+    /*val playerDB = Future(Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf))
     val gridDB = Future(Await.result(database.run(gridTable.schema.createIfNotExists), Duration.Inf))
     val setDB = Future(Await.result(database.run(settingsTable.schema.createIfNotExists), Duration.Inf))
     playerDB.onComplete {
@@ -53,7 +62,7 @@ class DAOSlickImpl2 @Inject () extends DAO {
     setDB.onComplete {
       case Success(_) => println("Connection to DB & Creation of settingsTable successful!")
       case Failure(e) => println("Error: " + e)
-    }
+    }*/
     createGrid()
     createPlayers()
     createSet()
