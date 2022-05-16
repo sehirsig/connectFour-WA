@@ -1,6 +1,6 @@
 package de.htwg.se.ConnectFour.databaseComponent
 
-trait DAO {
+trait DAOInterface {
   def create: Unit
 
   def read:String

@@ -1,7 +1,7 @@
 package de.htwg.se.ConnectFour.databaseComponent.Slick
 
 import com.google.inject.Inject
-import de.htwg.se.ConnectFour.databaseComponent.DaoInterface
+import de.htwg.se.ConnectFour.databaseComponent.DBInterface
 import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.{GridTable, PlayerTable}
 import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
@@ -19,7 +19,7 @@ import scala.concurrent.{Await, Future}
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
-class DaoSlick @Inject () extends DaoInterface:
+class DBSlickImpl @Inject () extends DBInterface:
 
   val connectIP = sys.env.getOrElse("POSTGRES_IP", "localhost").toString
   val connectPort = sys.env.getOrElse("POSTGRES_PORT", 5432).toString.toInt

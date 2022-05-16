@@ -7,7 +7,7 @@ import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 
 import scala.concurrent.Future
 
-trait DaoInterface:
+trait DBInterface:
 
   def readPlayer(playerId: Int): Option[(Int, Int, Option[String], String)]
 
