@@ -2,9 +2,9 @@ name: Scala CI
 
 on:
   push:
-    branches: [ SA-07_Slick ]
+    branches: [ development ]
   pull_request:
-    branches: [ SA-07_Slick ]
+    branches: [ development ]
 
 jobs:
   build:
