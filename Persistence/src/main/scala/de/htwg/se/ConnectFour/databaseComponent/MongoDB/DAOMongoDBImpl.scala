@@ -1,5 +1,6 @@
 package de.htwg.se.ConnectFour.databaseComponent.MongoDB
 
+import com.google.inject.Inject
 import de.htwg.se.ConnectFour.databaseComponent.DAOInterface
 import de.htwg.se.ConnectFour.model.gridComponent.{Cell, Piece}
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
@@ -16,7 +17,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 
 
-class DAOMongoDBImpl extends DAOInterface:
+class DAOMongoDBImpl @Inject ()  extends DAOInterface:
 
   val uri: String = "mongodb://mongo:27017/"
   val client: MongoClient = MongoClient(uri)
