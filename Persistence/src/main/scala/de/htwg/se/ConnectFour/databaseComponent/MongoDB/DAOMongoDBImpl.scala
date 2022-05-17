@@ -55,7 +55,7 @@ class DAOMongoDBImpl extends DAOInterface {
           case "2" => temp_grid = temp_grid.replaceCell(x._2, x._3, player2)
           case _ => temp_grid = temp_grid.replaceCell(x._2, x._3, Cell(None)))
       }
-    return temp_grid.toJsonString(1,player1,player1,player2)
+    temp_grid.toJsonString(1,player1,player1,player2)
 
 
       /** SAVE */
