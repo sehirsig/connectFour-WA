@@ -32,7 +32,7 @@ class DAOMongoDBImpl extends DAOInterface {
     observerInsertion(settingsCollection.insertOne(settingsDocument))
 
   /** Load */
-  override def load:Grid =
+  override def load:String =
     val gridDocument: Document = Await.result(levelCollection.find(equal("_id", "gridDocument")).first().head(), Duration.Inf)
     val player1Document: Document = Await.result(levelCollection.find(equal("_id", "playerDocument1")).first().head(), Duration.Inf)
     val player2Document: Document = Await.result(levelCollection.find(equal("_id", "playerDocument2")).first().head(), Duration.Inf)
@@ -55,10 +55,10 @@ class DAOMongoDBImpl extends DAOInterface {
           case "2" => temp_grid = temp_grid.replaceCell(x._2, x._3, player2)
           case _ => temp_grid = temp_grid.replaceCell(x._2, x._3, Cell(None)))
       }
-    return temp_grid
+    return temp_grid.toJsonString(1,player1,player1,player2)
 
 
-  /** SAVE */
+      /** SAVE */
   override def save(input:String) =
     val gameJson: JsValue = Json.parse(input)
     val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
