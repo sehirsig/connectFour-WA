@@ -48,21 +48,6 @@ class DAOSlickGridPlayerImpl @Inject () extends DAOInterface {
       case Success(_) => println("Connection to DB & Creation of Tables successful!")
       case Failure(e) => println("Error: " + e)
     }
-    /*val playerDB = Future(Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf))
-    val gridDB = Future(Await.result(database.run(gridTable.schema.createIfNotExists), Duration.Inf))
-    val setDB = Future(Await.result(database.run(settingsTable.schema.createIfNotExists), Duration.Inf))
-    playerDB.onComplete {
-      case Success(_) => println("Connection to DB & Creation of playerTable successful!")
-      case Failure(e) => println("Error: " + e)
-    }
-    gridDB.onComplete {
-      case Success(_) => println("Connection to DB & Creation of gridTable successful!")
-      case Failure(e) => println("Error: " + e)
-    }
-    setDB.onComplete {
-      case Success(_) => println("Connection to DB & Creation of settingsTable successful!")
-      case Failure(e) => println("Error: " + e)
-    }*/
     createGrid()
     createPlayers()
     createSet()
