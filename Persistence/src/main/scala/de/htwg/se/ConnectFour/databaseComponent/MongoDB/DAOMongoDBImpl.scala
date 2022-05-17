@@ -23,8 +23,8 @@ class DAOMongoDBImpl extends DAOInterface {
   /** CREATE */
   override def create =
     val gridDocument: Document = Document("_id" -> "gridDocument")
-    val player1Document: Document = Document("_id" -> "playerDocument", "playerNum" -> 1, "playerName" -> player1)
-    val player2Document: Document = Document("_id" -> "playerDocument", "playerNum" -> 2, "playerName" -> player2)
+    val player1Document: Document = Document("_id" -> "playerDocument1", "playerNum" -> 1, "playerName" -> player1)
+    val player2Document: Document = Document("_id" -> "playerDocument2", "playerNum" -> 2, "playerName" -> player2)
     val settingsDocument: Document = Document("_id" -> "settingsDocument", "moveCount" -> moveCount, "currentPlayer" -> currentPlayer)
     observerInsertion(gridCollection.insertOne(gridDocument))
     observerInsertion(playerCollection.insertOne(player1Document))
