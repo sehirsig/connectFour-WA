@@ -4,7 +4,7 @@ import de.htwg.se.ConnectFour.databaseComponent.DAOInterface
 import org.mongodb.scala.model.Filters.*
 import org.mongodb.scala.result.{DeleteResult, InsertOneResult}
 import play.api.libs.json.{JsArray, JsValue, Json}
-
+import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.{Await, Future}
@@ -32,14 +32,30 @@ class DAOMongoDBImpl extends DAOInterface {
     observerInsertion(settingsCollection.insertOne(settingsDocument))
 
   /** Load */
-  override def load:String =
+  override def load:Grid =
     val gridDocument: Document = Await.result(levelCollection.find(equal("_id", "gridDocument")).first().head(), Duration.Inf)
-    val player1Document: Document = Await.result(levelCollection.find(equal("_id", "playerDocument")).first().head(), Duration.Inf)
-    val player2Document: Document = Await.result(levelCollection.find(equal("_id", "playerDocument")).first().head(), Duration.Inf)
+    val player1Document: Document = Await.result(levelCollection.find(equal("_id", "playerDocument1")).first().head(), Duration.Inf)
+    val player2Document: Document = Await.result(levelCollection.find(equal("_id", "playerDocument2")).first().head(), Duration.Inf)
     val settingsDocument: Document = Await.result(levelCollection.find(equal("_id", "settingsDocument")).first().head(), Duration.Inf)
-    //TODO: Alles aus der Datenbank rausladen und zu json String konvertieren mit grid.toJsonString
-    //TODO: Aus den 42 Feldern den Vector erstellen, um eine Grid Implementation machen zu können.
-    ""
+    //Player1?
+    val player1 = m_player1 match
+      case Some(a) => Cell(Some(Piece(Player(player1Document("playerName").asString().getValue, player1Document("playerNum").asInt32().getValue))))
+      case None => Cell(Some(Piece(Player("Player_1", 1))))
+    //Player2?
+    val player2 = m_player2 match
+      case Some(a) => Cell(Some(Piece(Player(player2Document("playerName").asString().getValue, player2Document("playerNum").asInt32().getValue))))
+      case None => Cell(Some(Piece(Player("Player_2", 2))))
+
+    var temp_grid = Grid(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
+    for (x <- 0 to gridDocument("row").asInt32().getValue - 1) {
+      for (y <- 0 to gridDocument("col").asInt32().getValue - 1) {
+        val result = gridDocument("value").asInt32().getValue
+        val r = result.toList.map(x => x._4 match
+          case "1" => temp_grid = temp_grid.replaceCell(x._2, x._3, player1)
+          case "2" => temp_grid = temp_grid.replaceCell(x._2, x._3, player2)
+          case _ => temp_grid = temp_grid.replaceCell(x._2, x._3, Cell(None)))
+      }
+    return temp_grid
 
 
   /** SAVE */
