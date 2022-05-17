@@ -27,6 +27,7 @@ object dependencies {
   val hikarislick = ("com.typesafe.slick" %% "slick-hikaricp" % versionNumber.hikarislick).cross(CrossVersion.for3Use2_13)
   val githubslick =("com.github.slick.slick" % "slick_3" % versionNumber.githubslick)
   val postgresql = "org.postgresql" % "postgresql" % versionNumber.postgresql
+  val mongoDb = ("org.mongodb.scala" %% "mongo-scala-driver" % versionNumber.mongoDb).cross(CrossVersion.for3Use2_13)
 }
 
 object versionNumber {
@@ -44,4 +45,5 @@ object versionNumber {
   val hikarislick = "3.3.3"
   val githubslick = "nafg~dottyquery-SNAPSHOT"
   val postgresql = "42.3.4"
+  val mongoDb = "4.6.0"
 }
