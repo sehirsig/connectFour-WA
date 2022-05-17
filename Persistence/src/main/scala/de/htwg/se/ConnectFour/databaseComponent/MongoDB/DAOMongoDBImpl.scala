@@ -19,7 +19,10 @@ import scala.concurrent.duration.Duration
 
 class DAOMongoDBImpl @Inject ()  extends DAOInterface:
 
-  val uri: String = "mongodb://mongo:27017/"
+  val database_pw = sys.env.getOrElse("MONGO_INITDB_ROOT_PASSWORD", "mongo").toString
+  val database_username = sys.env.getOrElse("MONGO_INITDB_ROOT_USERNAME", "root").toString
+
+  val uri: String = s"mongodb://$database_username:$database_pw@localhost:27017/?authSource=admin"
   val client: MongoClient = MongoClient(uri)
   val db: MongoDatabase = client.getDatabase("ConnectFour")
   val gridCollection: MongoCollection[Document] = db.getCollection("grid")
@@ -29,15 +32,15 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
   /** CREATE */
   override def create =
     val gridDocument: Document = Document("_id" -> "gridDocument")
-    val player1Document: Document = Document("_id" -> "playerDocument1", "playerNum" -> 1, "playerName" -> "Player_1")
-    val player2Document: Document = Document("_id" -> "playerDocument2", "playerNum" -> 2, "playerName" -> "Player_2")
+    val player1Document: Document = Document("_id" -> "player1Document", "playerNum" -> 1, "playerName" -> "Player_1")
+    val player2Document: Document = Document("_id" -> "player2Document", "playerNum" -> 2, "playerName" -> "Player_2")
     val settingsDocument: Document = Document("_id" -> "settingsDocument", "moveCount" -> 1, "currentPlayer" -> "Player_1",
     "xsize" -> 7, "ysize" -> 6)
     observerInsertion(gridCollection.insertOne(gridDocument))
     var count = 0
-    for (x <- 0 to 7 - 1) {
-      for (y <- 0 to 6 - 1) {
-        observerInsertion(gridCollection.insertOne(Document("_id" -> count, "row" -> x, "col" -> y, "value" -> "None")))
+    for (cols <- 0 to 7 - 1) {
+      for (rows <- 0 to 6 - 1) {
+        observerInsertion(gridCollection.insertOne(Document("_id" -> count, "row" -> rows, "col" -> cols, "value" -> -1)))
         count += 1
       }
     }
@@ -47,37 +50,34 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
 
   /** READ */
   override def read:String =
-    val gridDocument: Document = Await.result(gridCollection.find(equal("_id", "gridDocument")).first().head(), Duration.Inf)
-    val player1Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument1")).first().head(), Duration.Inf)
-    val player2Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument2")).first().head(), Duration.Inf)
+    val player1Document: Document = Await.result(playerCollection.find(equal("_id", "player1Document")).first().head(), Duration.Inf)
+    val player2Document: Document = Await.result(playerCollection.find(equal("_id", "player2Document")).first().head(), Duration.Inf)
     val settingsDocument: Document = Await.result(settingsCollection.find(equal("_id", "settingsDocument")).first().head(), Duration.Inf)
 
-    val player1 = player1Document("playerName").asString().toString
-    val player2 = player2Document("playerName").asString().toString
-    val player1Cell = Cell(Some(Piece(Player("Player_1", 1))))
-    val player2Cell = Cell(Some(Piece(Player("Player_2", 2))))
+    val player1 = player1Document("playerName").asString().getValue.toString
+    val player2 = player2Document("playerName").asString().getValue.toString
+    val player1Cell = Cell(Some(Piece(Player(player1, 1))))
+    val player2Cell = Cell(Some(Piece(Player(player2, 2))))
 
+    val moveCount = settingsDocument("moveCount").asInt32().getValue
+    val currentPlayer = settingsDocument("currentPlayer").asString().getValue.toString
 
     var temp_grid = Grid(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
-    for (x <- 0 to (settingsDocument("xsize").asInt32().getValue * settingsDocument("ysize").asInt32().getValue)  - 1) {
-        val cellDocument = Await.result(gridCollection.find(equal("_id", x)).first().head(), Duration.Inf)
-        val value = cellDocument("value").asString().getValue
-        val row = cellDocument("row").asInt32().getValue
-        val col = cellDocument("col").asInt32().getValue
-        value match
-          case "1" => temp_grid = temp_grid.replaceCell(row, col, player1Cell)
-          case "2" => temp_grid = temp_grid.replaceCell(row, col, player2Cell)
-          case _ => temp_grid = temp_grid.replaceCell(row, col, Cell(None))
+
+    for (x <- 0 to 41) {
+      val cellDocument = Await.result(gridCollection.find(equal("_id", x)).first().head(), Duration.Inf)
+      val value = cellDocument("value").asInt32().getValue.toInt
+      val row = cellDocument("row").asInt32().getValue.toInt
+      val col = cellDocument("col").asInt32().getValue.toInt
+      value match
+        case 1 => temp_grid = temp_grid.replaceCell(row, col, player1Cell)
+        case 2 => temp_grid = temp_grid.replaceCell(row, col, player2Cell)
+        case _ => temp_grid = temp_grid.replaceCell(row, col, Cell(None))
     }
-    temp_grid.toJsonString(1,player1,player1,player2)
+    temp_grid.toJsonString(moveCount,currentPlayer,player1,player2)
 
       /** UPDATE */
   override def update(input:String) =
-    val gridDocument: Document = Await.result(gridCollection.find(equal("_id", "gridDocument")).first().head(), Duration.Inf)
-    val player1Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument1")).first().head(), Duration.Inf)
-    val player2Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument2")).first().head(), Duration.Inf)
-    val settingsDocument: Document = Await.result(settingsCollection.find(equal("_id", "settingsDocument")).first().head(), Duration.Inf)
-
     val gameJson: JsValue = Json.parse(input)
     val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
     val currentPlayer = (gameJson \ "player" \ "currentPlayer" \ "name").get.toString().toString
@@ -86,7 +86,7 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
     val grid = (gameJson \ "grid")
     val cells = (grid \ "cells").as[JsArray]
 
-    Await.result(deleteFuture, Duration.Inf)
+    //Await.result(deleteFuture, Duration.Inf)
     recUpdateGrid(cells, 0)
 
     Try({
@@ -109,30 +109,38 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
     val row = (cell \ "row").get.as[Int]
     val col = (cell \ "col").get.as[Int]
     val value = (cell \ "value").get.as[Int]
-    val newIdx = idx - 1
-    observerInsertion(gridCollection.insertOne(Document("_id" -> newIdx, "row" -> row, "col" -> col,
-      "value" -> value)))
+    observerUpdate(gridCollection.updateOne(equal("_id", idx), set("value", value)))
     recUpdateGrid(cells, idx + 1)
   }
 
   /** DELETE */
   override def delete:Unit = {
+    Await.result(deleteFuture, Duration.Inf)
+  }
+
+  private def deleteFuture:Future[String] = {
     gridCollection.deleteMany(equal("_id", "gridDocument")).subscribe(
       (dr: DeleteResult) => println(s"Deleted gridDocument"),
       (e: Throwable) => println(s"Error while trying to delete gridDocument: $e")
     )
-    playerCollection.deleteMany(equal("_id", "playerDocument")).subscribe(
-      (dr: DeleteResult) => println(s"Deleted playerDocument"),
-      (e: Throwable) => println(s"Error while trying to delete playerDocument: $e")
+    for (x <- 0 to 42) {
+      gridCollection.deleteMany(equal("_id", x)).subscribe(
+        (dr: DeleteResult) => println(s"Deleted $x"),
+        (e: Throwable) => println(s"Error while trying to delete $x: $e")
+      )
+    }
+    playerCollection.deleteMany(equal("_id", "player1Document")).subscribe(
+      (dr: DeleteResult) => println(s"Deleted player1Document"),
+      (e: Throwable) => println(s"Error while trying to delete player1Document: $e")
+    )
+    playerCollection.deleteMany(equal("_id", "player2Document")).subscribe(
+      (dr: DeleteResult) => println(s"Deleted player2Document"),
+      (e: Throwable) => println(s"Error while trying to delete player2Document: $e")
     )
     settingsCollection.deleteMany(equal("_id", "settingsDocument")).subscribe(
       (dr: DeleteResult) => println(s"Deleted settingsDocument"),
       (e: Throwable) => println(s"Error while trying to delete settingsDocument: $e")
     )
-  }
-
-  private def deleteFuture:Future[String] = {
-    delete
     Future {
       "Finished deleting!"
     }
