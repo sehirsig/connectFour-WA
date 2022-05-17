@@ -1,14 +1,14 @@
 package de.htwg.se.ConnectFour.databaseComponent.MongoDB
 
 import de.htwg.se.ConnectFour.databaseComponent.DAOInterface
-import de.htwg.se.ConnectFour.model.gridComponent.{Cell,Piece}
+import de.htwg.se.ConnectFour.model.gridComponent.{Cell, Piece}
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
-
-import org.mongodb.scala.model.Filters.*
-import org.mongodb.scala.result.{DeleteResult, InsertOneResult}
-import play.api.libs.json.{JsArray, JsValue, Json}
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
+import play.api.libs.json.{JsArray, JsValue, Json}
 import org.mongodb.scala.*
+import org.mongodb.scala.model.Updates.set
+import org.mongodb.scala.model.Filters.*
+import org.mongodb.scala.result.{DeleteResult, InsertOneResult, UpdateResult}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
@@ -30,8 +30,16 @@ class DAOMongoDBImpl extends DAOInterface:
     val gridDocument: Document = Document("_id" -> "gridDocument")
     val player1Document: Document = Document("_id" -> "playerDocument1", "playerNum" -> 1, "playerName" -> "Player_1")
     val player2Document: Document = Document("_id" -> "playerDocument2", "playerNum" -> 2, "playerName" -> "Player_2")
-    val settingsDocument: Document = Document("_id" -> "settingsDocument", "moveCount" -> 1, "currentPlayer" -> "Player_1")
+    val settingsDocument: Document = Document("_id" -> "settingsDocument", "moveCount" -> 1, "currentPlayer" -> "Player_1",
+    "xsize" -> 7, "ysize" -> 6)
     observerInsertion(gridCollection.insertOne(gridDocument))
+    var count = 0
+    for (x <- 0 to 7 - 1) {
+      for (y <- 0 to 6 - 1) {
+        observerInsertion(gridCollection.insertOne(Document("_id" -> count, "row" -> x, "col" -> y, "value" -> "None")))
+        count += 1
+      }
+    }
     observerInsertion(playerCollection.insertOne(player1Document))
     observerInsertion(playerCollection.insertOne(player2Document))
     observerInsertion(settingsCollection.insertOne(settingsDocument))
@@ -42,35 +50,33 @@ class DAOMongoDBImpl extends DAOInterface:
     val player1Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument1")).first().head(), Duration.Inf)
     val player2Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument2")).first().head(), Duration.Inf)
     val settingsDocument: Document = Await.result(settingsCollection.find(equal("_id", "settingsDocument")).first().head(), Duration.Inf)
-    //Player1?
-    /*val player1 = m_player1 match
-      case Some(a) => Cell(Some(Piece(Player(player1Document("playerName").asString().getValue, player1Document("playerNum").asInt32().getValue))))
-      case None => Cell(Some(Piece(Player("Player_1", 1))))
-    //Player2?
-    val player2 = m_player2 match
-      case Some(a) => Cell(Some(Piece(Player(player2Document("playerName").asString().getValue, player2Document("playerNum").asInt32().getValue))))
-      case None => Cell(Some(Piece(Player("Player_2", 2))))
-    */
 
-    val player1 = "Player_1"
-    val player2 = "Player_2"
+    val player1 = player1Document("playerName").asString().toString
+    val player2 = player2Document("playerName").asString().toString
+    val player1Cell = Cell(Some(Piece(Player("Player_1", 1))))
+    val player2Cell = Cell(Some(Piece(Player("Player_2", 2))))
+
 
     var temp_grid = Grid(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
-    for (x <- 0 to gridDocument("row").asInt32().getValue - 1) {
-      for (y <- 0 to gridDocument("col").asInt32().getValue - 1) {
-        /* TODO: do a find where row == x and col == y, this is the value you need.
-        val result = gridDocument("value").asInt32().getValue
-        val r = result.toList.map(x => x._4 match
-          case "1" => temp_grid = temp_grid.replaceCell(x._2, x._3, player1)
-          case "2" => temp_grid = temp_grid.replaceCell(x._2, x._3, player2)
-          case _ => temp_grid = temp_grid.replaceCell(x._2, x._3, Cell(None)))
-        */
-      }
+    for (x <- 0 to (settingsDocument("xsize").asInt32().getValue * settingsDocument("ysize").asInt32().getValue)  - 1) {
+        val cellDocument = Await.result(gridCollection.find(equal("_id", x)).first().head(), Duration.Inf)
+        val value = cellDocument("value").asString().getValue
+        val row = cellDocument("row").asInt32().getValue
+        val col = cellDocument("col").asInt32().getValue
+        value match
+          case "1" => temp_grid = temp_grid.replaceCell(row, col, player1Cell)
+          case "2" => temp_grid = temp_grid.replaceCell(row, col, player2Cell)
+          case _ => temp_grid = temp_grid.replaceCell(row, col, Cell(None))
     }
     temp_grid.toJsonString(1,player1,player1,player2)
 
       /** UPDATE */
   override def update(input:String) =
+    val gridDocument: Document = Await.result(gridCollection.find(equal("_id", "gridDocument")).first().head(), Duration.Inf)
+    val player1Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument1")).first().head(), Duration.Inf)
+    val player2Document: Document = Await.result(playerCollection.find(equal("_id", "playerDocument2")).first().head(), Duration.Inf)
+    val settingsDocument: Document = Await.result(settingsCollection.find(equal("_id", "settingsDocument")).first().head(), Duration.Inf)
+
     val gameJson: JsValue = Json.parse(input)
     val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
     val currentPlayer = (gameJson \ "player" \ "currentPlayer" \ "name").get.toString().toString
@@ -83,12 +89,12 @@ class DAOMongoDBImpl extends DAOInterface:
     recUpdateGrid(cells, 0)
 
     Try({
-      /* TODO: Filter Funktion für updateOne
-      observerInsertion(gridCollection.updateOne(Document("_id" -> "gridDocument")))
-      observerInsertion(playerCollection.updateOne(Document("_id" -> "playerDocument", "playerNum" -> 1, "playerName" -> player1_json)))
-      observerInsertion(playerCollection.updateOne(Document("_id" -> "playerDocument", "playerNum" -> 2, "playerName" -> player2_json)))
-      observerInsertion(settingsCollection.updateOne(Document("_id" -> "settingsDocument", "moveCount" -> moveCount, "currentPlayer" -> currentPlayer)))
-      */
+      observerUpdate(gridCollection.updateOne(equal("_id","gridDocument"), set("_id","gridDocument")))
+      observerUpdate(playerCollection.updateOne(equal("_id", "player1Document"), set("playerName", player1_json)))
+      observerUpdate(playerCollection.updateOne(equal("_id", "player2Document"), set("playerName", player2_json)))
+      observerUpdate(settingsCollection.updateOne(equal("_id", "settingsDocument"), set("moveCount", moveCount)))
+      observerUpdate(settingsCollection.updateOne(equal("_id", "settingsDocument"), set("currentPlayer", currentPlayer)))
+
     }) match {
       case Success(value) => true
       case Failure(exception) => println(exception); false
@@ -136,6 +142,16 @@ class DAOMongoDBImpl extends DAOInterface:
   private def observerInsertion(insertObservable: SingleObservable[InsertOneResult]): Unit = {
     insertObservable.subscribe(new Observer[InsertOneResult] {
       override def onNext(result: InsertOneResult): Unit = println(s"inserted: $result")
+
+      override def onError(e: Throwable): Unit = println(s"onError: $e")
+
+      override def onComplete(): Unit = println("completed")
+    })
+  }
+
+  private def observerUpdate(insertObservable: SingleObservable[UpdateResult]): Unit = {
+    insertObservable.subscribe(new Observer[UpdateResult] {
+      override def onNext(result: UpdateResult): Unit = println(s"inserted: $result")
 
       override def onError(e: Throwable): Unit = println(s"onError: $e")
 
