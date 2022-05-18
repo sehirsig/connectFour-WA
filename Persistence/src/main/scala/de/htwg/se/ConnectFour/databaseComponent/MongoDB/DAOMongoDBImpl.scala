@@ -19,6 +19,7 @@ import scala.concurrent.duration.Duration
 
 class DAOMongoDBImpl @Inject ()  extends DAOInterface:
 
+  /** Init */
   val database_pw = sys.env.getOrElse("MONGO_INITDB_ROOT_PASSWORD", "mongo").toString
   val database_username = sys.env.getOrElse("MONGO_INITDB_ROOT_USERNAME", "root").toString
 
@@ -38,8 +39,8 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
     "xsize" -> 7, "ysize" -> 6)
     observerInsertion(gridCollection.insertOne(gridDocument))
     var count = 0
-    for (cols <- 0 to 7 - 1) {
-      for (rows <- 0 to 6 - 1) {
+    for (cols <- 0 until 7) {
+      for (rows <- 0 until 6) {
         observerInsertion(gridCollection.insertOne(Document("_id" -> count, "row" -> rows, "col" -> cols, "value" -> -1)))
         count += 1
       }
@@ -64,7 +65,7 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
 
     var temp_grid = Grid(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
 
-    for (x <- 0 to 41) {
+    for (x <- 0 until settingsDocument("xsize").asInt32().getValue * settingsDocument("ysize").asInt32().getValue) {
       val cellDocument = Await.result(gridCollection.find(equal("_id", x)).first().head(), Duration.Inf)
       val value = cellDocument("value").asInt32().getValue.toInt
       val row = cellDocument("row").asInt32().getValue.toInt
@@ -86,7 +87,6 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
     val grid = (gameJson \ "grid")
     val cells = (grid \ "cells").as[JsArray]
 
-    //Await.result(deleteFuture, Duration.Inf)
     recUpdateGrid(cells, 0)
 
     Try({
@@ -95,10 +95,9 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
       observerUpdate(playerCollection.updateOne(equal("_id", "player2Document"), set("playerName", player2_json)))
       observerUpdate(settingsCollection.updateOne(equal("_id", "settingsDocument"), set("moveCount", moveCount)))
       observerUpdate(settingsCollection.updateOne(equal("_id", "settingsDocument"), set("currentPlayer", currentPlayer)))
-
     }) match {
-      case Success(value) => true
-      case Failure(exception) => println(exception); false
+      case Success(_) =>
+      case Failure(exception) => println(exception);
     }
 
 
@@ -110,6 +109,8 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
     val col = (cell \ "col").get.as[Int]
     val value = (cell \ "value").get.as[Int]
     observerUpdate(gridCollection.updateOne(equal("_id", idx), set("value", value)))
+    observerUpdate(gridCollection.updateOne(equal("_id", idx), set("row", row)))
+    observerUpdate(gridCollection.updateOne(equal("_id", idx), set("col", col)))
     recUpdateGrid(cells, idx + 1)
   }
 
@@ -123,7 +124,7 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
       (dr: DeleteResult) => println(s"Deleted gridDocument"),
       (e: Throwable) => println(s"Error while trying to delete gridDocument: $e")
     )
-    for (x <- 0 to 42) {
+    for (x <- 0 until 42) {
       gridCollection.deleteMany(equal("_id", x)).subscribe(
         (dr: DeleteResult) => println(s"Deleted $x"),
         (e: Throwable) => println(s"Error while trying to delete $x: $e")
@@ -147,23 +148,23 @@ class DAOMongoDBImpl @Inject ()  extends DAOInterface:
   }
 
 
-
+  /** Observer */
   private def observerInsertion(insertObservable: SingleObservable[InsertOneResult]): Unit = {
     insertObservable.subscribe(new Observer[InsertOneResult] {
       override def onNext(result: InsertOneResult): Unit = println(s"inserted: $result")
 
-      override def onError(e: Throwable): Unit = println(s"onError: $e")
+      override def onError(e: Throwable): Unit = println(s"insert onError: $e")
 
-      override def onComplete(): Unit = println("completed")
+      override def onComplete(): Unit = println("completed insert")
     })
   }
 
   private def observerUpdate(insertObservable: SingleObservable[UpdateResult]): Unit = {
     insertObservable.subscribe(new Observer[UpdateResult] {
-      override def onNext(result: UpdateResult): Unit = println(s"inserted: $result")
+      override def onNext(result: UpdateResult): Unit = println(s"updated: $result")
 
-      override def onError(e: Throwable): Unit = println(s"onError: $e")
+      override def onError(e: Throwable): Unit = println(s"update onError: $e")
 
-      override def onComplete(): Unit = println("completed")
+      override def onComplete(): Unit = println("completed update")
     })
   }
