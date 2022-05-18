@@ -2,9 +2,9 @@ name: Scala CI
 
 on:
   push:
-    branches: [ SA-08_MongoDB ]
+    branches: [ development ]
   pull_request:
-    branches: [ SA-08_MongoDB ]
+    branches: [ development ]
 
 jobs:
   build:
