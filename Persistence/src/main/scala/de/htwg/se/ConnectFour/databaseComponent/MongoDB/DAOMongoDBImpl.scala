@@ -17,7 +17,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 
 
-class DAOMongoDBImpl @Inject ()  extends DAOInterface:
+class DAOMongoDBImpl @Inject () extends DAOInterface:
 
   /** Init */
   val database_pw = sys.env.getOrElse("MONGO_INITDB_ROOT_PASSWORD", "mongo").toString

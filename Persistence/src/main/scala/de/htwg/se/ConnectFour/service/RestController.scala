@@ -19,7 +19,7 @@ object RestController:
   val databaseDAO = injector.getInstance(classOf[DAOInterface])
 
   def load(): String =
-    fileIO.load() //Test Database databaseDAO.read
+    databaseDAO.read//fileIO.load() //Test Database databaseDAO.read
 
   def save(gameAsText: String) =
     fileIO.save(gameAsText)
