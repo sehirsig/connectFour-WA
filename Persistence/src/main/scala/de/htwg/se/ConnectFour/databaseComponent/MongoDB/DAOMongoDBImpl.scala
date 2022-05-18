@@ -124,12 +124,7 @@ class DAOMongoDBImpl @Inject () extends DAOInterface:
       (dr: DeleteResult) => println(s"Deleted gridDocument"),
       (e: Throwable) => println(s"Error while trying to delete gridDocument: $e")
     )
-    for (x <- 0 until 42) {
-      gridCollection.deleteMany(equal("_id", x)).subscribe(
-        (dr: DeleteResult) => println(s"Deleted $x"),
-        (e: Throwable) => println(s"Error while trying to delete $x: $e")
-      )
-    }
+    recDelete(0)
     playerCollection.deleteMany(equal("_id", "player1Document")).subscribe(
       (dr: DeleteResult) => println(s"Deleted player1Document"),
       (e: Throwable) => println(s"Error while trying to delete player1Document: $e")
@@ -147,6 +142,14 @@ class DAOMongoDBImpl @Inject () extends DAOInterface:
     }
   }
 
+  private def recDelete(idx:Int): Unit =
+    if 42 == idx then
+      return;
+    gridCollection.deleteMany(equal("_id", idx)).subscribe(
+      (dr: DeleteResult) => println(s"Deleted $idx"),
+      (e: Throwable) => println(s"Error while trying to delete $idx: $e")
+    )
+    recDelete(idx + 1)
 
   /** Observer */
   private def observerInsertion(insertObservable: SingleObservable[InsertOneResult]): Unit = {
