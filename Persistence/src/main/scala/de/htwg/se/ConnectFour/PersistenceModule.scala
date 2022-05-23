@@ -15,4 +15,4 @@ class PersistenceModule extends AbstractModule:
     //bind(classOf[FileIOInterface]).to(classOf[xml.FileIO])
     bind(classOf[DBInterface]).to(classOf[DBSlickImpl])
     //bind(classOf[DAOInterface]).to(classOf[DAOSlickGridPlayerImpl])
-    bind(classOf[DAOInterface]).to(classOf[DAOMongoDBImpl])
+    bind(classOf[DAOInterface]).to(classOf[DAOMongoDBSimpleImpl])

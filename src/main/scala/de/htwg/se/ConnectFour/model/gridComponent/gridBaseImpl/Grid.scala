@@ -30,14 +30,16 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
       return this.replaceCell(idx, column, Cell(Some(piece)))
     this
 
+  /** Performance Boost, copy, instead of new */
+  def defaultGrid = Grid(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
+
   override def reset(): Grid =
-    new Grid()
+    defaultGrid
 
   override def checkWin(currentPlayer:PlayerInterface):Boolean =
     Try(checkWinTry(currentPlayer)) match
       case Success(v) => v
       case Failure(_) => false
-
 
   def checkWinTry(currentPlayer:PlayerInterface):Boolean =
     val playerPiece = Some(Piece(currentPlayer))
