@@ -20,7 +20,7 @@ import scala.concurrent.{Await, Future}
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
-class DAOSlickPlayerImpl extends DAOInterface {
+class DAOSlickPlayerImpl @Inject () extends DAOInterface {
   val connectIP = sys.env.getOrElse("POSTGRES_IP", "localhost").toString
   val connectPort = sys.env.getOrElse("POSTGRES_PORT", 5432).toString.toInt
   val database_user = sys.env.getOrElse("POSTGRES_USER", "postgres").toString

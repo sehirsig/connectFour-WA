@@ -133,6 +133,7 @@ object RestAPI:
   val bindingFuture = Http().newServerAt(connectIP, connectPort).bind(route)
 
   RestController.createDAO()
+  RestController.createDB()
 
   bindingFuture.onComplete{
     case Success(binding) => {

@@ -97,7 +97,7 @@ class DBSlickImpl @Inject () extends DBInterface:
     }) match {
       case Success(_) =>
         println("Geklappt");player.playerNumber
-      case Failure(exception) => println(exception); -1
+      case Failure(exception) => println(exception);println("ohno"); -1
     }
 
   override def createGrid() =
