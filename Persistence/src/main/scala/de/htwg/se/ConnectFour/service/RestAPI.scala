@@ -113,9 +113,15 @@ object RestAPI:
         complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.getPlayers().toString()))
       }
     },
-    path("db" / "deleteall") {
+    path("db" / "deleteallplayers") {
       get {
         RestController.deleteAllPlayers()
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Deleted all Players"))
+      }
+    },
+    path("db" / "deleteall") {
+      get {
+        RestController.deleteAll()
         complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Deleted all Players"))
       }
     },

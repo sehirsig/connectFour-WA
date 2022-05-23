@@ -70,3 +70,7 @@ object RestController:
 
   def saveDAO(input:String) =
     databaseDAO.update(input)
+
+  def deleteAll() =
+    database.deleteAllPlayers()
+    database.deleteGrid()
