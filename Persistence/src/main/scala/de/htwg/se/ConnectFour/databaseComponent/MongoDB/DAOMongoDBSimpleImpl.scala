@@ -61,20 +61,20 @@ class DAOMongoDBSimpleImpl @Inject () extends DAOInterface:
   /** Observer */
   private def observerInsertion(insertObservable: SingleObservable[InsertOneResult]): Unit = {
     insertObservable.subscribe(new Observer[InsertOneResult] {
-      override def onNext(result: InsertOneResult): Unit = println(s"inserted: $result")
+      override def onNext(result: InsertOneResult): Unit = ???//println(s"inserted: $result")
 
-      override def onError(e: Throwable): Unit = println(s"insert onError: $e")
+      override def onError(e: Throwable): Unit = ???//println(s"insert onError: $e")
 
-      override def onComplete(): Unit = println("completed insert")
+      override def onComplete(): Unit = ???//println("completed insert")
     })
   }
 
   private def observerUpdate(insertObservable: SingleObservable[UpdateResult]): Unit = {
     insertObservable.subscribe(new Observer[UpdateResult] {
-      override def onNext(result: UpdateResult): Unit = println(s"updated: $result")
+      override def onNext(result: UpdateResult): Unit = ???//println(s"updated: $result")
 
-      override def onError(e: Throwable): Unit = println(s"update onError: $e")
+      override def onError(e: Throwable): Unit = ???//println(s"update onError: $e")
 
-      override def onComplete(): Unit = println("completed update")
+      override def onComplete(): Unit = ???//println("completed update")
     })
   }
