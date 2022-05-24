@@ -122,7 +122,7 @@ object RestAPI:
     path("db" / "deleteall") {
       get {
         RestController.deleteAll()
-        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Deleted all Players"))
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Deleted all Tables"))
       }
     },
     path("db" / "deleteplayer" / Segment) { command => {
