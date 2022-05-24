@@ -3,6 +3,7 @@ package de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl
 import com.google.inject.Inject
 import de.htwg.se.ConnectFour.model.gridComponent.{Cell, GridInterface, Piece}
 import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
+import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Prototype.GridDefaultPrototype
 import netscape.javascript.JSObject
 import play.api.libs.json.{JsArray, JsValue, Json}
 
@@ -31,10 +32,10 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
     this
 
   /** Performance Boost, copy, instead of new */
-  def defaultGrid = Grid(Vector.tabulate(6, 7) { (rowCount, col) => Cell(None) })
+  def defaultGrid : GridPrototype = GridDefaultPrototype()
 
   override def reset(): Grid =
-    defaultGrid
+    defaultGrid.cloneGrid()
 
   override def checkWin(currentPlayer:PlayerInterface):Boolean =
     Try(checkWinTry(currentPlayer)) match
