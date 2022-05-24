@@ -1,0 +1,10 @@
+{
+  "simulation": "EnduranceTestSmall",
+  "simulationId": "endurancetestsmall",
+  "start": 1653314733550,
+  "description": "",
+  "scenarios": ["Test"],
+  "assertions": [
+
+  ]
+}

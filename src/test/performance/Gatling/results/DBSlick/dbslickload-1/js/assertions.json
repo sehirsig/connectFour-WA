@@ -1,0 +1,10 @@
+{
+  "simulation": "DBSlickLoad",
+  "simulationId": "dbslickload",
+  "start": 1653325387365,
+  "description": "",
+  "scenarios": ["DBSlick Load Test"],
+  "assertions": [
+
+  ]
+}
