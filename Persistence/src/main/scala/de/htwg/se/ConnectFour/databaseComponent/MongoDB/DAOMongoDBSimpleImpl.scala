@@ -34,9 +34,9 @@ class DAOMongoDBSimpleImpl @Inject () extends DAOInterface:
     observerInsertion(gameCollection.insertOne(gameDocument))
 
   /** READ */
-  override def read:String =
+  override def read:Future[String] =
     val gameDocument: Document = Await.result(gameCollection.find(equal("_id", "gameDocument")).first().head(), Duration.Inf)
-    gameDocument("game").asString().getValue.toString
+    Future(gameDocument("game").asString().getValue.toString)
 
   /** UPDATE */
   override def update(input:String) =

@@ -1,9 +1,11 @@
 package de.htwg.se.ConnectFour.databaseComponent
 
+import scala.concurrent.Future
+
 trait DAOInterface {
   def create: Unit
 
-  def read:String
+  def read: Future[String]
 
   def update(input: String): Unit
 

@@ -5,8 +5,10 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.*
 import akka.http.scaladsl.server.Directives.*
+import akka.http.scaladsl.model.StatusCodes
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.io.StdIn
 import scala.util.{Failure, Success}
 
@@ -51,12 +53,12 @@ object RestAPI:
     },
     path("db" / "loadUI") {
       get {
-        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.loadDB_UI())) //Change here to json, to be able to load json to SRC Controller
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, Await.result(RestController.loadDB_UI(), Duration.Inf))) //Change here to json, to be able to load json to SRC Controller
       }
     },
     path("db" / "load") {
       get {
-        complete(HttpEntity(ContentTypes.`application/json`, RestController.loadDB())) //Change here to json, to be able to load json to SRC Controller
+        complete(HttpEntity(ContentTypes.`application/json`, Await.result(RestController.loadDB(), Duration.Inf))) //Change here to json, to be able to load json to SRC Controller
       }
     },
     path("db" / "save") {
@@ -71,7 +73,7 @@ object RestAPI:
     },
     path("db" / "loadDAO") {
       get {
-        complete(HttpEntity(ContentTypes.`application/json`, RestController.loadDAO())) //Change here to json, to be able to load json to SRC Controller
+        complete(HttpEntity(ContentTypes.`application/json`, Await.result(RestController.loadDAO(),  Duration.Inf))) //Change here to json, to be able to load json to SRC Controller
       }
     },
     path("db" / "saveDAO") {
@@ -105,12 +107,12 @@ object RestAPI:
       }
     },
     path("db" / "getplayer" / Segment) { command => {
-       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.getPlayer(command).toString))
+       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, Await.result(RestController.getPlayer(command), Duration.Inf).toString))
       }
     },
     path("db" / "getplayer") {
       get {
-        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.getPlayers().toString()))
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, Await.result(RestController.getPlayers(), Duration.Inf).toString))
       }
     },
     path("db" / "deleteallplayers") {

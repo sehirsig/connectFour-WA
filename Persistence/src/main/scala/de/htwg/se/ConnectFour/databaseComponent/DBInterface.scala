@@ -9,7 +9,7 @@ import scala.concurrent.Future
 
 trait DBInterface:
 
-  def readPlayer(playerId: Int): Option[(Int, Int, Option[String], String)]
+  def readPlayer(playerId: Int): Future[Option[(Int, Int, Option[String], String)]]
 
   def updatePlayer(id: Int, name: String): String
 
@@ -19,13 +19,13 @@ trait DBInterface:
 
   def createPlayer(player: Player): Int
 
-  def readAllPlayers():List[(Int, Int, Option[String], String)]
+  def readAllPlayers(): Future[List[(Int, Int, Option[String], String)]]
 
   def deleteAllPlayers(): Unit
 
   def createGrid(): Unit
 
-  def readPiece(row: Int, col: Int): Option[(Int, Int, Int, String)]
+  def readPiece(row: Int, col: Int): Future[Option[(Int, Int, Int, String)]]
 
   def updatePiece(row: Int, col: Int, value: String): String
 
@@ -35,8 +35,8 @@ trait DBInterface:
 
   def deleteGrid(): Unit
 
-  def readGrid(): GridInterface
+  def readGrid(): Future[GridInterface]
 
-  def loadGrid():String
+  def loadGrid(): Future[String]
 
-  def loadGrid_UI():String
+  def loadGrid_UI(): Future[String]

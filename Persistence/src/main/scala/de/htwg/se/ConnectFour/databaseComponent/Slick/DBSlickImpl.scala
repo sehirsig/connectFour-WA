@@ -52,32 +52,34 @@ class DBSlickImpl @Inject () extends DBInterface:
       case Failure(e) => print("Error: " + e)
     }
 
-  override def readPlayer(playerId: Int): Option[(Int, Int, Option[String], String)] =
+  override def readPlayer(playerId: Int): Future[Option[(Int, Int, Option[String], String)]] =
     val actionQuery = sql"""SELECT * FROM "PLAYER" WHERE "number" = $playerId""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result match {
-      case Seq(a) => Some((a._1, a._2, a._3, a._4))
-      case _ => None
+      case Seq(a) => Future(Some((a._1, a._2, a._3, a._4)))
+      case _ => Future(None)
     }
 
-  override def readPiece(row: Int, col: Int): Option[(Int, Int, Int, String)] =
+  override def readPiece(row: Int, col: Int): Future[Option[(Int, Int, Int, String)]] =
     val actionQuery = sql"""SELECT * FROM "GRID" WHERE "row" = $row AND "column" = $col""".as[(Int, Int, Int, String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result match {
-      case Seq(a) => Some((a._1, a._2, a._3, a._4))
-      case _ => None
+      case Seq(a) => Future(Some((a._1, a._2, a._3, a._4)))
+      case _ => Future(None)
     }
 
-  override def updatePiece(row: Int, col: Int, value: String):String  =
-    if readPiece(row,col) == None then
+  override def updatePiece(row: Int, col: Int, value: String): String  =
+    val readpiece_result = Await.result(readPiece(row,col), Duration.Inf)
+    if readpiece_result.isEmpty then
       return "Grid Piece non existent."
     val actionQuery =
       sql"""UPDATE "GRID" SET "value" = $value WHERE "row" = $row AND "column" = $col""".as[(Int, Int, String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     result.toString()
 
-  override def updatePlayer(id: Int, name: String):String   =
-    if readPlayer(id) == None then
+  override def updatePlayer(id: Int, name: String): String   =
+    val readplayer_result = Await.result(readPlayer(id), Duration.Inf)
+    if readplayer_result.isEmpty then
       return "Player non existent."
     val actionQuery =
       sql"""UPDATE "PLAYER" SET "number" = id, "name" = $name WHERE "number" = $id""".as[(Int, Int, Option[String], String)]
@@ -89,7 +91,8 @@ class DBSlickImpl @Inject () extends DBInterface:
     Future(Await.result(database.run(action), atMost = 10.second))
 
   override def createPlayer(player: Player): Int =
-    if readAllPlayers().length > 1 then
+    val readAllplayer_result = Await.result(readAllPlayers(), Duration.Inf)
+    if readAllplayer_result.length > 1 then
       return -1
     Try({
       database.run(playerTable += (0, player.playerNumber, player.color, player.playerName))
@@ -100,7 +103,7 @@ class DBSlickImpl @Inject () extends DBInterface:
       case Failure(exception) => println(exception);println("ohno"); -1
     }
 
-  override def createGrid() =
+  override def createGrid(): Unit =
     if isGridCreated() then
       resetGrid()
       return println("Grid already created! Resetting Grid.")
@@ -123,10 +126,10 @@ class DBSlickImpl @Inject () extends DBInterface:
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
     !result.toList.isEmpty
 
-  override def readAllPlayers(): List[(Int, Int, Option[String], String)] =
+  override def readAllPlayers(): Future[List[(Int, Int, Option[String], String)]] =
     val actionQuery = sql"""SELECT * FROM "PLAYER"""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
-    result.toList
+    Future(result.toList)
 
   override def deleteAllPlayers() =
     val action = playerTable.delete
@@ -145,12 +148,12 @@ class DBSlickImpl @Inject () extends DBInterface:
     val actionQuery = sql"""UPDATE "GRID" SET "value" = $new_value WHERE "value" != $new_value""".as[Int]
     Await.result(database.run(actionQuery), atMost = 10.second)
 
-  override def readGrid(): GridInterface =
-    val m_player1 = readPlayer(1)
+  override def readGrid(): Future[GridInterface] =
+    val m_player1 = Await.result(readPlayer(1), Duration.Inf)
     val player1 = m_player1 match
       case Some(a) => Cell(Some(Piece(Player(a._4, a._2))))
       case None => Cell(Some(Piece(Player("Player_1", 1))))
-    val m_player2 = readPlayer(2)
+    val m_player2 = Await.result(readPlayer(2), Duration.Inf)
     val player2 = m_player2 match
       case Some(a) => Cell(Some(Piece(Player(a._4, a._2))))
       case None => Cell(Some(Piece(Player("Player_2", 2))))
@@ -161,21 +164,23 @@ class DBSlickImpl @Inject () extends DBInterface:
       case "1" => temp_grid = temp_grid.replaceCell(x._2, x._3, player1)
       case "2" => temp_grid = temp_grid.replaceCell(x._2, x._3, player2)
       case _ => temp_grid = temp_grid.replaceCell(x._2, x._3, Cell(None)))
-    return temp_grid
+    return Future(temp_grid)
 
-  override def loadGrid():String =
-    val m_player1 = readPlayer(1)
+  override def loadGrid(): Future[String] =
+    val m_player1 = Await.result(readPlayer(1), Duration.Inf)
     val player1 = m_player1 match
       case Some(a) => a._4
       case None => "Player 1"
-    val m_player2 = readPlayer(2)
+    val m_player2 = Await.result(readPlayer(2), Duration.Inf)
     val player2 = m_player2 match
       case Some(a) => a._4
       case None => "Player 2"
-    this.readGrid().toJsonString(1, player1, player1, player2)
+    val readGrid_result = Await.result(this.readGrid(), Duration.Inf)
+    Future(readGrid_result.toJsonString(1, player1, player1, player2))
 
-  override def loadGrid_UI():String =
-    this.readGrid().toPlainString
+  override def loadGrid_UI(): Future[String] =
+    val readGrid_result = Await.result(this.readGrid(), Duration.Inf)
+    Future(readGrid_result.toPlainString)
 
 
   override def updateGrid(input: String) =

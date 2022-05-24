@@ -128,7 +128,7 @@ class DAOSlickGridPlayerImpl @Inject () extends DAOInterface {
     recUpdateGrid(cells, idx + 1)
 
   /** READ */
-  override def read: String =
+  override def read: Future[String] =
     val player1Query = sql"""SELECT * FROM "PLAYER" WHERE "id" = 1""".as[(Int, Int, Option[String], String)]
     val result1 = Await.result(database.run(player1Query), atMost = 10.second)
     val player1 = result1 match {
@@ -150,7 +150,7 @@ class DAOSlickGridPlayerImpl @Inject () extends DAOInterface {
     }
 
     val grid = readGrid()
-    grid.toJsonString(settings._2, settings._1, player1, player2)
+    Future(grid.toJsonString(settings._2, settings._1, player1, player2))
 
   def readGrid(): GridInterface =
     val m_player1 = readPlayer(1)

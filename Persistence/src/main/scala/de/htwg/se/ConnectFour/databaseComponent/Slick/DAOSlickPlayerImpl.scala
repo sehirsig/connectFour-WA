@@ -59,10 +59,10 @@ class DAOSlickPlayerImpl @Inject () extends DAOInterface {
       sql"""UPDATE "PLAYER" SET "number" = 2, "name" = $player2 WHERE "number" = 2""".as[(Int, Int, Option[String], String)]
     Await.result(database.run(actionQuery2), atMost = 10.second)
 
-  override def read: String =
+  override def read: Future[String] =
     val actionQuery = sql"""SELECT * FROM "PLAYER"""".as[(Int, Int, Option[String], String)]
     val result = Await.result(database.run(actionQuery), atMost = 10.second)
-    result.toList.toString()
+    Future(result.toList.toString())
 
   override def delete =
     val action = playerTable.delete

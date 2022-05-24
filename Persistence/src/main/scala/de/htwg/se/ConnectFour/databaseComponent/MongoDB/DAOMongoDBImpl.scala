@@ -50,7 +50,7 @@ class DAOMongoDBImpl @Inject () extends DAOInterface:
     observerInsertion(settingsCollection.insertOne(settingsDocument))
 
   /** READ */
-  override def read:String =
+  override def read:Future[String] =
     val player1Document: Document = Await.result(playerCollection.find(equal("_id", "player1Document")).first().head(), Duration.Inf)
     val player2Document: Document = Await.result(playerCollection.find(equal("_id", "player2Document")).first().head(), Duration.Inf)
     val settingsDocument: Document = Await.result(settingsCollection.find(equal("_id", "settingsDocument")).first().head(), Duration.Inf)
@@ -75,9 +75,9 @@ class DAOMongoDBImpl @Inject () extends DAOInterface:
         case 2 => temp_grid = temp_grid.replaceCell(row, col, player2Cell)
         case _ => temp_grid = temp_grid.replaceCell(row, col, Cell(None))
     }
-    temp_grid.toJsonString(moveCount,currentPlayer,player1,player2)
+    Future(temp_grid.toJsonString(moveCount,currentPlayer,player1,player2))
 
-      /** UPDATE */
+  /** UPDATE */
   override def update(input:String) =
     val gameJson: JsValue = Json.parse(input)
     val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt

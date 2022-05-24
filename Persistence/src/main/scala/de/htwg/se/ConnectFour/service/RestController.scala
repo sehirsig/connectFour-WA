@@ -1,15 +1,21 @@
 package de.htwg.se.ConnectFour.service
 
-import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.ConnectFour.PersistenceModule
 import de.htwg.se.ConnectFour.fileIOComponent.FileIOInterface
-import com.google.inject.name.Names
 import de.htwg.se.ConnectFour.databaseComponent.DBInterface
 import de.htwg.se.ConnectFour.databaseComponent.DAOInterface
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 
+import com.google.inject.name.Names
+import com.google.inject.{Guice, Inject, Injector}
+
 import java.io.*
 import scala.io.Source
+
+import scala.concurrent.{Future, Await}
+import scala.concurrent.duration.{Duration, DurationInt}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object RestController:
 
@@ -18,16 +24,16 @@ object RestController:
   val database = injector.getInstance(classOf[DBInterface])
   val databaseDAO = injector.getInstance(classOf[DAOInterface])
 
-  def load(): String =
-    databaseDAO.read//fileIO.load() //Test Database databaseDAO.read
+  def load(): String=
+    fileIO.load() //Test Database databaseDAO.read databaseDAO.read
 
   def save(gameAsText: String) =
     fileIO.save(gameAsText)
 
-  def loadDB_UI(): String =
+  def loadDB_UI(): Future[String] =
     database.loadGrid_UI()
 
-  def loadDB(): String =
+  def loadDB(): Future[String] =
     database.loadGrid()
 
   def saveDB(grid:String) =
@@ -44,7 +50,7 @@ object RestController:
     val play = Player(input, 2)
     database.createPlayer(play)
 
-  def getPlayer(input:String): Option[(Int, Int, Option[String], String)]=
+  def getPlayer(input:String): Future[Option[(Int, Int, Option[String], String)]]=
     database.readPlayer(input.toInt)
 
   def createDB() =
@@ -53,8 +59,9 @@ object RestController:
   def updatePlayer(num:Int, name:String) =
     database.updatePlayer(num, name)
 
-  def getPlayers():String=
-    database.readAllPlayers().toString()
+  def getPlayers(): Future[String] =
+    val result = Await.result(database.readAllPlayers(), Duration.Inf)
+    Future(result.toString())
 
   def deleteAllPlayers() =
     database.deleteAllPlayers()
@@ -65,7 +72,7 @@ object RestController:
   def deleteDAO(): Unit =
     databaseDAO.delete
 
-  def loadDAO(): String =
+  def loadDAO(): Future[String] =
     databaseDAO.read
 
   def saveDAO(input:String) =
