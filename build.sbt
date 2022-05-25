@@ -33,9 +33,20 @@ lazy val persistence = (project in file("Persistence"))
     libraryDependencies ++= commonDependencies,
   )
 
+/** Util Module */
+lazy val util = (project in file("Util"))
+  .settings(
+    name := "ConnectFour-Util",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+
 /** Root Module */
 lazy val root = project
   .in(file("."))
+  .dependsOn(util)
+  .aggregate(util)
   .settings(
     name := "ConnectFour",
     version := "0.5.0-SNAPSHOT",

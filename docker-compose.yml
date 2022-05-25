@@ -44,6 +44,8 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+    depends_on:
+      - "persistence"
     ports:
       - "8080:8080"
     stdin_open: true
