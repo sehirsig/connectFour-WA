@@ -2,9 +2,9 @@ name: Scala CI
 
 on:
   push:
-    branches: [ SA-09_Performance-Testing ]
+    branches: [ development ]
   pull_request:
-    branches: [ SA-09_Performance-Testing ]
+    branches: [ development ]
 
 jobs:
   build:
