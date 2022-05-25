@@ -32,7 +32,7 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
     this
 
   /** Performance Boost, copy, instead of new */
-  val defaultGrid : GridPrototype = GridDefaultPrototype()
+  def defaultGrid : GridPrototype = GridDefaultPrototype()
 
   override def reset(): Grid =
     defaultGrid.cloneGrid()
