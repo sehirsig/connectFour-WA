@@ -18,6 +18,9 @@ class CellSpec extends AnyWordSpec with Matchers:
       "have a nice String representation" in {
         emptyCell.toString should be (Console.BLUE + "_ ")
       }
+      "have a plain String representation" in {
+        emptyCell.toPlainString should be ("_ ")
+      }
     }
     "set to a specific value" should {
       val playerBuilder = PlayerBuilder()
@@ -31,6 +34,9 @@ class CellSpec extends AnyWordSpec with Matchers:
       }
       "have a nice String representation" in {
         nonEmptyCell.toString should be (Console.RED + "☻ ")
+      }
+      "have a plain String representation" in {
+        nonEmptyCell.toPlainString should be ("© ")
       }
     }
   }

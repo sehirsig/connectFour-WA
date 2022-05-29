@@ -15,5 +15,9 @@ class PieceSpec extends AnyWordSpec with Matchers:
         piece1.toString should be (Console.RED + "☻ ")
         piece2.toString should be (Console.YELLOW + "☻ ")
       }
+      "have a plain String represntation" in {
+        piece1.toPlainString should be ("© ")
+        piece2.toPlainString should be ("® ")
+      }
     }
   }

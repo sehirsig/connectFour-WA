@@ -134,7 +134,7 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
   override def toJson(moveCount:Int, curPlayerName:String, player1Name:String, player2Name:String): JsValue =
     gameToJson(moveCount, curPlayerName, player1Name, player2Name)
 
-  override def jsonToGridM(player1:PlayerInterface, player2:PlayerInterface, par_grid: GridInterface, source:String): GridInterface =
+  override def jsonToGrid(player1:PlayerInterface, player2:PlayerInterface, par_grid: GridInterface, source:String): GridInterface =
     val gameJson: JsValue = Json.parse(source)
     val grid = (gameJson \ "grid")
 

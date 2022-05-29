@@ -110,3 +110,15 @@ class ControllerSpec extends AnyWordSpec with Matchers:
       controller.moveCount should be (203)
     }
   }
+  "when using its help methods" should {
+    "have a correct value when checking for win" in {
+      controller.checkWin() should be (false)
+    }
+    "change the currentplayer when using whoseTurnIsIt() method" in {
+      controller.moveCount += 1
+      controller.currentPlayer should be (controller.players(0))
+      controller.moveCount += 1
+      controller.whoseTurnIsIt()
+      controller.currentPlayer should be (controller.players(1))
+    }
+  }
