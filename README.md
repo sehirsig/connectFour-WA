@@ -28,6 +28,17 @@ Connect Four is a solved game. The first player can always win by playing the ri
  9. Performance Testing
  10. Futures
 
+# Features
+- PostgreSQL Database
+- MongoDB Database
+- REST User Interface (RUI)
+- REST API for persistence & controller
+- Automatic saving into the database
+- Offline-Mode, if Database not available
+- Gatling Performance Tests in (../src/Test/performance/Gatling/)
+- Fully optimized recursive methods
+
+
 # Presentation Link
 [Google Presentation](www.google.de)
 
