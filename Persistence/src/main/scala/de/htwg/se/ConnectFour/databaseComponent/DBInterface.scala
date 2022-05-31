@@ -7,6 +7,9 @@ import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 
 import scala.concurrent.Future
 
+/**
+ * DB Interface to be able to fully use the Database.
+ */
 trait DBInterface:
 
   def readPlayer(playerId: Int): Future[Option[(Int, Int, Option[String], String)]]

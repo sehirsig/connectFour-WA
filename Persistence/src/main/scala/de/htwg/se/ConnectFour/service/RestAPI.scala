@@ -12,6 +12,9 @@ import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.io.StdIn
 import scala.util.{Failure, Success}
 
+/**
+ * REST API Interface for the Persistence Module.
+ */
 object RestAPI:
 
   val connectIP = sys.env.getOrElse("FILEIO_SERVICE_HOST", "localhost").toString

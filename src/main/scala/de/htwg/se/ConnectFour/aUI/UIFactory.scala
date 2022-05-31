@@ -5,6 +5,9 @@ import de.htwg.se.ConnectFour.aUI.tui.TUI
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import javafx.embed.swing.JFXPanel
 
+/**
+ * UIFactory, to create the User Interface.
+ */
 object UIFactory:
   def apply(uiType:String, controller:ControllerInterface) =
     

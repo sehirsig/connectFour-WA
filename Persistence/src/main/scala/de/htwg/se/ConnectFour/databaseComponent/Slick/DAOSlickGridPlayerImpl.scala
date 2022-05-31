@@ -19,6 +19,9 @@ import scala.concurrent.{Await, Future}
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
+/**
+ * DAO Slick Implementation to store the Grid, Players and Settings (Extended).
+ */
 class DAOSlickGridPlayerImpl @Inject () extends DAOInterface {
   val connectIP = sys.env.getOrElse("POSTGRES_IP", "localhost").toString
   val connectPort = sys.env.getOrElse("POSTGRES_PORT", 5432).toString.toInt

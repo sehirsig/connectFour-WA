@@ -17,6 +17,9 @@ import scala.concurrent.duration.{Duration, DurationInt}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
+/**
+ * REST Controller for the Persistence REST API.
+ */
 object RestController:
 
   val injector: Injector = Guice.createInjector(PersistenceModule())

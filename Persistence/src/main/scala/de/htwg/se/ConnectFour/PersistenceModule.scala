@@ -9,6 +9,9 @@ import de.htwg.se.ConnectFour.databaseComponent.Slick.*
 import de.htwg.se.ConnectFour.fileIOComponent.*
 import net.codingwell.scalaguice.ScalaModule
 
+/**
+ * Persistence Module to choose between different implementations.
+ */
 class PersistenceModule extends AbstractModule:
   override def configure() =
     bind(classOf[FileIOInterface]).to(classOf[json.FileIO])

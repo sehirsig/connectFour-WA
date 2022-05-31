@@ -3,6 +3,9 @@ package de.htwg.se.ConnectFour.model
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+/**
+ * Error tests.
+ */
 class ErrorSpec extends AnyWordSpec with Matchers:
   "An Error" when {
     "set up" should {

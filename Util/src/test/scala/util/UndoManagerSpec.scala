@@ -3,6 +3,9 @@ package de.htwg.se.ConnectFour.util
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+/**
+ * UndoManager tests.
+ */
 class UndoManagerSpec extends AnyWordSpec with Matchers:
   "An UndoManager" should {
     val undoManager = new UndoManager

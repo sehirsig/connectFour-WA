@@ -3,7 +3,9 @@ package de.htwg.se.ConnectFour.util
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 
-
+/**
+ * Command-Pattern tests.
+ */
 class incrCommand extends Command:
   var state:Int = 0
   override def doStep: Unit = state+=1

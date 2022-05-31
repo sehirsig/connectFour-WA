@@ -12,6 +12,9 @@ import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success, Try}
 
+/**
+ * REST Implementation of a User Interface.
+ */
 object UiAPI:
 
   val connectIP = sys.env.getOrElse("CONNECTFOUR_SERVICE_HOST", "localhost").toString

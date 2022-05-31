@@ -4,6 +4,9 @@ import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+/**
+ * Piece tests.
+ */
 class PieceSpec extends AnyWordSpec with Matchers:
   "A Piece" when {
     "new" should {

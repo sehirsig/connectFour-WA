@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Script:
+#This script was made to let the user choose what User Interface to use while using docker.
+#If started by docker-compose, this script gets skipped automatically.
+
 #Colours
 RED='\033[31;1m'
 YELLOW='\033[33;1m'

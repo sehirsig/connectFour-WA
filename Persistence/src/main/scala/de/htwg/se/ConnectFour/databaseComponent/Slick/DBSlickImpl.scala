@@ -19,6 +19,9 @@ import scala.concurrent.{Await, Future}
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
+/**
+ * Database Slick Implementation to fully use the Database.
+ */
 class DBSlickImpl @Inject () extends DBInterface:
 
   val connectIP = sys.env.getOrElse("POSTGRES_IP", "localhost").toString

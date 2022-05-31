@@ -14,6 +14,9 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Failure
 
+/**
+ * Controller tests.
+ */
 class ControllerSpec extends AnyWordSpec with Matchers:
   val injector = Guice.createInjector(ConnectFourModule())
   val grid = injector.getInstance(classOf[GridInterface])

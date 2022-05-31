@@ -2,6 +2,9 @@ package de.htwg.se.ConnectFour.databaseComponent.Slick.tables
 
 import slick.jdbc.PostgresProfile.api.*
 
+/**
+ * Player Table for SQL.
+ */
 class PlayerTable(tag: Tag) extends Table[(Int, Int, Option[String], String)](tag, "PLAYER") {
 
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)

@@ -3,6 +3,9 @@ package de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+/**
+ * Player tests.
+ */
 class PlayerSpec extends AnyWordSpec with Matchers:
   "A Player" when {
     "new" should {

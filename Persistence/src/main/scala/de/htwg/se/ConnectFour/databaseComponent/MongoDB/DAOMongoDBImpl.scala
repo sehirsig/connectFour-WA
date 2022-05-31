@@ -16,7 +16,9 @@ import scala.util.{Failure, Success, Try}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 
-
+/**
+ * DAO MongoDB Extended Implementation. To see the difference in performance with a extravagantly solution.
+ */
 class DAOMongoDBImpl @Inject () extends DAOInterface:
 
   /** Init */

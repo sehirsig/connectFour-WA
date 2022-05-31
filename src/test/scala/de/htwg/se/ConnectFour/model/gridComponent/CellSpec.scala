@@ -5,6 +5,9 @@ import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+/**
+ * Cell tests.
+ */
 class CellSpec extends AnyWordSpec with Matchers:
   "A Cell" when {
     "not set to any value " should {

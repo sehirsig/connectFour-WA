@@ -3,7 +3,9 @@ package de.htwg.se.ConnectFour.util
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-
+/**
+ * Observable-Pattern tests.
+ */
 class ObservableSpec extends AnyWordSpec with Matchers:
   "An Observable" should {
     val observable = new Observable

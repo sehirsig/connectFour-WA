@@ -7,6 +7,9 @@ import de.htwg.se.ConnectFour.aUI.service.UiAPI
 
 import scala.util.{Failure, Success, Try}
 
+/**
+ * Main class of the project.
+ */
 case object ConnectFour:
   @main def run =
     val injector: Injector = Guice.createInjector(ConnectFourModule())
