@@ -42,4 +42,4 @@ Connect Four is a solved game. The first player can always win by playing the ri
 # Presentation Link
 [Google Presentation](www.google.de)
 
-*Project Malefiz written by [@sehirsig](https://github.com/sehirsig/) & [@furkankarayel](https://github.com/furkankarayel/)*
+*Project ConnectFour written by [@sehirsig](https://github.com/sehirsig/) & [@furkankarayel](https://github.com/furkankarayel/)*
