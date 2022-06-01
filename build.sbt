@@ -67,7 +67,9 @@ lazy val commonSettings = Seq(
   jacocoExcludes in Test := Seq(
     "de.htwg.se.ConnectFour.aUI*",
     "de.htwg.se.ConnectFour.fileIOComponent*",
-    "de.htwg.se.ConnectFour.ConnectFour*"
+    "de.htwg.se.ConnectFour.ConnectFour*",
+    "de.htwg.se.ConnectFour.ConnectFour.scala",
+    "de.htwg.se.ConnectFour.model.gridComponent.GridInterface.scala"
   ),
 
   resolvers += "jitpack" at "https://jitpack.io",
