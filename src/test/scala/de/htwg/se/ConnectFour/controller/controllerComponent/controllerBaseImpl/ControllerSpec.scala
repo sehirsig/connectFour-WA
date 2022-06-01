@@ -7,11 +7,13 @@ import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.playerComponent.PlayerBuilderInterface
 import de.htwg.se.ConnectFour.model.playerComponent.playerBuilderBaseImpl.PlayerBuilder
 import de.htwg.se.ConnectFour.util.Observer
-//import model.fileIOComponent.FileIOInterface
 import de.htwg.se.ConnectFour.ConnectFourModule
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 import scala.util.Failure
 
 /**
@@ -123,5 +125,27 @@ class ControllerSpec extends AnyWordSpec with Matchers:
       controller.moveCount += 1
       controller.whoseTurnIsIt()
       controller.currentPlayer should be (controller.players(1))
+    }
+    "add a player when playercount is 0" in {
+      controller.players = Vector.empty
+      controller.players.length should be (0)
+      Await.result(Future(controller.addPlayer("Player 1")), Duration.Inf)
+      controller.buildPlayer("Player 1", 1)
+      controller.players.length should be (1)
+    }
+    "add a player when playercount is 1" in {
+      controller.players = Vector.empty
+      controller.players.length should be (0)
+      controller.buildPlayer("Player 1", 1)
+      Await.result(Future(controller.addPlayer("Player 1")), Duration.Inf)
+      controller.players.length should be (2)
+    }
+    "add no player when playercount is 2" in {
+      controller.players = Vector.empty
+      controller.players.length should be (0)
+      controller.buildPlayer("Player 1", 1)
+      controller.buildPlayer("Player 2", 2)
+      Await.result(Future(controller.addPlayer("Player 3")), Duration.Inf)
+      controller.players.length should be (2)
     }
   }
