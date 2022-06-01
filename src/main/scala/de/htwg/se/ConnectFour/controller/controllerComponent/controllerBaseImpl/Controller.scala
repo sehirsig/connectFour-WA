@@ -16,6 +16,7 @@ import de.htwg.se.ConnectFour.model.playerComponent.{PlayerBuilderInterface, Pla
 import de.htwg.se.ConnectFour.util.UndoManager
 import play.api.libs.json.{JsArray, JsValue, Json}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
@@ -26,6 +27,9 @@ import scala.util.{Failure, Success, Try}
 class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuilderInterface) extends ControllerInterface:
   val injector = Guice.createInjector(ConnectFourModule())
 
+  // needed to run the route
+  val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "my-system")
+  given ActorSystem[Any] = system
 
   val fileIOIP = sys.env.getOrElse("FILEIO_SERVICE_HOST", "localhost").toString
   val fileIOPort = sys.env.getOrElse("FILEIO_SERVICE_PORT", 8081).toString.toInt
@@ -51,8 +55,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
   override def addPlayer(name:String) =
     if players.size == 0 then
       players = Vector.empty
-      implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
-      implicit val executionContext = system.executionContext
+
       val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/deleteall"))
       responseFuture
         .onComplete {
@@ -78,8 +81,6 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
       val player = playerBuilder.createPlayer(name,number)
       players = players.appended(player)
 
-      implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
-      implicit val executionContext = system.executionContext
       val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/addplayer/" + number + "/" + name.replace(" ", "_")))
       responseFuture
         .onComplete {
@@ -123,10 +124,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
   /** Save the current game into a database with a HTTP call. */
   override def saveGame() =
     this.saveDB
-    //FileIO.save(this.grid)
-    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
-
-    implicit val executionContext = system.executionContext
+    //FileIO.save(this.grid) // Use DAO or FileIO Persistence
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.POST,
@@ -151,10 +149,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
    *  Grid gets unpacked in model.
    * */
   override def loadGame() =
-    //this.grid = FileIO.load(this.players(0), this.players(1), this.grid)
-    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
-
-    implicit val executionContext = system.executionContext
+    //this.grid = FileIO.load(this.players(0), this.players(1), this.grid) // Use DAO or FileIO Persistence
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = fileIOURI + "/load"))
 
@@ -188,9 +183,6 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
   /** Method to save the database into the DAO database. */
   def saveDB =
-    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
-    implicit val executionContext = system.executionContext
-
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.POST,
       uri = databaseURI + "/saveDAO",
