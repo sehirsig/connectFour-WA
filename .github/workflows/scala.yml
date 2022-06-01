@@ -2,9 +2,9 @@ name: Scala CI
 
 on:
   push:
-    branches: [ development ]
+    branches: [ SA-11_CleanUp ]
   pull_request:
-    branches: [ development ]
+    branches: [ SA-11_CleanUp ]
 
 jobs:
   build:
