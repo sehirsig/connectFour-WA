@@ -25,6 +25,7 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
 
   override def replaceCell(row: Int, col: Int, cell: Cell): Grid = copy(rows.updated(row, rows(row).updated(col, cell)))
 
+  /** Drop a Piece into the grid */
   override def drop(column: Int, piece: Piece): Grid =
     val idx = this.rows.indexWhere(row => !row(column).isSet)
     if idx > -1 then
@@ -37,11 +38,13 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
   override def reset(): Grid =
     defaultGrid.cloneGrid()
 
+  /** Check if someone has won. */
   override def checkWin(currentPlayer:PlayerInterface):Boolean =
     Try(checkWinTry(currentPlayer)) match
       case Success(v) => v
       case Failure(_) => false
 
+  /** CheckWin which gets called by a "Try" to prevent exceptions. */
   def checkWinTry(currentPlayer:PlayerInterface):Boolean =
     val playerPiece = Some(Piece(currentPlayer))
 
@@ -53,13 +56,15 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
     //Check ob es einen Win gab
     checkList.filterNot(_.isEmpty).contains(Some(true))
 
+  /** winPattern starts a recursive Method, to check if someone won. */
   def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Option[Boolean] =
-    //idx = rowMin für descendingDiagonla, damit idx bei rowMin anfängt!
+    //idx = rowMin für descendingDiagonal, damit idx bei rowMin anfängt!
     if goThroughRow(currentPiece)(rowMin,rowMax,colMin, colMax,rowMin, chipSet) == Some(true) then
       Some(true)
     else
       None
 
+  /** goThroughRow recursively visits every row and calls every column. */
   def goThroughRow(currentPiece:Option[Piece])(rowMin:Int,rowMax:Int, colMin:Int, colMax:Int, idx:Int,chipSet:(Int,Int)):Option[Boolean] =
     if rowMax < idx || rowMin > idx then
       Some(false)
@@ -70,6 +75,7 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
     else
       Some(false)
 
+  /** goThroughCol recursively goes through every column and checks for a win with checkP */
   def goThroughCol(currentPiece:Option[Piece])(min:Int,max:Int,idx:Int,rowIdx:Int,chipSet:(Int,Int)):Option[Boolean] =
     if (max < idx) || (min > idx) then
       Some(false)
@@ -78,12 +84,14 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
     else
       goThroughCol(currentPiece)(min, max, idx + 1, rowIdx, chipSet)
 
+  /** Extensions for tuples, for the checkP method. */
   extension (b:(Int,Int))
     def add(c:(Int,Int)):(Int,Int)=
       (b._1 + c._1, b._2 + c._2)
     def multi(d:Int):(Int,Int)=
       (b._1 * d, b._2 * d)
 
+  /** checkP looks if 4 Pieces are from the same person, if so returns true. */
   def checkP(currentPiece:Option[Piece])(firstChip:(Int,Int), chipSet:(Int,Int)):Boolean =
     (0 to 3).map(x => {
       val c = firstChip.add(chipSet.multi(x))
@@ -156,11 +164,13 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
       case _ => None
     recursiveSetGrid(player1, player2, cells, idx + 1, grid.replaceCell(row, col, Cell(optPiece)))
 
+  /** Plain String for representation in the TUI. */
   def drawPlainString:String =
     val builder = new StringBuilder
     this.rows.reverse.map(row => {row.map(col => builder.append(col.toPlainString)); builder.append("\n")})
     builder.toString()
 
+  /** Plain String for representation in the TUI. */
   override def toPlainString: String =
     print(drawPlainString);
     this.rows.map(row => row.map(col => if col.isSet then return drawPlainString ))
