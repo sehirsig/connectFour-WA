@@ -43,6 +43,11 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
     reset()
     notifyObservers
 
+  /** addPlayer automatically adds players to the database on creation of the players.
+   *  If the connection to the database timeouts, the player gets created without being safed to the database.
+   *  (Offline Mode)
+   *  If player.size == 0, all existing player get deleted, to make space for the new players.
+   * */
   override def addPlayer(name:String) =
     if players.size == 0 then
       players = Vector.empty
@@ -63,6 +68,11 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
     else
       buildPlayer(name,2)
 
+  /**
+   * Builds the player. While building, updates it directly onto the database.
+   * If the connection to the database timeouts, the player gets created without being safed to the database.
+   *  (Offline Mode)
+   */
   def buildPlayer(name:String, number:Int) =
     if !(number == players.length) && (number == players.length + 1) then
       val player = playerBuilder.createPlayer(name,number)
@@ -82,6 +92,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
           }
         }
 
+  /** Checks whos turn it is and changes the currentPlayer to it, */
   override def whoseTurnIsIt() =
     currentPlayer = if moveCount % 2 == 0 then players(0) else players(1)
     notifyObservers
@@ -89,6 +100,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
   override def checkWin():Boolean =
     grid.checkWin(currentPlayer)
 
+  /** Drop a Piece into the grid. */
   override def drop(col:String) =
     whoseTurnIsIt()
     var validCol = 0
@@ -108,6 +120,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
     moveCount += 1
     notifyObservers
 
+  /** Save the current game into a database with a HTTP call. */
   override def saveGame() =
     this.saveDB
     //FileIO.save(this.grid)
@@ -132,6 +145,11 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
       }
     notifyObservers
 
+
+  /** Load the before saved game from a database.
+   *  Needs JSON here to save the moveCount, currentPlayer and player1/2 into the controller.
+   *  Grid gets unpacked in model.
+   * */
   override def loadGame() =
     //this.grid = FileIO.load(this.players(0), this.players(1), this.grid)
     implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
@@ -168,6 +186,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
       }
     notifyObservers
 
+  /** Method to save the database into the DAO database. */
   def saveDB =
     implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
     implicit val executionContext = system.executionContext
