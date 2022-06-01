@@ -6,6 +6,9 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
 /**
  * Grid Base Implementation tests.
  */
@@ -101,7 +104,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         grid = grid.replaceCell(0, 1, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(0, 2, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(0, 3, Cell(Some(Piece(player1))))
-        val horizontal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (0, 1))
+        val horizontal = Await.result(grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (0, 1)), Duration.Inf)
         var bool = false
         horizontal match {
           case Some(v) => bool = v
@@ -117,7 +120,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         grid = grid.replaceCell(1, 0, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(2, 0, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(3, 0, Cell(Some(Piece(player1))))
-        val vertical = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 1, (1, 0))
+        val vertical = Await.result(grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 1, (1, 0)), Duration.Inf)
         var bool = false
         vertical match {
           case Some(v) => bool = v
@@ -133,7 +136,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         grid = grid.replaceCell(1, 1, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(2, 2, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(3, 3, Cell(Some(Piece(player1))))
-        val ascDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 4, (1, 1))
+        val ascDiagonal = Await.result(grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 4, (1, 1)), Duration.Inf)
         var bool = false
         ascDiagonal match {
           case Some(v) => bool = v
@@ -150,7 +153,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         grid = grid.replaceCell(4, 5, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(3, 4, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(2, 3, Cell(Some(Piece(player1))))
-        val ascDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 4, (1, 1))
+        val ascDiagonal = Await.result(grid.winPattern(Some(Piece(player1)))(grid.rowCount - 4, grid.colCount - 4, (1, 1)), Duration.Inf)
         var bool = false
         ascDiagonal match {
           case Some(v) => bool = v
@@ -166,7 +169,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         grid = grid.replaceCell(4, 1, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(3, 2, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(2, 3, Cell(Some(Piece(player1))))
-        val descDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (-1, 1), 3)
+        val descDiagonal = Await.result(grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (-1, 1), 3), Duration.Inf)
         var bool = false
         descDiagonal match {
           case Some(v) => bool = v
@@ -182,7 +185,7 @@ class GridSpec extends AnyWordSpec with Matchers:
         grid = grid.replaceCell(1, 5, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(2, 4, Cell(Some(Piece(player1))))
         grid = grid.replaceCell(3, 3, Cell(Some(Piece(player1))))
-        val descDiagonal = grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (-1, 1), 3)
+        val descDiagonal = Await.result(grid.winPattern(Some(Piece(player1)))(grid.rowCount - 1, grid.colCount - 4, (-1, 1), 3), Duration.Inf)
         var bool = false
         descDiagonal match {
           case Some(v) => bool = v

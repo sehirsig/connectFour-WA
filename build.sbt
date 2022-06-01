@@ -7,6 +7,7 @@ val scala3Version = "3.1.1"
 lazy val commonDependencies = Seq(
   dependencies.scalactic,
   dependencies.scalatest,
+  dependencies.scalamock,
   dependencies.scalafx,
   dependencies.codingwell,
   dependencies.akkaHttp,

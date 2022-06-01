@@ -7,6 +7,9 @@ import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Prototype.GridDef
 import netscape.javascript.JSObject
 import play.api.libs.json.{JsArray, JsValue, Json}
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -44,7 +47,9 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
       case Success(v) => v
       case Failure(_) => false
 
-  /** CheckWin which gets called by a "Try" to prevent exceptions. */
+  /** CheckWin which gets called by a "Try" to prevent exceptions.
+   * Future to allow asynchronous pattern matching, enhancing performance.
+   * */
   def checkWinTry(currentPlayer:PlayerInterface):Boolean =
     val playerPiece = Some(Piece(currentPlayer))
 
@@ -52,17 +57,31 @@ case class Grid(rows: Vector[Vector[Cell]]) extends GridInterface:
     val vertical = winPattern(playerPiece)(rowCount - 4,colCount - 1,(1,0))
     val ascendingDiagonal = winPattern(playerPiece)(rowCount - 4,colCount - 4,(1,1))
     val descendingDiagonal = winPattern(playerPiece)(rowCount - 1,colCount - 4,(-1,1), 3)
-    val checkList:List[Option[Boolean]] = List(horizontal,vertical,ascendingDiagonal,descendingDiagonal)
+
+    val result: Future[(Option[Boolean], Option[Boolean], Option[Boolean], Option[Boolean])] = for {
+      hor <- horizontal
+      vert <- vertical
+      asc <- ascendingDiagonal
+      desc <- descendingDiagonal
+    } yield (hor, vert, asc, desc)
+
+    val x = Await.result(result, Duration.Inf)
+    val checkList:List[Option[Boolean]] = List(x._1,x._2,x._3,x._4)
+
     //Check ob es einen Win gab
     checkList.filterNot(_.isEmpty).contains(Some(true))
 
-  /** winPattern starts a recursive Method, to check if someone won. */
-  def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Option[Boolean] =
+  /** winPattern starts a recursive Method, to check if someone won.
+   *  As Future, so multiple winPattern can run at once.
+   * */
+  def winPattern(currentPiece:Option[Piece])(rowMax:Int, colMax:Int,chipSet:(Int,Int), rowMin:Int = 0, colMin:Int = 0):Future[Option[Boolean]] =
     //idx = rowMin für descendingDiagonal, damit idx bei rowMin anfängt!
-    if goThroughRow(currentPiece)(rowMin,rowMax,colMin, colMax,rowMin, chipSet) == Some(true) then
-      Some(true)
-    else
-      None
+    Future {
+      if goThroughRow(currentPiece)(rowMin, rowMax, colMin, colMax, rowMin, chipSet) == Some(true) then
+        Some(true)
+      else
+        None
+    }
 
   /** goThroughRow recursively visits every row and calls every column. */
   def goThroughRow(currentPiece:Option[Piece])(rowMin:Int,rowMax:Int, colMin:Int, colMax:Int, idx:Int,chipSet:(Int,Int)):Option[Boolean] =
