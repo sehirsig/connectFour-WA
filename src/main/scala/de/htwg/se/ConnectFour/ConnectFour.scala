@@ -15,11 +15,8 @@ case object ConnectFour:
     val injector: Injector = Guice.createInjector(ConnectFourModule())
     val controller = injector.getInstance(classOf[ControllerInterface])
 
-
-    val uiType = sys.env.getOrElse("C4_UITYPE", "gui").toString
-
-    val uiRest = sys.env.getOrElse("C4_VIEWREST", "y").toString
-
+    val uiType = sys.env.getOrElse("C4_UITYPE", "gui").toString //Changeable to "gui" or "tui"
+    val uiRest = sys.env.getOrElse("C4_VIEWREST", "y").toString //"y", if the ViewREST API should be loaded.
 
     uiRest match
       case "y" =>
@@ -31,4 +28,3 @@ case object ConnectFour:
     Try(UIFactory(uiType,controller)) match
       case Success(_) => println("See you next time! Bye.")
       case Failure(v) => println("Could not create UI: " + v.getMessage + v.getCause)
-
