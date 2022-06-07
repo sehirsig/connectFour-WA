@@ -123,8 +123,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
 
   /** Save the current game into a database with a HTTP call. */
   override def saveGame() =
-    this.saveDB
-    //FileIO.save(this.grid) // Use DAO or FileIO Persistence
+    this.saveDB //calls saveDAO for MongoDB, to show MongoDB Working.
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.POST,
@@ -149,8 +148,7 @@ class Controller @Inject ()(var grid:GridInterface, val playerBuilder:PlayerBuil
    *  Grid gets unpacked in model.
    * */
   override def loadGame() =
-    //this.grid = FileIO.load(this.players(0), this.players(1), this.grid) // Use DAO or FileIO Persistence
-
+    // switch /load to /loadDAO to load the saved game from MongoDB
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = fileIOURI + "/load"))
 
     responseFuture
