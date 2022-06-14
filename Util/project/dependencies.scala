@@ -3,6 +3,7 @@ import sbt._
 object dependencies {
   val scalactic = "org.scalactic" %% "scalactic" % versionNumber.scalactic
   val scalatest = "org.scalatest" %% "scalatest" % versionNumber.scalatest % "test"
+  val scalamock = ("org.scalamock" %% "scalamock" % versionNumber.scalamock % Test).cross(CrossVersion.for3Use2_13)
 
   val scalafx = "org.scalafx" %% "scalafx" % versionNumber.scalafx
 
@@ -35,6 +36,7 @@ object versionNumber {
   val akkaHttpVersion = "10.2.9"
   val scalactic = "3.2.11"
   val scalatest = "3.2.11"
+  val scalamock = "5.1.0"
   val scalafx = "17.0.1-R26"
   val googleinject = "5.1.0"
   val codingwell = "5.0.1"
