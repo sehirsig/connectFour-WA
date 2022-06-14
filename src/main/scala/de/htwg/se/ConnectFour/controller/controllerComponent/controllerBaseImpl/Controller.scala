@@ -1,8 +1,12 @@
 package de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl
 
-import com.google.inject.{Guice, Inject, Key}
 import de.htwg.se.ConnectFour.ConnectFourModule
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
+import de.htwg.se.ConnectFour.model.gridComponent.{GridInterface, Piece}
+import de.htwg.se.ConnectFour.model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
+import de.htwg.se.ConnectFour.util.{UndoManager,Observable}
+
+import com.google.inject.{Guice, Inject, Key}
 import akka.http.scaladsl.server.Directives.{complete, concat, get, path}
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
@@ -11,9 +15,6 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethods, HttpRequest, HttpResponse, StatusCode}
 import akka.http.scaladsl.server.{ExceptionHandler, Route}
 import akka.http.scaladsl.unmarshalling.Unmarshal
-import de.htwg.se.ConnectFour.model.gridComponent.{GridInterface, Piece}
-import de.htwg.se.ConnectFour.model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
-import de.htwg.se.ConnectFour.util.UndoManager
 import play.api.libs.json.{JsArray, JsValue, Json}
 
 import scala.concurrent.ExecutionContext.Implicits.global

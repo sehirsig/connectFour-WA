@@ -6,8 +6,8 @@ import de.htwg.se.ConnectFour.model.gridComponent.GridInterface
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.playerComponent.PlayerBuilderInterface
 import de.htwg.se.ConnectFour.model.playerComponent.playerBuilderBaseImpl.PlayerBuilder
-import de.htwg.se.ConnectFour.util.Observer
 import de.htwg.se.ConnectFour.ConnectFourModule
+import de.htwg.se.ConnectFour.util.Observer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

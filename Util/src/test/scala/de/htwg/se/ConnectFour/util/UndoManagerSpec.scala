@@ -8,10 +8,10 @@ import org.scalatest.wordspec.AnyWordSpec
  */
 class UndoManagerSpec extends AnyWordSpec with Matchers:
   "An UndoManager" should {
-    val undoManager = new UndoManager
+    val undoManager = UndoManager()
 
     "have a do, undo and redo" in {
-      val command = new incrCommand
+      val command = incrCommand()
       undoManager.undoStep
       undoManager.redoStep
       command.state should be(0)
@@ -24,7 +24,7 @@ class UndoManagerSpec extends AnyWordSpec with Matchers:
     }
 
     "handle multiple undo steps correctly" in {
-      val command = new incrCommand
+      val command = incrCommand()
       command.state should be(0)
       undoManager.doStep(command)
       command.state should be(1)
@@ -38,7 +38,7 @@ class UndoManagerSpec extends AnyWordSpec with Matchers:
       command.state should be(1)
     }
     "do nothing" in {
-      val command = new incrCommand
+      val command = incrCommand()
       command.state should be(0)
       undoManager.undoStep
       command.state should be(0)

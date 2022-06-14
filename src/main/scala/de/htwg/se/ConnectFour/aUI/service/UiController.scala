@@ -2,8 +2,6 @@ package de.htwg.se.ConnectFour.aUI.service
 
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 
-import de.htwg.se.ConnectFour.util.{Observer, UI}
-
 /**
  * Controller for the REST User Interface.
  */
