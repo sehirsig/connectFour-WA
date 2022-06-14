@@ -26,7 +26,7 @@ object dependencies {
   val slf4jNop = "org.slf4j" % "slf4j-nop" % versionNumber.slf4jNop
   val slick = ("com.typesafe.slick" %% "slick" % versionNumber.slick).cross(CrossVersion.for3Use2_13)
   val hikarislick = ("com.typesafe.slick" %% "slick-hikaricp" % versionNumber.hikarislick).cross(CrossVersion.for3Use2_13)
-  val githubslick =("com.github.slick.slick" % "slick_3" % versionNumber.githubslick)
+  val githubslick = ("com.github.slick.slick" % "slick_3" % versionNumber.githubslick)
   val postgresql = "org.postgresql" % "postgresql" % versionNumber.postgresql
   val mongoDb = ("org.mongodb.scala" %% "mongo-scala-driver" % versionNumber.mongoDb).cross(CrossVersion.for3Use2_13)
 }

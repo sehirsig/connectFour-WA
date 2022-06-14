@@ -6,7 +6,7 @@ import org.scalatest.wordspec.AnyWordSpec
 /**
  * Error tests.
  */
-class ErrorSpec extends AnyWordSpec with Matchers:
+class ErrorSpec extends AnyWordSpec with Matchers :
   "An Error" when {
     "set up" should {
       var error1 = CannotDropPiece()
@@ -16,11 +16,11 @@ class ErrorSpec extends AnyWordSpec with Matchers:
       var error5 = InputExpected()
 
       "should extend Error" in {
-        error1 should be (CannotDropPiece())
-        error2 should be (ColumnFull())
-        error3 should be (InvalidPiece())
-        error4 should be (InvalidColumnNumber())
-        error5 should be (InputExpected())
+        error1 should be(CannotDropPiece())
+        error2 should be(ColumnFull())
+        error3 should be(InvalidPiece())
+        error4 should be(InvalidColumnNumber())
+        error5 should be(InputExpected())
       }
     }
   }

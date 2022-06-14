@@ -1,12 +1,12 @@
 package de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.Guice
+import de.htwg.se.ConnectFour.ConnectFourModule
 import de.htwg.se.ConnectFour.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.ConnectFour.model.gridComponent.GridInterface
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.playerComponent.PlayerBuilderInterface
 import de.htwg.se.ConnectFour.model.playerComponent.playerBuilderBaseImpl.PlayerBuilder
-import de.htwg.se.ConnectFour.ConnectFourModule
 import de.htwg.se.ConnectFour.util.Observer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -19,7 +19,7 @@ import scala.util.Failure
 /**
  * Controller tests.
  */
-class ControllerSpec extends AnyWordSpec with Matchers:
+class ControllerSpec extends AnyWordSpec with Matchers :
   val injector = Guice.createInjector(ConnectFourModule())
   val grid = injector.getInstance(classOf[GridInterface])
   val playerbuilder = injector.getInstance(classOf[PlayerBuilderInterface])
@@ -37,7 +37,8 @@ class ControllerSpec extends AnyWordSpec with Matchers:
         def isUpdated: Boolean = updated
 
         override def update: Boolean = {
-          updated = true; updated
+          updated = true;
+          updated
         }
 
         override def toString: String = updated.toString
@@ -90,16 +91,16 @@ class ControllerSpec extends AnyWordSpec with Matchers:
   }
   "use its get methods deliver specific values" should {
     "for accessing the grid" in {
-      controller.getGrid() should be (controller.grid)
+      controller.getGrid() should be(controller.grid)
     }
     "for accessing the players" in {
-      controller.getPlayers() should be (controller.players)
+      controller.getPlayers() should be(controller.players)
     }
     "for accessing the current player" in {
-      controller.getCurrentPlayer() should be (controller.currentPlayer)
+      controller.getCurrentPlayer() should be(controller.currentPlayer)
     }
     "for accessing the move count" in {
-      controller.getMoveCount should be (controller.moveCount)
+      controller.getMoveCount should be(controller.moveCount)
     }
   }
   "use its set methods they should overwrite existing variables" should {
@@ -108,44 +109,44 @@ class ControllerSpec extends AnyWordSpec with Matchers:
     }
     "for setting the current player" in {
       controller.setCurrentPlayer(controller.players(0))
-      controller.currentPlayer should be (controller.players(0))
+      controller.currentPlayer should be(controller.players(0))
     }
     "for setting the move count" in {
       controller.setMoveCount(203)
-      controller.moveCount should be (203)
+      controller.moveCount should be(203)
     }
   }
   "when using its help methods" should {
     "have a correct value when checking for win" in {
-      controller.checkWin() should be (false)
+      controller.checkWin() should be(false)
     }
     "change the currentplayer when using whoseTurnIsIt() method" in {
       controller.moveCount += 1
-      controller.currentPlayer should be (controller.players(0))
+      controller.currentPlayer should be(controller.players(0))
       controller.moveCount += 1
       controller.whoseTurnIsIt()
-      controller.currentPlayer should be (controller.players(1))
+      controller.currentPlayer should be(controller.players(1))
     }
     "add a player when playercount is 0" in {
       controller.players = Vector.empty
-      controller.players.length should be (0)
+      controller.players.length should be(0)
       Await.result(Future(controller.addPlayer("Player 1")), Duration.Inf)
       controller.buildPlayer("Player 1", 1)
-      controller.players.length should be (1)
+      controller.players.length should be(1)
     }
     "add a player when playercount is 1" in {
       controller.players = Vector.empty
-      controller.players.length should be (0)
+      controller.players.length should be(0)
       controller.buildPlayer("Player 1", 1)
       Await.result(Future(controller.addPlayer("Player 1")), Duration.Inf)
-      controller.players.length should be (2)
+      controller.players.length should be(2)
     }
     "add no player when playercount is 2" in {
       controller.players = Vector.empty
-      controller.players.length should be (0)
+      controller.players.length should be(0)
       controller.buildPlayer("Player 1", 1)
       controller.buildPlayer("Player 2", 2)
       Await.result(Future(controller.addPlayer("Player 3")), Duration.Inf)
-      controller.players.length should be (2)
+      controller.players.length should be(2)
     }
   }
