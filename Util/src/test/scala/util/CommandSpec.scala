@@ -18,7 +18,7 @@ class CommandSpec extends AnyWordSpec with Matchers:
   "A Command" should {
 
     "have a do step" in {
-      val command = new incrCommand
+      val command = incrCommand()
       command.state should be(0)
       command.doStep
       command.state should be(1)
@@ -27,7 +27,7 @@ class CommandSpec extends AnyWordSpec with Matchers:
 
     }
     "have an undo step" in {
-      val command = new incrCommand
+      val command = incrCommand()
       command.state should be(0)
       command.doStep
       command.state should be(1)
@@ -35,7 +35,7 @@ class CommandSpec extends AnyWordSpec with Matchers:
       command.state should be(0)
     }
     "have a redo step" in {
-      val command = new incrCommand
+      val command = incrCommand()
       command.state should be(0)
       command.doStep
       command.state should be(1)
