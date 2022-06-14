@@ -30,9 +30,12 @@ object RestAPI:
 
   // needed to run the route
   val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "my-system")
+
   given ActorSystem[Any] = system
+
   // needed for the future flatMap/onComplete in the end
   val executionContext: ExecutionContextExecutor = system.executionContext
+
   given ExecutionContextExecutor = executionContext
 
   val route = concat(
@@ -76,7 +79,7 @@ object RestAPI:
     },
     path("db" / "loadDAO") {
       get {
-        complete(HttpEntity(ContentTypes.`application/json`, Await.result(RestController.loadDAO(),  Duration.Inf))) //Change here to json, to be able to load json to SRC Controller
+        complete(HttpEntity(ContentTypes.`application/json`, Await.result(RestController.loadDAO(), Duration.Inf))) //Change here to json, to be able to load json to SRC Controller
       }
     },
     path("db" / "saveDAO") {
@@ -102,16 +105,16 @@ object RestAPI:
       }
     },
     path("db" / "addplayer" / "1" / Segment) { command => {
-       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer1(command).toString))
-     }
+      complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer1(command).toString))
+    }
     },
     path("db" / "addplayer" / "2" / Segment) { command => {
-        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer2(command).toString))
-      }
+      complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.addPlayer2(command).toString))
+    }
     },
     path("db" / "getplayer" / Segment) { command => {
-       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, Await.result(RestController.getPlayer(command), Duration.Inf).toString))
-      }
+      complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, Await.result(RestController.getPlayer(command), Duration.Inf).toString))
+    }
     },
     path("db" / "getplayer") {
       get {
@@ -131,12 +134,12 @@ object RestAPI:
       }
     },
     path("db" / "deleteplayer" / Segment) { command => {
-        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.deletePlayer(command).toString))
-      }
+      complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.deletePlayer(command).toString))
+    }
     },
     path("db" / "updateplayer" / "1" / Segment) { command => {
-        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.updatePlayer(1, command).toString))
-      }
+      complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, RestController.updatePlayer(1, command).toString))
+    }
     }
   )
 
@@ -146,7 +149,7 @@ object RestAPI:
   RestController.createDAO()
   RestController.createDB()
 
-  bindingFuture.onComplete{
+  bindingFuture.onComplete {
     case Success(binding) => {
       val address = binding.localAddress
       println(s"File IO REST service online at http://$connectIP:$connectPort/\nPress RETURN to stop...")
