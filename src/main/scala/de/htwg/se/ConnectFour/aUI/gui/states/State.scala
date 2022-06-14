@@ -8,4 +8,4 @@ import de.htwg.se.ConnectFour.aUI.gui.GUI
  * pattern in the GUI package
  */
 trait State[T]:
-  def handle(input:String,gui:GUI,state:T): Unit
+  def handle(input: String, gui: GUI, state: T): Unit

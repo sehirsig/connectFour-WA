@@ -1,11 +1,10 @@
 package de.htwg.se.ConnectFour.aUI.service
 
-import akka.http.scaladsl.server.Directives.{complete, concat, get, path}
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCode}
+import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.{ExceptionHandler, Route, StandardRoute}
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 
@@ -22,9 +21,11 @@ object UiAPI:
 
   // needed to run the route
   val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "my-system")
-  given ActorSystem[Any] = system
   // needed for the future flatMap/onComplete in the end
   val executionContext: ExecutionContextExecutor = system.executionContext
+
+  given ActorSystem[Any] = system
+
   given ExecutionContextExecutor = executionContext
 
   def apply(controller: ControllerInterface) =
@@ -74,8 +75,8 @@ object UiAPI:
         )
       },
       path("drop" / Segment) { command => {
-          complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.drop(controller, command)))
-        }
+        complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, UiController.drop(controller, command)))
+      }
       },
       path("load") {
         concat(

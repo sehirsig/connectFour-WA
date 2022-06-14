@@ -1,4 +1,5 @@
 package de.htwg.se.ConnectFour.aUI
+
 import de.htwg.se.ConnectFour.aUI.*
 import de.htwg.se.ConnectFour.aUI.gui.GUI
 import de.htwg.se.ConnectFour.aUI.tui.TUI
@@ -9,8 +10,8 @@ import javafx.embed.swing.JFXPanel
  * UIFactory, to create the User Interface.
  */
 object UIFactory:
-  def apply(uiType:String, controller:ControllerInterface) =
-    
+  def apply(uiType: String, controller: ControllerInterface) =
+
     uiType.toLowerCase() match
       case "gui" =>
         JFXPanel()

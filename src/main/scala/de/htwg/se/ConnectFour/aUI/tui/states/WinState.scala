@@ -7,14 +7,14 @@ import scala.io.AnsiColor
 /**
  * WinState of TUI
  */
-case class WinState(controller: ControllerInterface) extends State[GameState]:
+case class WinState(controller: ControllerInterface) extends State[GameState] :
   //Extension Methods
-  extension (con:ControllerInterface)
-    def printWinner(color: "\u001B[31m" | "\u001B[33m"):Unit = println(color + "BOOOOOOOOOOM!!!! Player " +
+  extension (con: ControllerInterface)
+    def printWinner(color: "\u001B[31m" | "\u001B[33m"): Unit = println(color + "BOOOOOOOOOOM!!!! Player " +
       con.currentPlayer.playerNumber + " called " +
       con.currentPlayer.playerName + " has won the game.")
-    def printWinnerRed:Unit = printWinner(AnsiColor.RED)
-    def printWinnerYellow:Unit = printWinner(AnsiColor.YELLOW)
+    def printWinnerRed: Unit = printWinner(AnsiColor.RED)
+    def printWinnerYellow: Unit = printWinner(AnsiColor.YELLOW)
 
   override def handle(input: String, state: GameState) =
     if input == "n" then
