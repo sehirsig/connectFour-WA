@@ -1,5 +1,6 @@
 package de.htwg.se.ConnectFour.model.playerBaseImpl
 
+import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
