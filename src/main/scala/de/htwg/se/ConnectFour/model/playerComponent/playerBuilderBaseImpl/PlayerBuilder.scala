@@ -1,8 +1,8 @@
 package de.htwg.se.ConnectFour.model.playerComponent.playerBuilderBaseImpl
 
 import com.google.inject.Inject
-import de.htwg.se.ConnectFour.model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.ConnectFour.model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
 
 /**
  * Player Builder implementation

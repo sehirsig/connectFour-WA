@@ -7,7 +7,7 @@ import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
 /**
  * Player implementation
  */
-case class Player @Inject() (@Named("Dummy")playerName: String, @Named("Eins")playerNumber: Int) extends PlayerInterface:
+case class Player @Inject()(@Named("Dummy") playerName: String, @Named("Eins") playerNumber: Int) extends PlayerInterface :
 
 
   val color: Option[String] =
