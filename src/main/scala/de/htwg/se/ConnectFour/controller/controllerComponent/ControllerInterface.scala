@@ -8,13 +8,13 @@ import de.htwg.se.ConnectFour.util.{Observable, UndoManager}
  * Controller Trait
  */
 trait ControllerInterface extends Observable :
-  var grid: GridInterface
   val playerBuilder: PlayerBuilderInterface
+  val maxPlayers: Int
+  val undoManager: UndoManager
+  var grid: GridInterface
   var players: Vector[PlayerInterface]
   var moveCount: Int
   var currentPlayer: PlayerInterface
-  val maxPlayers: Int
-  val undoManager: UndoManager
 
   def createGrid(): Unit
 
