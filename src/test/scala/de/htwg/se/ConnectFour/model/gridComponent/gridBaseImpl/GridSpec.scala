@@ -1,7 +1,7 @@
 package de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl
 
-import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.ConnectFour.model.gridComponent.*
+import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
@@ -12,7 +12,7 @@ import scala.concurrent.duration.Duration
 /**
  * Grid Base Implementation tests.
  */
-class GridSpec extends AnyWordSpec with Matchers:
+class GridSpec extends AnyWordSpec with Matchers :
 
   "A Grid" when {
     val grid = new Grid()
@@ -27,13 +27,13 @@ class GridSpec extends AnyWordSpec with Matchers:
         grid.cell(5, 6) should be(Cell(None))
       }
       "should not have a PlainString yet" in {
-        grid.toPlainString should be ("")
+        grid.toPlainString should be("")
       }
       "should have a default toJsonString" in {
-        grid.toJsonString(0, "Player1","Player1", "Player2") should include ("\"value\" : 0")
+        grid.toJsonString(0, "Player1", "Player1", "Player2") should include("\"value\" : 0")
       }
       "should have a default toJson" in {
-        Json.prettyPrint(grid.toJson(0, "Player1","Player1", "Player2")) should include ("\"value\" : 0")
+        Json.prettyPrint(grid.toJson(0, "Player1", "Player1", "Player2")) should include("\"value\" : 0")
       }
     }
     "when not full" should {
@@ -62,10 +62,10 @@ class GridSpec extends AnyWordSpec with Matchers:
         newDrop.rows should be(afterFull.rows)
       }
       "should be able to load from a json file" in {
-        val json_grid = grid.toJsonString(1, "Player1","Player1", "Player2")
+        val json_grid = grid.toJsonString(1, "Player1", "Player1", "Player2")
         val p1 = Player("Player1", 1)
         val p2 = Player("Player2", 2)
-        grid.jsonToGrid(p1, p2, grid, json_grid) should be (grid)
+        grid.jsonToGrid(p1, p2, grid, json_grid) should be(grid)
       }
     }
     "when filled specifically" should {

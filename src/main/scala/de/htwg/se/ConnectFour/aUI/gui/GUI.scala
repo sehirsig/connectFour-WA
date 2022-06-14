@@ -22,89 +22,6 @@ import scala.util.{Failure, Success, Try}
  */
 case class GUI(controller: ControllerInterface) extends UI with Observer with JFXApp3 :
   controller.add(this)
-  var gameState: GameState = GameState(controller, this)
-
-  override def start() =
-    stage = new JFXApp3.PrimaryStage {
-      title.value = "ConnectFour Game"
-      minWidth = 650
-      minHeight = 900
-      resizable = true
-      scene = new Scene {
-        root = new BorderPane {
-          style = "-fx-border-color: #353535; -fx-background-color: #b3daff;"
-          top = gameLogo
-          center = gameGrid
-          bottom = bottombar
-        }
-        beginExec("")
-      }
-    }
-
-  def run() = main(Array())
-
-  //Security, if player have been added yet.
-  var playerNum = 0
-
-  def waitForDatabase(): Unit=
-    if playerNum != controller.players.size then
-      Thread.sleep(1000)
-      waitForDatabase()
-
-  def typeName() =
-    waitForDatabase()
-
-    val dialog = new TextInputDialog(defaultValue = "Player " + (controller.players.size + 1)) {
-      initOwner(stage)
-      title = "ConnectFour Game"
-      headerText = "Welcome to Connect Four!"
-      var number = ""
-      if (controller.players.size == 0) number = "one" else number = "two"
-      contentText = "Player " + number + " please enter your name:"
-    }
-
-    val result = dialog.showAndWait()
-    result match
-      case Some(name) => if playerNum == controller.players.size then controller.addPlayer(name);playerNum += 1;
-      case None => println("Please type a name!")
-
-  /** Partially applied function beginExec, to execute the execute method. */
-  def beginExec =
-    begin(execute)
-
-  /**
-   * Force to type in names
-   * when method is running
-   */
-  def begin(callback: (String) => Unit)(msg: String) =
-    waitForPlayers
-    callback(msg) // changing the state
-
-  /**
-   * Help Method to Force to type in names
-   * when method is running
-   */
-  def waitForPlayers: Unit =
-    if controller.players.size < 2 then
-      controller.players.size match
-        case 0 => typeName(); waitForPlayers
-        case 1 => typeName(); waitForPlayers
-        case _ =>
-
-  /**
-   * Method to create a gamefield button.
-   * On mouse click the button passes
-   * its y-value to the gameState
-   */
-  def gameFieldButton(y: Int): Button =
-    val gameFieldButton = new Button {
-      style = "-fx-font: normal bold 16pt sans-serif;  -fx-border-color: lightgrey; -fx-text-fill: black; -fx-background-color: #e6f3ff;"
-      onMouseClicked = _ => {
-        gameState.handle(y.toString)
-      }
-    }
-    gameFieldButton
-
   val gameLogo: HBox = new HBox {
     style = "-fx-background-color: #b3daff;"
     padding = Insets(30, 100, 0, 100)
@@ -134,7 +51,6 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
       },
     )
   }
-
   /**
    * Initialising the game grid.
    */
@@ -155,7 +71,6 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
       i += 1
     })
   }
-
   /**
    * Initialising the the bottom bar.
    */
@@ -240,10 +155,88 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
     add(save, 2, 0)
     add(load, 2, 1)
   }
-
   /** Images */
   val redImage = Image("/red.png")
   val yellowImage = Image("/yellow.png")
+  var gameState: GameState = GameState(controller, this)
+  //Security, if player have been added yet.
+  var playerNum = 0
+
+  override def start() =
+    stage = new JFXApp3.PrimaryStage {
+      title.value = "ConnectFour Game"
+      minWidth = 650
+      minHeight = 900
+      resizable = true
+      scene = new Scene {
+        root = new BorderPane {
+          style = "-fx-border-color: #353535; -fx-background-color: #b3daff;"
+          top = gameLogo
+          center = gameGrid
+          bottom = bottombar
+        }
+        beginExec("")
+      }
+    }
+
+  def run() = main(Array())
+
+  def waitForDatabase(): Unit =
+    if playerNum != controller.players.size then
+      Thread.sleep(1000)
+      waitForDatabase()
+
+  def typeName() =
+    waitForDatabase()
+
+    val dialog = new TextInputDialog(defaultValue = "Player " + (controller.players.size + 1)) {
+      initOwner(stage)
+      title = "ConnectFour Game"
+      headerText = "Welcome to Connect Four!"
+      var number = ""
+      if (controller.players.size == 0) number = "one" else number = "two"
+      contentText = "Player " + number + " please enter your name:"
+    }
+
+    val result = dialog.showAndWait()
+    result match
+      case Some(name) => if playerNum == controller.players.size then controller.addPlayer(name); playerNum += 1;
+      case None => println("Please type a name!")
+
+  /** Partially applied function beginExec, to execute the execute method. */
+  def beginExec =
+    begin(execute)
+
+  /**
+   * Force to type in names
+   * when method is running
+   */
+  def begin(callback: (String) => Unit)(msg: String) =
+    waitForPlayers
+    callback(msg) // changing the state
+
+  /**
+   * Help Method to Force to type in names
+   * when method is running
+   */
+  def waitForPlayers: Unit =
+    if controller.players.size < 2 then
+      controller.players.size match
+        case 0 => typeName(); waitForPlayers
+        case 1 => typeName(); waitForPlayers
+        case _ =>
+
+  override def processInput(input: String) =
+    input match
+      case _ => execute(input)
+
+  def execute(input: String) =
+    gameState.handle(input)
+
+  override def update: Boolean =
+    Try(refreshView()) match
+      case Success(v) => true
+      case Failure(v) => false
 
   /**
    * This method needs to be run
@@ -281,14 +274,16 @@ case class GUI(controller: ControllerInterface) extends UI with Observer with JF
         gameGrid.add(piece, x, reverseY)
       }))
 
-  override def processInput(input: String) =
-    input match
-      case _ => execute(input)
-
-  def execute(input: String) =
-    gameState.handle(input)
-
-  override def update: Boolean =
-    Try(refreshView()) match
-      case Success(v) => true
-      case Failure(v) => false
+  /**
+   * Method to create a gamefield button.
+   * On mouse click the button passes
+   * its y-value to the gameState
+   */
+  def gameFieldButton(y: Int): Button =
+    val gameFieldButton = new Button {
+      style = "-fx-font: normal bold 16pt sans-serif;  -fx-border-color: lightgrey; -fx-text-fill: black; -fx-background-color: #e6f3ff;"
+      onMouseClicked = _ => {
+        gameState.handle(y.toString)
+      }
+    }
+    gameFieldButton
