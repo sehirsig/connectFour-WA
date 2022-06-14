@@ -6,7 +6,7 @@ import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 /**
  * GameState of GUI
  */
-case class GameState(controller: ControllerInterface, gui:GUI):
+case class GameState(controller: ControllerInterface, gui: GUI):
   var state: State[GameState] = InitialState(controller, gui)
 
   def handle(input: String) =
@@ -14,4 +14,4 @@ case class GameState(controller: ControllerInterface, gui:GUI):
 
   def changeState(state: State[GameState]) =
     this.state = state
-    state.handle("",gui,this)
+    state.handle("", gui, this)
