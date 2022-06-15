@@ -38,6 +38,8 @@ Connect Four is a solved game. The first player can always win by playing the ri
 - Gatling Performance Tests in (../src/Test/performance/Gatling/)
 - Fully optimized recursive methods
 
+# How to play
+You can either choose to play with a GUI, TUI or the Rest Interface
 
 # Presentation Link
 [Google Presentation](www.google.de)
