@@ -36,6 +36,7 @@ Connect Four is a solved game. The first player can always win by playing the ri
 - Automatic saving into the database
 - Offline-Mode, if Database not available
 - Gatling Performance Tests in (../src/Test/performance/Gatling/)
+  - (Results in https://github.com/sehirsig/connectFour-Gatling-Results)
 - Fully optimized recursive methods
 
 # How to play
