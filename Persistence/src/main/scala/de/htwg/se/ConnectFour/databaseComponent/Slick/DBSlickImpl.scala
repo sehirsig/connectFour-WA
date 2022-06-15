@@ -8,7 +8,6 @@ import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.playerComponent.PlayerInterface
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
 import play.api.libs.json.{JsArray, JsValue, Json}
-//import slick.driver.PostgresDriver.api.*
 import slick.jdbc.JdbcBackend.Database
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api.*
@@ -41,8 +40,6 @@ class DBSlickImpl @Inject () extends DBInterface:
   val gridTable = TableQuery[GridTable]
 
   //Create Database
-  //Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf)
-
   override def createDB(): Unit =
     val playerDB = Future(Await.result(database.run(playerTable.schema.createIfNotExists), Duration.Inf))
     val gridDB = Future(Await.result(database.run(gridTable.schema.createIfNotExists), Duration.Inf))
