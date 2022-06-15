@@ -1,0 +1,10 @@
+{
+  "simulation": "LoadUITest",
+  "simulationId": "loaduitest",
+  "start": 1653316185008,
+  "description": "",
+  "scenarios": ["LoadUITest"],
+  "assertions": [
+
+  ]
+}

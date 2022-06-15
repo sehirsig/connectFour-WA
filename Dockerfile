@@ -1,9 +1,14 @@
-FROM hseeberger/scala-sbt:16.0.1_1.5.4_2.13.6
+FROM hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1
 
-ADD . /ConnectFour
+RUN apt-get update && apt-get install -y libxrender1 libxtst6 libxi6 libgl1-mesa-glx libgtk-3-0
 
-WORKDIR /ConnectFour
+EXPOSE 8080
 
-RUN apt-get update && apt-get install -y libxrender1 libxtst6 libxi6 libgl1-mesa-glx
+WORKDIR /connectFour
 
-CMD sbt run
+ADD . /connectFour
+
+RUN chmod +x /connectFour/run.sh
+
+CMD /bin/bash -c '/connectFour/run.sh; /bin/bash'
+#ENTRYPOINT ["/connectFour/run.sh"]

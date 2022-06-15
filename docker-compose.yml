@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+      MONGI_INITDB_DATABASE: ConnectFour
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_IP: localhost
+      POSTGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+
+  persistence:
+    image: connectfour-persistence-service
+    build:
+      context: ./Persistence/
+      dockerfile: ./Dockerfile
+    ports:
+      - "8081:8081"
+    stdin_open: true
+    container_name: persistence_service
+    environment:
+      FILEIO_SERVICE_HOST: fileio
+      FILEIO_SERVICE_PORT: 8081
+      POSTGRES_IP: postgres
+      POSTGRES_PORT: 5432
+    tty: true
+
+  connectfour:
+    image: connectfour-service
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    depends_on:
+      - "persistence"
+    ports:
+      - "8080:8080"
+    stdin_open: true
+    container_name: connectfour_service
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      DISPLAY: $DISPLAY
+      CONNECTFOUR_SERVICE_HOST: connectfour
+      CONNECTFOUR_SERVICE_PORT: 8080
+      FILEIO_SERVICE_HOST: fileio
+      FILEIO_SERVICE_PORT: 8081

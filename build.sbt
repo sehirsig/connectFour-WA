@@ -1,32 +1,88 @@
-name := "ConnectFour"
-version := "0.1"
-scalaVersion := "2.13.5"
+import sbt.Keys.libraryDependencies
 
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.7"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.7" % "test"
-libraryDependencies += "com.google.inject" % "guice" % "5.0.1"
-libraryDependencies += "net.codingwell" %% "scala-guice" % "5.0.1"
-libraryDependencies += "org.scalafx" %% "scalafx" % "15.0.1-R21"
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.0-RC2"
-libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.13" % "2.0.0"
+/** ScalaVersion */
+val scala3Version = "3.1.1"
 
-lazy val javaFXModules = {
-  // Determine OS version of JavaFX binaries
-  lazy val osName = System.getProperty("os.name") match {
-    case n if n.startsWith("Linux")   => "linux"
-    case n if n.startsWith("Mac")     => "mac"
-    case n if n.startsWith("Windows") => "win"
-    case _                            =>
-      throw new Exception("Unknown platform!")
+/** Dependencies */
+lazy val commonDependencies = Seq(
+  dependencies.scalactic,
+  dependencies.scalatest,
+  dependencies.scalamock,
+  dependencies.scalafx,
+  dependencies.codingwell,
+  dependencies.akkaHttp,
+  dependencies.akkaHttpSpray,
+  dependencies.akkaHttpCore,
+  dependencies.googleinject,
+  dependencies.scalalangmodules,
+  dependencies.typesafeplay,
+  dependencies.akkaActor,
+  dependencies.akkaStream,
+  dependencies.akkaActorTyped,
+  dependencies.slf4jNop,
+  dependencies.githubslick,
+  dependencies.postgresql,
+  dependencies.mongoDb
+)
+
+/** Persistence Module */
+lazy val persistence = (project in file("Persistence"))
+  .settings(
+    name := "ConnectFour-Persistence",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+
+/** Util Module */
+lazy val util = (project in file("Util"))
+  .settings(
+    name := "ConnectFour-Util",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+
+/** Root Module */
+lazy val root = project
+  .in(file("."))
+  .dependsOn(util)
+  .aggregate(util)
+  .settings(
+    name := "ConnectFour",
+    version := "0.5.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies ++= commonDependencies,
+  )
+  .enablePlugins(JacocoCoverallsPlugin)
+
+/** Common Settings */
+lazy val commonSettings = Seq(
+  scalaVersion := scala3Version,
+  organization := "de.htwg.se",
+
+  jacocoCoverallsServiceName := "github-actions",
+  jacocoCoverallsBranch := sys.env.get("CI_BRANCH"),
+  jacocoCoverallsPullRequest := sys.env.get("GITHUB_EVENT_NAME"),
+  jacocoCoverallsRepoToken := sys.env.get("COVERALLS_REPO_TOKEN"),
+  jacocoExcludes in Test := Seq(
+    "de.htwg.se.ConnectFour.aUI*",
+    "de.htwg.se.ConnectFour.fileIOComponent*",
+    "de.htwg.se.ConnectFour.ConnectFour*"
+  ),
+
+  resolvers += "jitpack" at "https://jitpack.io",
+
+  libraryDependencies ++= {
+    // Determine OS version of JavaFX binaries
+    lazy val osName = System.getProperty("os.name") match {
+      case n if n.startsWith("Linux") => "linux"
+      case n if n.startsWith("Mac") => "mac"
+      case n if n.startsWith("Windows") => "win"
+      case _ => throw new Exception("Unknown platform!")
+    }
+
+    Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
+      .map(m => "org.openjfx" % s"javafx-$m" % "17.0.1" classifier osName)
   }
-  // Create dependencies for JavaFX modules
-  Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
-    .map( m=> "org.openjfx" % s"javafx-$m" % "15.0.1" classifier osName)
-}
-
-libraryDependencies ++= javaFXModules
-
-coverageExcludedPackages := "de.htwg.se.ConnectFour.aUI.*;" +
-                            "de.htwg.se.ConnectFour.model.fileio.*;" +
-                            "de.htwg.se.ConnectFour.Game;"
-
+)

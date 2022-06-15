@@ -2,7 +2,6 @@
 *.log
 /.idea/
 /.bsp/
-/target/
 /project/project/target/
 /project/target/
 /null/
@@ -10,3 +9,9 @@ game.json
 game.xml
 null/
 null
+.sbt/
+.cache
+/.sbt/
+/.cache/
+.run
+/.run/
