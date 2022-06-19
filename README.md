@@ -43,6 +43,6 @@ Connect Four is a solved game. The first player can always win by playing the ri
 You can either choose to play with a GUI, TUI or the Rest Interface
 
 # Presentation Link
-[Google Presentation]([www.google.de](https://docs.google.com/presentation/d/1w6HkRycYHzP5xsOA3xHuf1UvpGZN6-_Ph3m9MT0HJ_o/edit?usp=sharing))
+[Google Presentation](https://docs.google.com/presentation/d/1w6HkRycYHzP5xsOA3xHuf1UvpGZN6-_Ph3m9MT0HJ_o/edit?usp=sharing)
 
 *Project ConnectFour written by [@sehirsig](https://github.com/sehirsig/) & [@furkankarayel](https://github.com/furkankarayel/)*
