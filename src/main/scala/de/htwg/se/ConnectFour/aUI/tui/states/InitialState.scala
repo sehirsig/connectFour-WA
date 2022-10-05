@@ -15,5 +15,6 @@ case class InitialState(controller: ControllerInterface) extends State[GameState
         controller.addPlayer(input)
       println("Player " + controller.players.size + " is called: " + input)
       if controller.players.size == 2 then
+        println("Type 0 - 6 to drop a piece")
         state.changeState(DropState(controller))
     end if

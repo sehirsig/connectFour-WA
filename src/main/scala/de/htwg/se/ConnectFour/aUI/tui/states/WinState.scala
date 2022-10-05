@@ -19,6 +19,7 @@ case class WinState(controller: ControllerInterface) extends State[GameState] :
   override def handle(input: String, state: GameState) =
     if input == "n" then
       controller.reset()
+      println("New Game! Drop with typing a number between 0 - 6")
       state.changeState(DropState(controller))
     else if controller.checkWin() then
       if controller.currentPlayer.color.equals(Some("red")) then
