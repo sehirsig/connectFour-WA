@@ -2,10 +2,10 @@
 # Scala Project - Connect Four
 ## Game Project For The Lecture SA
 
-[![Scala CI](https://github.com/sehirsig/connectFour/actions/workflows/scala.yml/badge.svg?branch=WA-01_HTTP&kill_cache=1)](https://github.com/sehirsig/connectFour/actions/workflows/scala.yml)
-[![Coverage Status](https://coveralls.io/repos/github/sehirsig/connectFour/badge.svg?branch=WA-01_HTTP)](https://coveralls.io/github/sehirsig/connectFour?branch=WA-01_HTTP)
+[![Scala CI](https://github.com/sehirsig/connectFour-WA/actions/workflows/scala.yml/badge.svg?branch=WA-01_HTTP&kill_cache=1)](https://github.com/sehirsig/connectFour-WA/actions/workflows/scala.yml)
+[![Coverage Status](https://coveralls.io/repos/github/sehirsig/connectFour-WA/badge.svg?branch=WA-01_HTTP)](https://coveralls.io/github/sehirsig/connectFour-WA?branch=WA-01_HTTP)
 
-![alt text](https://github.com/sehirsig/connectFour/blob/master/GuiImage.png)
+![alt text](https://github.com/sehirsig/connectFour-WA/blob/master/GuiImage.png)
 
 ## Game Rules
 Connect Four is a two-player connection board game, in which the players choose a color and then take turns dropping colored discs into a seven-column, six-row vertically suspended grid. \
