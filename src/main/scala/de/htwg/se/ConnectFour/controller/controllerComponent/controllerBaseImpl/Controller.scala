@@ -12,6 +12,7 @@ import de.htwg.se.ConnectFour.ConnectFourModule
 import de.htwg.se.ConnectFour.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ConnectFour.model.gridComponent.{GridInterface, Piece}
 import de.htwg.se.ConnectFour.model.playerComponent.{PlayerBuilderInterface, PlayerInterface}
+import de.htwg.se.ConnectFour.model.fileIOComponent.FileIOInterface
 import de.htwg.se.ConnectFour.util.{Observable, UndoManager}
 import play.api.libs.json.{JsArray, JsValue, Json}
 
@@ -30,6 +31,7 @@ class Controller @Inject()(var grid: GridInterface, val playerBuilder: PlayerBui
   val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "my-system")
   val fileIOIP = sys.env.getOrElse("FILEIO_SERVICE_HOST", "localhost").toString
   val fileIOPort = sys.env.getOrElse("FILEIO_SERVICE_PORT", 8081).toString.toInt
+  val offlineFileIo = injector.getInstance(classOf[FileIOInterface])
 
   val fileIOURI = "http://" + fileIOIP + ":" + fileIOPort + "/fileio"
   val databaseURI = "http://" + fileIOIP + ":" + fileIOPort + "/db"
@@ -37,6 +39,8 @@ class Controller @Inject()(var grid: GridInterface, val playerBuilder: PlayerBui
   var players: Vector[PlayerInterface] = Vector.empty
   var moveCount = 0
   var currentPlayer: PlayerInterface = _
+
+  val serverStatus = sys.env.getOrElse("C4_MODE", "offline").toString //"offline", then REST from SA should be deactivated
 
   given ActorSystem[Any] = system
 
@@ -78,23 +82,27 @@ class Controller @Inject()(var grid: GridInterface, val playerBuilder: PlayerBui
 
   /** Save the current game into a database with a HTTP call. */
   override def saveGame() =
-    this.saveDB //calls saveDAO for MongoDB, to show MongoDB Working.
+    serverStatus match
+      case "offline" =>
+        offlineFileIo.save(this.grid)
+      case _ =>
+        this.saveDB //calls saveDAO for MongoDB, to show MongoDB Working.
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
-      method = HttpMethods.POST,
-      uri = fileIOURI + "/save",
-      entity = gridToJsonString()
-    ))
-    responseFuture
-      .onComplete {
-        case Failure(_) => println(responseFuture)
-        case Success(value) => Unmarshal(value.entity).to[String].onComplete {
-          case Failure(_) => sys.error("Failed unmarshalling")
-          case Success(value) => {
-            println("Response: " + value)
+        val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
+          method = HttpMethods.POST,
+          uri = fileIOURI + "/save",
+          entity = gridToJsonString()
+        ))
+        responseFuture
+          .onComplete {
+            case Failure(_) => println(responseFuture)
+            case Success(value) => Unmarshal(value.entity).to[String].onComplete {
+              case Failure(_) => sys.error("Failed unmarshalling")
+              case Success(value) => {
+                println("Response: " + value)
+              }
+            }
           }
-        }
-      }
     notifyObservers
 
   /** Method to save the database into the DAO database. */
@@ -124,35 +132,39 @@ class Controller @Inject()(var grid: GridInterface, val playerBuilder: PlayerBui
    * Grid gets unpacked in model.
    * */
   override def loadGame() =
-    // switch /load to /loadDAO to load the saved game from MongoDB
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = fileIOURI + "/load"))
+    serverStatus match
+      case "offline" =>
+        this.grid = offlineFileIo.load(this.players(0), this.players(1), this.grid)
+      case _ =>
+        // switch /load to /loadDAO to load the saved game from MongoDB
+        val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = fileIOURI + "/load"))
 
-    responseFuture
-      .onComplete {
-        case Failure(_) => sys.error("Failed getting Json")
-        case Success(value) => {
-          Unmarshal(value.entity).to[String].onComplete {
-            case Failure(_) => sys.error("Failed unmarshalling")
+        responseFuture
+          .onComplete {
+            case Failure(_) => sys.error("Failed getting Json")
             case Success(value) => {
-              val gameJson: JsValue = Json.parse(value)
-              val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
-              val currentPlayer = (gameJson \ "player" \ "currentPlayer").get.toString()
-              val player1 = (gameJson \ "player" \ "player1" \ "name").get.toString()
-              val player2 = (gameJson \ "player" \ "player2" \ "name").get.toString()
-              setMoveCount(moveCount)
-              addPlayer(player1)
-              addPlayer(player2)
-              currentPlayer match
-                case player1 => setCurrentPlayer(players(0))
-                case player2 => setCurrentPlayer(players(1))
+              Unmarshal(value.entity).to[String].onComplete {
+                case Failure(_) => sys.error("Failed unmarshalling")
+                case Success(value) => {
+                  val gameJson: JsValue = Json.parse(value)
+                  val moveCount = (gameJson \ "player" \ "moveCount" \ "value").get.toString().toInt
+                  val currentPlayer = (gameJson \ "player" \ "currentPlayer").get.toString()
+                  val player1 = (gameJson \ "player" \ "player1" \ "name").get.toString()
+                  val player2 = (gameJson \ "player" \ "player2" \ "name").get.toString()
+                  setMoveCount(moveCount)
+                  addPlayer(player1)
+                  addPlayer(player2)
+                  currentPlayer match
+                    case player1 => setCurrentPlayer(players(0))
+                    case player2 => setCurrentPlayer(players(1))
 
-              val loadedGame = this.grid.jsonToGrid(players(0), players(1), this.grid, value)
-              this.grid = loadedGame
-              notifyObservers
+                  val loadedGame = this.grid.jsonToGrid(players(0), players(1), this.grid, value)
+                  this.grid = loadedGame
+                  notifyObservers
+                }
+              }
             }
           }
-        }
-      }
     notifyObservers
 
   /** addPlayer automatically adds players to the database on creation of the players.
@@ -164,18 +176,22 @@ class Controller @Inject()(var grid: GridInterface, val playerBuilder: PlayerBui
     if players.size == 0 then
       players = Vector.empty
 
-      val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/deleteall"))
-      responseFuture
-        .onComplete {
-          case Failure(_) => println(responseFuture); buildPlayer(name, 1)
-          case Success(value) => Unmarshal(value.entity).to[String].onComplete {
-            case Failure(_) => sys.error("Failed unmarshalling"); buildPlayer(name, 1)
-            case Success(value) => {
-              println("Response: " + value)
-              buildPlayer(name, 1)
+      serverStatus match
+        case "offline" =>
+          buildPlayer(name, 1)
+        case _ =>
+          val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/deleteall"))
+          responseFuture
+            .onComplete {
+              case Failure(_) => println(responseFuture); buildPlayer(name, 1)
+              case Success(value) => Unmarshal(value.entity).to[String].onComplete {
+                case Failure(_) => sys.error("Failed unmarshalling"); buildPlayer(name, 1)
+                case Success(value) => {
+                  println("Response: " + value)
+                  buildPlayer(name, 1)
+                }
+              }
             }
-          }
-        }
     else
       buildPlayer(name, 2)
 
@@ -189,17 +205,20 @@ class Controller @Inject()(var grid: GridInterface, val playerBuilder: PlayerBui
       val player = playerBuilder.createPlayer(name, number)
       players = players.appended(player)
 
-      val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/addplayer/" + number + "/" + name.replace(" ", "_")))
-      responseFuture
-        .onComplete {
-          case Failure(_) => println(responseFuture)
-          case Success(value) => Unmarshal(value.entity).to[String].onComplete {
-            case Failure(_) => sys.error("Failed unmarshalling")
-            case Success(value) => {
-              println("Response: " + value)
+      serverStatus match
+        case "offline" =>
+        case _ =>
+          val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(method = HttpMethods.GET, uri = databaseURI + "/addplayer/" + number + "/" + name.replace(" ", "_")))
+          responseFuture
+            .onComplete {
+              case Failure(_) => println(responseFuture)
+              case Success(value) => Unmarshal(value.entity).to[String].onComplete {
+                case Failure(_) => sys.error("Failed unmarshalling")
+                case Success(value) => {
+                  println("Response: " + value)
+                }
+              }
             }
-          }
-        }
 
   override def setCurrentPlayer(currentPlayer: PlayerInterface) = this.currentPlayer = currentPlayer;
 

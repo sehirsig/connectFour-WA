@@ -1,6 +1,5 @@
 package de.htwg.se.ConnectFour.databaseComponent
 
-import de.htwg.se.ConnectFour.databaseComponent.Slick.tables.GridTable
 import de.htwg.se.ConnectFour.model.gridComponent.GridInterface
 import de.htwg.se.ConnectFour.model.gridComponent.gridBaseImpl.Grid
 import de.htwg.se.ConnectFour.model.playerComponent.playerBaseImpl.Player
