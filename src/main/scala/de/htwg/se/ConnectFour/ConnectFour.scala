@@ -15,7 +15,7 @@ case object ConnectFour:
     val injector: Injector = Guice.createInjector(ConnectFourModule())
     val controller = injector.getInstance(classOf[ControllerInterface])
 
-    val uiType = sys.env.getOrElse("C4_UITYPE", "gui").toString //Changeable to "gui" or "tui"
+    val uiType = sys.env.getOrElse("C4_UITYPE", "tui").toString //Changeable to "gui" or "tui"
     val uiRest = sys.env.getOrElse("C4_VIEWREST", "y").toString //"y", if the ViewREST API should be loaded.
     val serverStatus = sys.env.getOrElse("C4_MODE", "offline").toString //"offline", then REST from SA should be deactivated
 
