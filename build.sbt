@@ -1,7 +1,7 @@
 import sbt.Keys.libraryDependencies
 
 /** ScalaVersion */
-val scala3Version = "3.1.1"
+val scala3Version = "3.2.0"
 
 /** Dependencies */
 lazy val commonDependencies = Seq(
