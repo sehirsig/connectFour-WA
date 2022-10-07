@@ -2,8 +2,8 @@
 # Scala Project - Connect Four
 ## Game Project For The Lecture WA
 
-[![Scala CI](https://github.com/sehirsig/connectFour-WA/actions/workflows/scala.yml/badge.svg?branch=WA-01_HTTP&kill_cache=1)](https://github.com/sehirsig/connectFour-WA/actions/workflows/scala.yml)
-[![Coverage Status](https://coveralls.io/repos/github/sehirsig/connectFour-WA/badge.svg?branch=WA-01_HTTP)](https://coveralls.io/github/sehirsig/connectFour-WA?branch=WA-01_HTTP)
+[![Scala CI](https://github.com/sehirsig/connectFour-WA/actions/workflows/scala.yml/badge.svg?branch=development&kill_cache=1)](https://github.com/sehirsig/connectFour-WA/actions/workflows/scala.yml)
+[![Coverage Status](https://coveralls.io/repos/github/sehirsig/connectFour-WA/badge.svg?branch=development)](https://coveralls.io/github/sehirsig/connectFour-WA?branch=development)
 
 ![alt text](https://github.com/sehirsig/connectFour-WA/blob/master/GuiImage.png)
 
